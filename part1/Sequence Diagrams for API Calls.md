@@ -1,6 +1,6 @@
 # Sequence Diagrams for API Calls
 # 1 - User Registration
-description
+## A user signs up for a new account.
 
 ```mermaid
 sequenceDiagram
@@ -30,7 +30,7 @@ sequenceDiagram
 ```
 
 # 2 - Place Creation
-Description
+## A user creates a new place listing.
 
 ```mermaid
 sequenceDiagram
@@ -60,7 +60,7 @@ sequenceDiagram
 ```
 
 # 3 - Review Submission
-Descritpion
+## A user submits a review for a place.
 ```mermaid
 sequenceDiagram
     participant Client(Frontend)
@@ -89,6 +89,7 @@ sequenceDiagram
 ```
 
 # 4 - Fetching a list of places 
+## A user requests a list of places based on certain criteria.
 ```mermaid
 sequenceDiagram
     participant Client(Frontend)
