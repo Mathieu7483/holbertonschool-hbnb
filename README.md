@@ -5,31 +5,31 @@
 
 
 📝 Description
-Ce projet, HBnB Evolution, vise à créer une application simplifiée similaire à AirBnB. Cette première partie est dédiée à la documentation technique de haut niveau, qui servira de base pour le développement futur. Le but est de modéliser l'architecture et les interactions du système à l'aide de diagrammes UML (Unified Modeling Language), garantissant une compréhension claire du design avant le début de l'implémentation. Le projet est structuré en trois couches principales : la couche de présentation, la couche de logique métier et la couche de persistance.
+This project, HBnB Evolution, is the initial phase of developing a simplified AirBnB-like application. This part focuses on creating a comprehensive technical documentation blueprint using UML (Unified Modeling Language). The goal is to design the system's architecture and interactions before implementation, ensuring a clear and shared understanding among the team. The application is structured into three main layers: the Presentation Layer, the Business Logic Layer, and the Persistence Layer.
 
-📂 Contenu de l'exercice
-Ce répertoire contient les diagrammes UML et les notes explicatives qui constituent la documentation technique du projet.
+📂 Exercise Content
+This directory contains the UML diagrams and explanatory notes that form the technical documentation for the project.
 
-0. High-Level Package Diagram: Un diagramme de paquets de haut niveau illustrant l'architecture en trois couches de l'application et la communication entre elles via le "facade pattern". Ce diagramme donne une vue d'ensemble de l'organisation du code.
+0. High-Level Package Diagram: A high-level package diagram illustrating the application's three-layer architecture and the communication between them via the Facade Pattern. This diagram provides an overview of the code's organization.
 
-1. Detailed Class Diagram for Business Logic Layer: Un diagramme de classes détaillé pour la couche de logique métier. Il modélise les entités principales de l'application (User, Place, Review, Amenity) avec leurs attributs, leurs méthodes et leurs relations. Ce diagramme est essentiel pour la conception des modèles de données.
+1. Detailed Class Diagram for Business Logic Layer: A detailed class diagram for the Business Logic layer. It models the core entities of the application (User, Place, Review, Amenity) with their attributes, methods, and relationships. This diagram is crucial for designing the data models.
 
-2. Sequence Diagrams for API Calls: Une série de diagrammes de séquence qui illustrent le flux d'informations et les interactions entre les différentes couches pour des cas d'utilisation spécifiques, tels que l'enregistrement d'un utilisateur, la création d'un lieu, l'ajout d'un avis ou la récupération d'une liste de lieux.
+2. Sequence Diagrams for API Calls: A series of sequence diagrams that illustrate the flow of information and interactions between the different layers for specific use cases, such as user registration, place creation, review submission, and fetching a list of places.
 
-3. Documentation Compilation: La compilation de tous les diagrammes et de leurs notes explicatives en un seul document cohérent. Ce document final sert de référence complète pour la phase d'implémentation, assurant que toute l'équipe de développement travaille à partir de la même vision architecturale.
+3. Documentation Compilation: The compilation of all diagrams and their explanatory notes into a single, cohesive document. This final document serves as a complete reference for the implementation phase, ensuring the entire development team works from the same architectural vision.
 
-🛠️ Prérequis
-Logiciel de diagramme: Utilisation de Mermaid.js ou d'un outil similaire pour créer des diagrammes UML.
+🛠️ Prerequisites
+Diagramming Software: Proficiency with a tool like Mermaid.js to create and manage UML diagrams.
 
-Connaissance UML: Compréhension de base des notations UML pour les diagrammes de classes, de paquets et de séquences.
+UML Knowledge: A basic understanding of UML notation for class, package, and sequence diagrams is required.
 
 🚀 Tests
-Ce projet étant un exercice de documentation et de conception, il n'y a pas de tests à exécuter. Les livrables attendus sont les diagrammes UML et les notes de documentation.
+As this project is a documentation and design exercise, there are no tests to run. The expected deliverables are the UML diagrams and the accompanying documentation.
 
-✍️ Auteurs
+✍️ Authors
 Florian Hadjar
 
 Mathieu Godalier
 
-⚖️ Licence
-Ce projet est sous licence MIT. Pour plus de détails, consultez le fichier LICENSE.
+⚖️ License
+This project is licensed under the MIT License. For more details, see the LICENSE file.
