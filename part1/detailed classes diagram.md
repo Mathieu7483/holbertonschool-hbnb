@@ -13,65 +13,6 @@ This detailed view is crucial for understanding the object-oriented structure of
 
 ```mermaid
 classDiagram
-    User <|-- Client : *
-    User <|-- Administrator : 2 admins Florian et Mathieu
-    User <|-- Owner : *
-    User : - First name
-    User : - Last name
-    User: - Mail
-    User: - Password
-    User: + Register()
-    User: + Update()
-    User: + Delete()
-
-    class Client{
-      -ID
-      -
-    }
-    Client -- PlaceEntity
-    class Administrator{
-      - Boolean ID
-      + Modify()
-    }
-    Administrator -- Client
-    Administrator -- Owner
-    Administrator -- PlaceEntity
-    Administrator -- AmenityEntity
-    Administrator -- ReviewEntity
-
-    class Owner{
-      - Boolean ID
-      + Create()
-      + Update()
-      + Delete()
-      + Listed()
-    }
-    class PlaceEntity{
-        - Title = Str
-        - Descritpion = Str
-        - Price = Float
-        - Longitude = Float
-        - Lattitude = Float
-    }
-    Owner -- PlaceEntity
-
-    class ReviewEntity{
-        - Place = Str
-        - User = Str
-        - Rating = Int
-        - Comment = Str
-    }
-    ReviewEntity -- Client
-
-    class AmenityEntity{
-        - Name = Str
-        - Descritpion = Str
-        }
-    AmenityEntity -- Owner
-    AmenityEntity -- PlaceEntity
-
-
-classDiagram
     direction TD
 
     User <|-- Client
