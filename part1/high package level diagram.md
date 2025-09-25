@@ -8,3 +8,5 @@ Business Logic Layer: The core of the application, containing the main business 
 Persistence Layer: This layer handles all data storage and retrieval operations, abstracting the database from the business logic.
 
 The Presentation Layer communicates with the Business Logic Layer using a Facade Pattern to simplify interactions. The Business Logic Layer then interacts with the Persistence Layer to perform all necessary database operations.
+
+
