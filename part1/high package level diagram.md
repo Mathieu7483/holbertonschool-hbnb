@@ -10,3 +10,30 @@ Persistence Layer: This layer handles all data storage and retrieval operations,
 The Presentation Layer communicates with the Business Logic Layer using a Facade Pattern to simplify interactions. The Business Logic Layer then interacts with the Persistence Layer to perform all necessary database operations.
 
 
+```mermaid
+classDiagram
+class PresentationLayer {
+    <<Interface>>
+    +ServicesAPI
+    +UserController
+    +PlaceController
+    +ReviewController
+    +AmenityController
+}
+class BusinessLogicLayer {
+    + User
+    + Place
+    + Review
+    + Amenity
+    + HBnBFacade
+}
+class PersistenceLayer {
+    + UserRepository
+    + PlaceRepository
+    + ReviewRepository
+    + AmenityRepository
+    + DatabaseConnector
+}
+PresentationLayer --> BusinessLogicLayer : via HBNB Facade
+BusinessLogicLayer --> PersistenceLayer : UsesRepositories
+```
