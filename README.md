@@ -1,5 +1,5 @@
 <p align="center">
-<img src="https://github.com/Mathieu7483/Aiko78-Photgraphy/blob/main/img/Logo%20HBnB.png" width="1000">
+<img src="https://github.com/Mathieu7483/Aiko78-Photgraphy/blob/main/img/Logo%20de%20hippocampe%20et%20circuits%20%C3%A9lectroniques.png" width="1000">
 </p>
 
 
