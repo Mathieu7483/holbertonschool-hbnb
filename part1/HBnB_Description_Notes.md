@@ -271,3 +271,57 @@ sequenceDiagram
     API-->>Client(Frontend): HTTP Created
     deactivate API
 ```
+
+### Place Creation
+
+This sequence diagram illustrates the **process of creating a new place listing** in the HBnB system.
+It shows how an **Owner**, the **API layer**, the **Business Logic Layer (BL)**, and the **Database** interact to successfully register a new place.
+
+1. **Owner → API**
+   - The owner (frontend) sends an HTTP `POST /owner/place/register` request with the new place data (title, description, price, location, amenities).
+   - The API receives the request and validates its format.
+
+2. **API → Business Logic Layer**
+   - The API forwards the request to the BL via `registerPlace(ownerData)`.
+   - The BL applies validation rules (e.g., title not empty, price > 0).
+
+3. **Business Logic Layer → Database**
+   - If validation passes, the BL calls the Persistence Layer to save the new place using `savePlace(ownerData)`.
+
+4. **Database → Business Logic Layer**
+   - The database confirms creation and returns the saved record.
+
+5. **Business Logic Layer → API**
+   - The BL processes the result and prepares a success response.
+
+6. **API → Owner**
+   - The API responds with `HTTP 201 Created` to the client, confirming the place was registered.
+
+### Diagram: Place Creation
+
+```mermaid
+sequenceDiagram
+    participant Owner as OwnerFrontend
+    participant API as HBnB API
+    participant BL as Business Logic Layer
+    participant DB as Database
+
+    Owner->>API: POST /owner/place/register
+    activate API
+    Note right of API: Owner place registration request
+
+    API->>BL: registerPlace(ownerData)
+    activate BL
+
+    BL->>DB: savePlace(ownerData)
+    activate DB
+
+    DB-->>BL: new place record
+    deactivate DB
+
+    BL-->>API: success response
+    deactivate BL
+
+    API-->>Owner: HTTP 201 Created
+    deactivate API
+```
