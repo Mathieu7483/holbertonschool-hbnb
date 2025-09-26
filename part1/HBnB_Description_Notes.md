@@ -213,4 +213,62 @@ classDiagram
         - rating: Int
         - comment: String
     }
+```
+
+## Sequence Diagrams for API Calls
+
+### User Registration
+
+This sequence diagram illustrates the **process of creating a new user account** in the HBnB system.
+It shows how the **frontend client**, **API layer**, **Business Logic Layer (BL)**, and **database** interact to successfully register a new user.
+
+1. **Client → API**
+   - The client (frontend) initiates the registration by sending an HTTP `POST /users/register` request with the necessary user data (e.g., first name, last name, email, password).
+   - The API receives the request and validates its format.
+
+2. **API → Business Logic Layer**
+   - The API forwards the request to the **Business Logic Layer** via the method `registerUser(userData)`.
+   - At this stage, the BL applies validation rules (e.g., check if email already exists, verify password strength).
+
+3. **Business Logic Layer → Database**
+   - If the data is valid, the BL interacts with the **Persistence Layer** to save the new user.
+   - The user information is stored in the database through a `saveUser(userData)` operation.
+
+4. **Database → Business Logic Layer**
+   - The database confirms the creation of the new record and returns the stored user data.
+
+5. **Business Logic Layer → API**
+   - The BL processes the result and prepares a success response indicating that the registration was successful.
+
+6. **API → Client**
+   - The API sends back an HTTP `201 Created` response to the client, confirming that the account was created.
+
+### Diagram: User Registration
+
+```mermaid
+sequenceDiagram
+    participant Client(Frontend)
+    participant API as HBnB API
+    participant BL as Business Logic Layer
+    participant Database(Backend)
+
+    Client(Frontend)->>API: POST /users/register
+    activate API
+    Note right of API: User registration request
+
+    API->>BL: registerUser(userData)
+    activate BL
+
+    BL->>Database(Backend): saveUser(userData)
+    activate Database(Backend)
+
+    Database(Backend)-->>BL: new user record
+    deactivate Database(Backend)
+
+    BL-->>API: success response
+    deactivate BL
+
+    API-->>Client(Frontend): HTTP Created
+    deactivate API
+    ```
 
