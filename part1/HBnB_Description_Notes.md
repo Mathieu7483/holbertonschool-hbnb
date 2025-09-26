@@ -431,6 +431,6 @@ sequenceDiagram
     BL-->>API: success response
     deactivate BL
 
-    API-->>Client: HTTP 200 OK
+    API-->>Client: HTTP Created
     deactivate API
 ```
