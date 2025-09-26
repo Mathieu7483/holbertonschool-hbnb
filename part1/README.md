@@ -58,7 +58,7 @@ This directory contains the UML diagrams and explanatory notes that form the tec
 
 [2. Sequence Diagrams for API Calls:](https://github.com/Mathieu7483/holbertonschool-hbnb/blob/Mathieu/part1/Sequence%20Diagrams%20for%20API%20Calls.md) A series of sequence diagrams that illustrate the flow of information and interactions between the different layers for specific use cases, such as user registration, place creation, review submission, and fetching a list of places.
 
-[3. Documentation Compilation:]() The compilation of all diagrams and their explanatory notes into a single, cohesive document. This final document serves as a complete reference for the implementation phase, ensuring the entire development team works from the same architectural vision.
+[3. Documentation Compilation:](https://github.com/Mathieu7483/holbertonschool-hbnb/blob/Mathieu/part1/HBnB_Description_Notes.md) The compilation of all diagrams and their explanatory notes into a single, cohesive document. This final document serves as a complete reference for the implementation phase, ensuring the entire development team works from the same architectural vision.
 
 # 🛠️ Prerequisites
 Diagramming Software: Proficiency with a tool like Mermaid.js to create and manage UML diagrams.
