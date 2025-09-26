@@ -270,4 +270,4 @@ sequenceDiagram
 
     API-->>Client(Frontend): HTTP Created
     deactivate API
-    ```
+```
