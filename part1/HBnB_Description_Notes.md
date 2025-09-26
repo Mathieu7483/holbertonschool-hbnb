@@ -381,3 +381,56 @@ sequenceDiagram
 ```
 
 ### Fetching a list of places
+
+This sequence diagram illustrates the **process of fetching a list of places** based on user-specified criteria (e.g., city, price range, amenities).
+It shows how a **Client**, the **API layer**, the **Business Logic Layer (BL)**, and the **Database** interact to retrieve the requested data.
+
+1. **Client → API**
+   - The client sends an HTTP `GET /client/fetchplace` request with query parameters (location, dates, price range, etc.).
+   - The API receives the request and validates the parameters.
+
+2. **API → Business Logic Layer**
+   - The API forwards the request to the BL via `fetchPlace(clientData)`.
+   - The BL applies business rules, such as filtering by availability, location, and price.
+
+3. **Business Logic Layer → Database**
+   - The BL queries the Persistence Layer to fetch the places matching the criteria.
+   - This is done through a method like `getPlaces(clientData)`.
+
+4. **Database → Business Logic Layer**
+   - The database returns the list of matching places to the BL.
+
+5. **Business Logic Layer → API**
+   - The BL processes the results (e.g., applying additional filters or formatting) and prepares a success response.
+
+6. **API → Client**
+   - The API sends an HTTP `200 OK` response with the list of places back to the client.
+
+### Diagram: Fetching a List of Places
+
+```mermaid
+sequenceDiagram
+    participant Client as ClientFrontend
+    participant API as HBnB API
+    participant BL as Business Logic Layer
+    participant DB as Database
+
+    Client->>API: GET /client/fetchplace
+    activate API
+    Note right of API: Client FetchPlace request
+
+    API->>BL: fetchPlace(clientData)
+    activate BL
+
+    BL->>DB: getPlaces(clientData)
+    activate DB
+
+    DB-->>BL: list of places
+    deactivate DB
+
+    BL-->>API: success response
+    deactivate BL
+
+    API-->>Client: HTTP 200 OK
+    deactivate API
+```
