@@ -1,3 +1,7 @@
+<p align="center">
+<img src="https://github.com/Mathieu7483/Aiko78-Photgraphy/blob/main/img/Logo%20de%20hippocampe%20et%20circuits%20%C3%A9lectroniques.png" width="1000">
+</p>
+
 HBnB Application Architecture
 This diagram outlines the high-level, layered architecture of the HBnB application. The system is separated into three distinct layers to ensure a clean separation of concerns:
 
