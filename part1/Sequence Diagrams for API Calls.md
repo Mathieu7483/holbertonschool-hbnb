@@ -1,5 +1,7 @@
 # Sequence Diagrams for API Calls
+
 # 1 - User Registration
+
 ## A user signs up for a new account.
 
 ```mermaid
@@ -88,7 +90,7 @@ sequenceDiagram
     deactivate API
 ```
 
-# 4 - Fetching a list of places 
+# 4 - Fetching a list of places
 ## A user requests a list of places based on certain criteria.
 ```mermaid
 sequenceDiagram
