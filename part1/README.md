@@ -2,7 +2,7 @@
 <img src="https://github.com/Mathieu7483/Aiko78-Photgraphy/blob/main/img/Logo%20de%20hippocampe%20et%20circuits%20%C3%A9lectroniques.png" width="1000">
 </p>
 
-## Project Summary: HBnB Evolution - Technical Documentation (Part 1)
+# Project Summary: HBnB Evolution - Technical Documentation (Part 1)
 This first part of the HBnB Evolution project focuses on establishing robust technical documentation, which will serve as the detailed blueprint before implementation. The objective is to model the architecture and design of the application, a simplified version of an AirBnB-like service.
 
 The application will manage four main entities: Users, Places, Reviews, and Amenities.
@@ -60,13 +60,10 @@ This directory contains the UML diagrams and explanatory notes that form the tec
 
 [3. Documentation Compilation:]() The compilation of all diagrams and their explanatory notes into a single, cohesive document. This final document serves as a complete reference for the implementation phase, ensuring the entire development team works from the same architectural vision.
 
-🛠️ Prerequisites
+# 🛠️ Prerequisites
 Diagramming Software: Proficiency with a tool like Mermaid.js to create and manage UML diagrams.
 
 UML Knowledge: A basic understanding of UML notation for class, package, and sequence diagrams is required.
-
-# 🚀 Tests
-As this project is a documentation and design exercise, there are no tests to run. The expected deliverables are the UML diagrams and the accompanying documentation.
 
 # ✍️ Authors
 
