@@ -34,6 +34,8 @@ class PersistenceLayer {
     + AmenityRepository
     + DatabaseConnector
 }
-PresentationLayer --> BusinessLogicLayer : via HBNB Facade
-BusinessLogicLayer --> PersistenceLayer : UsesRepositories
+PresentationLayer --> BusinessLogicLayer : calls facade methods
+BusinessLogicLayer --> PersistenceLayer : delegates data access
+PersistenceLayer --> BusinessLogicLayer : returns entities/data
+BusinessLogicLayer --> PresentationLayer : returns responses
 ```
