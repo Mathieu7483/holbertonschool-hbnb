@@ -3,7 +3,7 @@
 This diagram outlines the **high-level, layered architecture** of the HBnB application.
 The system is separated into three distinct layers to ensure a **clean separation of concerns** and facilitate maintainability:
 
-## High-Lvel Package Diagram Description
+## High-Level Package Diagram Description
 
 - **Presentation Layer**
   - Exposes RESTful API endpoints to external clients (web, mobile).
@@ -79,3 +79,138 @@ BusinessLogicLayer --> PersistenceLayer : delegates data access
 PersistenceLayer --> BusinessLogicLayer : returns entities/data
 BusinessLogicLayer --> PresentationLayer : returns responses
 ```
+
+## Detailled Class Diagram for Business Logic Layer
+
+## 2. Business Logic Class Diagram
+
+The following diagram presents the **core business model** of the HBnB application.
+It defines the main **entities**, their **attributes**, and their **relationships**, as well as the different **user roles** that interact with the system.
+
+### Main Concepts
+
+- **User (abstract)**
+  - Represents a general user of the platform.
+  - Contains shared attributes such as `id`, `firstName`, `lastName`, `mail`, and `password`.
+  - Provides common operations: `register()`, `update()`, and `delete()`.
+  - Specialized into three roles:
+    - **Client**: a user who can book places and leave reviews.
+    - **Owner**: a user who can create and manage places.
+    - **Administrator**: a user with privileges to modify system entities.
+      - *Note: In this project, administrators are represented by Florian and Mathieu.*
+
+- **Client**
+  - Extends `User`.
+  - Main responsibilities:
+    - `book(place)` → allows a client to rent a place.
+    - `review(place, rating)` → enables a client to leave feedback on a place.
+
+- **Owner**
+  - Extends `User`.
+  - Main responsibilities:
+    - `createPlace(place)`, `updatePlace(place)`, `deletePlace(place)`.
+    - `listPlaces()` → view all owned properties.
+
+- **Administrator**
+  - Extends `User`.
+  - Has the ability to `modify(entity)` → applies administrative changes across the system.
+
+- **PlaceEntity**
+  - Represents a rental property.
+  - Attributes: `title`, `description`, `price`, `longitude`, `latitude`.
+  - A place can have multiple `AmenityEntity` objects (composition).
+  - A place can also receive multiple `ReviewEntity` objects (association).
+
+- **AmenityEntity**
+  - Represents a feature or facility offered with a place (e.g., Wi-Fi, parking).
+  - Attributes: `name`, `description`.
+
+- **ReviewEntity**
+  - Represents client feedback on a place.
+  - Attributes: `rating` (numeric score) and `comment`.
+  - Linked to both the `Client` (who wrote it) and the `PlaceEntity` (being reviewed).
+
+### Relationships
+
+1. **Inheritance**
+   - `User` is a generalization of `Client`, `Owner`, and `Administrator`.
+   - This ensures a clear separation of roles while keeping shared attributes and methods centralized.
+
+2. **Associations**
+   - A `Client` can rent multiple `PlaceEntity` objects.
+   - A `Client` can emit multiple `ReviewEntity` objects.
+   - An `Owner` possesses one or more `PlaceEntity` objects.
+
+3. **Composition and Aggregation**
+   - A `PlaceEntity` is composed of multiple `AmenityEntity` objects (if the place is deleted, its amenities are deleted as well).
+   - A `PlaceEntity` is associated with multiple `ReviewEntity` objects (reviews can exist independently, but are tied to places).
+
+This structure reflects the **domain rules** of the HBnB platform:
+- Users take on different roles with distinct responsibilities.
+- Places and amenities represent the core offerings of the platform.
+- Reviews enable clients to provide feedback, reinforcing trust in the system.
+
+### Diagram: Business Logic Layer
+
+```mermaid
+classDiagram
+    direction TD
+
+    User <|-- Client
+    User <|-- Administrator
+    User <|-- Owner
+
+    class User{
+        - id: String
+        - firstName: String
+        - lastName: String
+        - mail: String
+        - password: String
+        + register()
+        + update()
+        + delete()
+    }
+
+    note for Administrator "Administrators : Florian and Mathieu"
+
+    class Client{
+        + book(place)
+        + review(place, rating)
+    }
+
+    class Administrator{
+        + modify(entity)
+    }
+
+    class Owner{
+        + createPlace(place)
+        + updatePlace(place)
+        + deletePlace(place)
+        + listPlaces()
+    }
+
+    Client "1" -- "0..*" ReviewEntity : emits
+    Client "1" -- "0..*" PlaceEntity : rent
+    Owner "1" -- "0..*" PlaceEntity : possess
+    PlaceEntity "1" -- "0..*" ReviewEntity : a
+
+    PlaceEntity "1" *-- "0..*" AmenityEntity : a
+
+    class PlaceEntity{
+        - title: String
+        - description: String
+        - price: Float
+        - longitude: Float
+        - latitude: Float
+    }
+
+    class AmenityEntity{
+        - name: String
+        - description: String
+    }
+
+    class ReviewEntity{
+        - rating: Int
+        - comment: String
+    }
+
