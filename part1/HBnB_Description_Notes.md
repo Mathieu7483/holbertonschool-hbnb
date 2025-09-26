@@ -325,3 +325,59 @@ sequenceDiagram
     API-->>Owner: HTTP 201 Created
     deactivate API
 ```
+
+### Review Submission
+
+This sequence diagram illustrates the **process of submitting a review** for a place in the HBnB system.
+It shows how a **Client**, the **API layer**, the **Business Logic Layer (BL)**, and the **Database** interact to store a new review.
+
+1. **Client → API**
+   - The client sends an HTTP `POST /client/place/review` request with review data (place ID, rating, comment).
+   - The API receives the request and validates the input.
+
+2. **API → Business Logic Layer**
+   - The API forwards the request to the BL via `reviewPlace(clientData)`.
+   - The BL enforces business rules, such as verifying that the client has booked the place before reviewing it and that the rating is within valid bounds.
+
+3. **Business Logic Layer → Database**
+   - Once validation passes, the BL calls the Persistence Layer to save the review using `saveReview(clientData)`.
+
+4. **Database → Business Logic Layer**
+   - The database confirms the creation of the review record and returns it to the BL.
+
+5. **Business Logic Layer → API**
+   - The BL processes the result and prepares a success response.
+
+6. **API → Client**
+   - The API sends an HTTP `201 Created` response back to the client, confirming that the review has been successfully submitted.
+
+### Diagram: Review Submission
+
+```mermaid
+sequenceDiagram
+    participant Client as ClientFrontend
+    participant API as HBnB API
+    participant BL as Business Logic Layer
+    participant DB as Database
+
+    Client->>API: POST /client/place/review
+    activate API
+    Note right of API: Client place review request
+
+    API->>BL: reviewPlace(clientData)
+    activate BL
+
+    BL->>DB: saveReview(clientData)
+    activate DB
+
+    DB-->>BL: new review record
+    deactivate DB
+
+    BL-->>API: success response
+    deactivate BL
+
+    API-->>Client: HTTP 201 Created
+    deactivate API
+```
+
+### Fetching a list of places
