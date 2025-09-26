@@ -30,13 +30,13 @@ Business Logic Layer: Data models and core business rules.
 Persistence Layer: Responsibility for storing and retrieving data (database).
 
 Required Diagrams and Documentation:
-| Task |	Description of Output |
-| High-Level Package Diagram |	Overview illustrating the 3 architectural layers and their communication via the Facade pattern.|
-| Detailed Class Diagram |	Modeling the User, Place, Review, and Amenity entities within the Business Logic Layer, including attributes, methods, and their relationships (notably between Place and Amenity).|
-| Sequence Diagrams	| Representation of the information flow (interactions between the 3 layers) for at least four API calls: user registration, place creation, review submission, and fetching a list of places.|
-| Documentation Compilation |	Gathering all diagrams and explanatory notes into a coherent technical document.|
+| Task | Description of Output |
+| :--- | :--- |
+| **High-Level Package Diagram** | Overview illustrating the 3 architectural layers and their communication via the **Facade** pattern. |
+| **Detailed Class Diagram** | Modeling the User, Place, Review, and Amenity entities within the Business Logic Layer, including attributes, methods, and their relationships (notably between Place and Amenity). |
+| **Sequence Diagrams** | Representation of the information flow (interactions between the 3 layers) for at least four API calls: **user registration**, **place creation**, **review submission**, and **fetching a list of places**. |
+| **Documentation Compilation** | Gathering all diagrams and explanatory notes into a coherent technical document. |
 
-Exporter vers Sheets
 ✔️ Conditions and Constraints
 -Mandatory use of UML notation for all diagrams.
 
