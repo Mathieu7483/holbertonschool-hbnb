@@ -3,7 +3,7 @@
 This diagram outlines the **high-level, layered architecture** of the HBnB application.
 The system is separated into three distinct layers to ensure a **clean separation of concerns** and facilitate maintainability:
 
-## High-Level Package Diagram Description
+##  📊​High-Level Package Diagram Description
 
 - **Presentation Layer**
   - Exposes RESTful API endpoints to external clients (web, mobile).
@@ -80,7 +80,7 @@ PersistenceLayer --> BusinessLogicLayer : returns entities/data
 BusinessLogicLayer --> PresentationLayer : returns responses
 ```
 
-## Detailled Class Diagram for Business Logic Layer
+## 📊​Detailled Class Diagram for Business Logic Layer
 
 ## 2. Business Logic Class Diagram
 

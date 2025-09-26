@@ -1,4 +1,5 @@
-HBnB Application Architecture
+# HBnB Application Architecture
+
 This diagram outlines the high-level, layered architecture of the HBnB application. The system is separated into three distinct layers to ensure a clean separation of concerns:
 
 Presentation Layer: This layer serves as the user-facing interface, providing API endpoints and services.
