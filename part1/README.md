@@ -2,12 +2,12 @@
 <img src="https://github.com/Mathieu7483/Aiko78-Photgraphy/blob/main/img/Logo%20de%20hippocampe%20et%20circuits%20%C3%A9lectroniques.png" width="1000">
 </p>
 
-Project Summary: HBnB Evolution - Technical Documentation (Part 1)
+## Project Summary: HBnB Evolution - Technical Documentation (Part 1)
 This first part of the HBnB Evolution project focuses on establishing robust technical documentation, which will serve as the detailed blueprint before implementation. The objective is to model the architecture and design of the application, a simplified version of an AirBnB-like service.
 
 The application will manage four main entities: Users, Places, Reviews, and Amenities.
 
-🎯 Core Objectives
+# 🎯 Core Objectives
 The main challenge is to translate the business rules and architecture into clear and precise UML diagrams.
 
 
@@ -20,7 +20,7 @@ The main challenge is to translate the business rules and architecture into clea
 
 Common Attributes for all entities: Unique ID, creation and update timestamps.
 
-🧱 Architecture and Modeling Tasks
+# 🧱 Architecture and Modeling Tasks
 The application is designed using a Layered Architecture, separated into three levels that communicate via the Facade design pattern:
 
 Presentation Layer: API and services for user interaction.
@@ -37,7 +37,7 @@ Required Diagrams and Documentation:
 | **Sequence Diagrams** | Representation of the information flow (interactions between the 3 layers) for at least four API calls: **user registration**, **place creation**, **review submission**, and **fetching a list of places**. |
 | **Documentation Compilation** | Gathering all diagrams and explanatory notes into a coherent technical document. |
 
-✔️ Conditions and Constraints
+# ✔️ Conditions and Constraints
 -Mandatory use of UML notation for all diagrams.
 
 -Accurate representation of business rules in the diagrams.
