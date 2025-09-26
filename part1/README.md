@@ -11,13 +11,13 @@ The application will manage four main entities: Users, Places, Reviews, and Amen
 The main challenge is to translate the business rules and architecture into clear and precise UML diagrams.
 
 
-| Entity |	Primary Business Rules and Roles |
-| User |	Management (CRUD), unique ID, first_name, last_name, email, password, administrator status (boolean).|
-| Place |	Management (CRUD), title, description, price, latitude, longitude, associated with an owner (User), can have a list of Amenities (Amenity).|
-| Review |	Management (CRUD), associated with a specific Place and User, includes a rating and a comment.|
-| Amenity	| Management (CRUD), name, description.|
+| Entity | Primary Business Rules and Roles | 
+| :--- | :--- | 
+| **User** | Management (CRUD), unique ID, first\_name, last\_name, email, password, administrator status (boolean).| 
+| **Place** | Management (CRUD), title, description, price, latitude, longitude, associated with an owner (User), can have a list of Amenities (Amenity).| 
+| **Review** | Management (CRUD), associated with a specific Place and User, includes a rating and a comment.| 
+| **Amenity** | Management (CRUD), name, description.|
 
-Exporter vers Sheets
 Common Attributes for all entities: Unique ID, creation and update timestamps.
 
 🧱 Architecture and Modeling Tasks
