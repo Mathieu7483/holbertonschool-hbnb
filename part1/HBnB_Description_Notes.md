@@ -410,27 +410,27 @@ It shows how a **Client**, the **API layer**, the **Business Logic Layer (BL)**,
 
 ```mermaid
 sequenceDiagram
-    participant Client as ClientFrontend
+    participant Client(Frontend)
     participant API as HBnB API
     participant BL as Business Logic Layer
     participant DB as Database
 
-    Client->>API: GET /client/fetchplace
+    Client(Frontend)->>API: GET /places?location=Paris&price<100
     activate API
-    Note right of API: Client FetchPlace request
+    Note right of API: Fetch places with filters
 
-    API->>BL: fetchPlace(clientData)
+    API->>BL: getPlaces(filters)
     activate BL
 
-    BL->>DB: getPlaces(clientData)
+    BL->>DB: queryPlaces(filters)
     activate DB
 
     DB-->>BL: list of places
     deactivate DB
 
-    BL-->>API: success response
+    BL-->>API: list of places
     deactivate BL
 
-    API-->>Client: HTTP Created
+    API-->>Client(Frontend): 200 OK + [places...]
     deactivate API
 ```
