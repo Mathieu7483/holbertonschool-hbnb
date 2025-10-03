@@ -20,7 +20,7 @@ sequenceDiagram
 
     BL->>Database(Backend): saveUser(userData)
     activate Database(Backend)
-
+;
     Database(Backend)-->>BL: new user record
     deactivate Database(Backend)
 
@@ -97,24 +97,24 @@ sequenceDiagram
     participant Client(Frontend)
     participant API as HBnB API
     participant BL as Business Logic Layer
-    participant Database(Backend)
+    participant DB as Database
 
-    Client(Frontend)->>API: GET /Client/FetchPlace
+    Client(Frontend)->>API: GET /places?location=Paris&price<100
     activate API
-    Note right of API: Client FetchPlace request
+    Note right of API: Fetch places with filters
 
-    API->>BL: FetchPlace(ClientData)
+    API->>BL: getPlaces(filters)
     activate BL
 
-    BL->>Database(Backend): saveFetchPlace(ClientData)
-    activate Database(Backend)
+    BL->>DB: queryPlaces(filters)
+    activate DB
 
-    Database(Backend)-->>BL: new FetchPlace record
-    deactivate Database(Backend)
+    DB-->>BL: list of places
+    deactivate DB
 
-    BL-->>API: success response
+    BL-->>API: list of places
     deactivate BL
 
-    API-->>Client(Frontend): HTTP Created
+    API-->>Client(Frontend): 200 OK + [places...]
     deactivate API
 ```
