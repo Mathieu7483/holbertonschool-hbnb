@@ -36,28 +36,44 @@ sequenceDiagram
 
 ```mermaid
 sequenceDiagram
-    participant Owner(Frontend)
+    participant Owner as Owner (Frontend)
     participant API as HBnB API
     participant BL as Business Logic Layer
-    participant Database(Backend)
+    participant Database as Database (Backend)
 
-    Owner(Frontend)->>API: POST /Owner/place/register
+    Owner->>API: POST /owner/place/register
     activate API
     Note right of API: Owner place registration request
 
-    API->>BL: registerPlace(OwnerData)
-    activate BL
+    alt Invalid request (Owner -> API)
+        Note right of API: Input validation (Frontend)
+        API-->>Owner: HTTP 400 Bad Request
+    else Valid request
+        API->>BL: registerPlace(OwnerData)
+        activate BL
 
-    BL->>Database(Backend): savePlace(OwnerData)
-    activate Database(Backend)
+        alt Validation or business logic error (API -> BL)
+            Note right of BL: Data validation (e.g., missing data)
+            BL-->>API: Error: Invalid Data
+            API-->>Owner: HTTP 422 Unprocessable Entity
+        else Valid data
+            BL->>Database: savePlace(OwnerData)
+            activate Database
 
-    Database(Backend)-->>BL: new place record
-    deactivate Database(Backend)
-
-    BL-->>API: success response
-    deactivate BL
-
-    API-->>Owner(Frontend): HTTP Created
+            alt Database error (BL -> Database)
+                Note right of Database: Insert failure (e.g., constraint violated)
+                Database-->>BL: Error: DB Constraint Violation
+                BL-->>API: Error: Database Issue
+                API-->>Owner: HTTP 500 Internal Server Error
+            else Successful save
+                Database-->>BL: new place record
+                BL-->>API: success response
+                API-->>Owner: HTTP 201 Created
+            end
+            deactivate Database
+        end
+        deactivate BL
+    end
     deactivate API
 ```
 
