@@ -126,27 +126,48 @@ sequenceDiagram
 ## A user requests a list of places based on certain criteria.
 ```mermaid
 sequenceDiagram
-    participant Client(Frontend)
+    participant Client as Client (Frontend)
     participant API as HBnB API
     participant BL as Business Logic Layer
-    participant DB as Database
+    participant Database as Database (Backend)
 
-    Client(Frontend)->>API: GET /places?location=Paris&price<100
+    Client->>API: GET /places?location=Paris&price<100
     activate API
     Note right of API: Fetch places with filters
 
-    API->>BL: getPlaces(filters)
-    activate BL
+    alt Invalid request (Client -> API)
+        Note right of API: Query validation (e.g., invalid filter format)
+        API-->>Client: HTTP 400 Bad Request
+    else Valid request
+        API->>BL: getPlaces(filters)
+        activate BL
 
-    BL->>DB: queryPlaces(filters)
-    activate DB
+        alt Validation or business logic error (API -> BL)
+            Note right of BL: Filter validation (e.g., unsupported parameters)
+            BL-->>API: Error: Invalid Filters
+            API-->>Client: HTTP 422 Unprocessable Entity
+        else Valid filters
+            BL->>Database: queryPlaces(filters)
+            activate Database
 
-    DB-->>BL: list of places
-    deactivate DB
-
-    BL-->>API: list of places
-    deactivate BL
-
-    API-->>Client(Frontend): 200 OK + [places...]
+            alt Database error (BL -> Database)
+                Note right of Database: Query failure (e.g., connection timeout, syntax error)
+                Database-->>BL: Error: DB Query Failed
+                BL-->>API: Error: Database Issue
+                API-->>Client: HTTP 500 Internal Server Error
+            else Successful query
+                Database-->>BL: list of places
+                BL-->>API: list of places
+                alt No results found
+                    Note right of API: Empty result set
+                    API-->>Client: HTTP 200 OK + []
+                else Results found
+                    API-->>Client: HTTP 200 OK + [places...]
+                end
+            end
+            deactivate Database
+        end
+        deactivate BL
+    end
     deactivate API
 ```
