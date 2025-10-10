@@ -6,28 +6,50 @@
 
 ```mermaid
 sequenceDiagram
-    participant Client(Frontend)
+    participant Client as Frontend
     participant API as HBnB API
     participant BL as Business Logic Layer
-    participant Database(Backend)
+    participant DB as Database (Backend)
 
-    Client(Frontend)->>API: POST /users/register
+    Client->>API: POST /users/register
     activate API
     Note right of API: User registration request
 
-    API->>BL: registerUser(userData)
-    activate BL
+    alt Invalid form data (frontend validation failed)
+        Client-->>Client: Show "Invalid input" message"
+    else Valid data
+        API->>BL: registerUser(userData)
+        activate BL
 
-    BL->>Database(Backend): saveUser(userData)
-    activate Database(Backend)
-;
-    Database(Backend)-->>BL: new user record
-    deactivate Database(Backend)
+        alt API validation error
+            BL-->>API: Validation failed
+            API-->>Client: HTTP 400 Bad Request
+            Note left of Client: Display validation error
+        else Valid request
+            BL->>DB: saveUser(userData)
+            activate DB
 
-    BL-->>API: success response
+            alt Database unreachable
+                DB-->>BL: error "Connection timeout"
+                Note right of BL: Database unreachable
+                BL-->>API: HTTP 500 Internal Server Error
+                API-->>Client: Show "Service unavailable"
+            else Duplicate user
+                DB-->>BL: error "Duplicate entry"
+                Note right of BL: User already exists
+                BL-->>API: HTTP 422 Conflict
+                API-->>Client: Show "User already exists"
+            else Success
+                DB-->>BL: new user record
+                Note right of BL: User successfully created
+                BL-->>API: success response
+                API-->>Client: HTTP 201 Created
+            end
+            deactivate DB
+        end
+    end
+
     deactivate BL
-
-    API-->>Client(Frontend): HTTP Created
     deactivate API
 ```
 
