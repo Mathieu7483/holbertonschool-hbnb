@@ -81,28 +81,44 @@ sequenceDiagram
 ## A user submits a review for a place.
 ```mermaid
 sequenceDiagram
-    participant Client(Frontend)
+    participant Client as Client (Frontend)
     participant API as HBnB API
     participant BL as Business Logic Layer
-    participant Database(Backend)
+    participant Database as Database (Backend)
 
-    Client(Frontend)->>API: POST /Client/place/review
+    Client->>API: POST /client/place/review
     activate API
     Note right of API: Client place review request
 
-    API->>BL: reviewPlace(ClientData)
-    activate BL
+    alt Invalid request (Client -> API)
+        Note right of API: Input validation (Frontend)
+        API-->>Client: HTTP 400 Bad Request
+    else Valid request
+        API->>BL: reviewPlace(ClientData)
+        activate BL
 
-    BL->>Database(Backend): saveReview(ClientData)
-    activate Database(Backend)
+        alt Validation or business logic error (API -> BL)
+            Note right of BL: Data validation (e.g., missing rating, invalid place ID)
+            BL-->>API: Error: Invalid Data
+            API-->>Client: HTTP 422 Unprocessable Entity
+        else Valid data
+            BL->>Database: saveReview(ClientData)
+            activate Database
 
-    Database(Backend)-->>BL: new review record
-    deactivate Database(Backend)
-
-    BL-->>API: success response
-    deactivate BL
-
-    API-->>Client(Frontend): HTTP Created
+            alt Database error (BL -> Database)
+                Note right of Database: Insert failure (e.g., duplicate review, foreign key violation)
+                Database-->>BL: Error: DB Constraint Violation
+                BL-->>API: Error: Database Issue
+                API-->>Client: HTTP 500 Internal Server Error
+            else Successful save
+                Database-->>BL: new review record
+                BL-->>API: success response
+                API-->>Client: HTTP 201 Created
+            end
+            deactivate Database
+        end
+        deactivate BL
+    end
     deactivate API
 ```
 
