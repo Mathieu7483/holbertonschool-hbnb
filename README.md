@@ -10,13 +10,13 @@ This project, HBnB Evolution, is the initial phase of developing a simplified Ai
 # 📂 Exercise Content
 This directory contains the UML diagrams and explanatory notes that form the technical documentation for the project.
 
-[0. High-Level Package Diagram:]() A high-level package diagram illustrating the application's three-layer architecture and the communication between them via the Facade Pattern. This diagram provides an overview of the code's organization.
+[0. High-Level Package Diagram:](https://github.com/Mathieu7483/holbertonschool-hbnb/blob/main/part1/high%20package%20level%20diagram.md) A high-level package diagram illustrating the application's three-layer architecture and the communication between them via the Facade Pattern. This diagram provides an overview of the code's organization.
 
-[1. Detailed Class Diagram for Business Logic Layer:]() A detailed class diagram for the Business Logic layer. It models the core entities of the application (User, Place, Review, Amenity) with their attributes, methods, and relationships. This diagram is crucial for designing the data models.
+[1. Detailed Class Diagram for Business Logic Layer:](https://github.com/Mathieu7483/holbertonschool-hbnb/blob/main/part1/detailed%20classes%20diagram.md) A detailed class diagram for the Business Logic layer. It models the core entities of the application (User, Place, Review, Amenity) with their attributes, methods, and relationships. This diagram is crucial for designing the data models.
 
-[2. Sequence Diagrams for API Calls:]() A series of sequence diagrams that illustrate the flow of information and interactions between the different layers for specific use cases, such as user registration, place creation, review submission, and fetching a list of places.
+[2. Sequence Diagrams for API Calls:](https://github.com/Mathieu7483/holbertonschool-hbnb/blob/main/part1/Sequence%20Diagrams%20for%20API%20Calls.md) A series of sequence diagrams that illustrate the flow of information and interactions between the different layers for specific use cases, such as user registration, place creation, review submission, and fetching a list of places.
 
-[3. Documentation Compilation:]() The compilation of all diagrams and their explanatory notes into a single, cohesive document. This final document serves as a complete reference for the implementation phase, ensuring the entire development team works from the same architectural vision.
+[3. Documentation Compilation:](https://github.com/Mathieu7483/holbertonschool-hbnb/blob/main/part1/HBnB_Description_Notes.md) The compilation of all diagrams and their explanatory notes into a single, cohesive document. This final document serves as a complete reference for the implementation phase, ensuring the entire development team works from the same architectural vision.
 
 🛠️ Prerequisites
 Diagramming Software: Proficiency with a tool like Mermaid.js to create and manage UML diagrams.
