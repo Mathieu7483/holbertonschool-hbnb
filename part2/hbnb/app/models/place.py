@@ -1,4 +1,6 @@
 from hbnb.app.models.basemodel import BaseModel
+from hbnb.app.models.user import User
+from hbnb.app.models.amenity import Amenity
 
 
 class Place(BaseModel):
