@@ -1,7 +1,5 @@
 from app.models.basemodel import BaseModel
 from app.models.user import User
-from app.models.amenity import Amenity
-from app.models.review import Review
 
 
 class Place(BaseModel):
@@ -18,6 +16,7 @@ class Place(BaseModel):
 
     def add_review(self, review):
         """Add a review to the place."""
+        from app.models.review import Review
         if not isinstance(review, Review):
             raise TypeError("review must be an instance of the Review class.")
         if review not in self.reviews:
@@ -25,6 +24,7 @@ class Place(BaseModel):
 
     def add_amenity(self, amenity):
         """Add an amenity to the place."""
+        from app.models.amenity import Amenity
         if not isinstance(amenity, Amenity):
             raise TypeError("amenity must be an instance of the Amenity class.")
         if amenity not in self.amenities:
