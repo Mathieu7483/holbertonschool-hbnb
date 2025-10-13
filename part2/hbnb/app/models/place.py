@@ -43,7 +43,7 @@ class Place(BaseModel):
         if len(self.title) > 100:
             raise ValueError("title cannot be longer than 100 characters")
         if self.price < 0:
-            raise ValueError("price must be non-negative")
+            raise ValueError("price must positive")
         if not (-90 <= self.latitude <= 90):
             raise ValueError("latitude must be between -90 and 90")
         if not (-180 <= self.longitude <= 180):
