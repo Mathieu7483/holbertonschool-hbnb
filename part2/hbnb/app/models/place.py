@@ -1,6 +1,7 @@
 from hbnb.app.models.basemodel import BaseModel
 from hbnb.app.models.user import User
 from hbnb.app.models.amenity import Amenity
+from hbnb.app.models.review import Review
 
 
 class Place(BaseModel):
@@ -17,11 +18,17 @@ class Place(BaseModel):
 
     def add_review(self, review):
         """Add a review to the place."""
-        self.reviews.append(review)
+        if not isinstance(review, Review):
+            raise TypeError("review must be an instance of the Review class.")
+        if review not in self.reviews:
+            self.reviews.append(review)
 
     def add_amenity(self, amenity):
         """Add an amenity to the place."""
-        self.amenities.append(amenity)
+        if not isinstance(amenity, Amenity):
+            raise TypeError("amenity must be an instance of the Amenity class.")
+        if amenity not in self.amenities:
+            self.amenities.append(amenity)
 
     @property
     def validate(self):
@@ -43,7 +50,7 @@ class Place(BaseModel):
         if len(self.title) > 100:
             raise ValueError("title cannot be longer than 100 characters")
         if self.price < 0:
-            raise ValueError("price must positive")
+            raise ValueError("price must be positive")
         if not (-90 <= self.latitude <= 90):
             raise ValueError("latitude must be between -90 and 90")
         if not (-180 <= self.longitude <= 180):
