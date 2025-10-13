@@ -13,3 +13,22 @@ class Amenity(BaseModel):
     def add_amenity(self, amenity):
         """Add an amenity to a place"""
         self.amenities.append(amenity)
+
+    @property
+    def validate(self):
+        """Validate the attributes of the Amenity instance."""
+        if not isinstance(self.id, str):
+            raise TypeError("id must be a string")
+        if not isinstance(self.name, str):
+            raise TypeError("name must be a string")
+        if not isinstance(self.created_at, str):
+            raise TypeError("created_at must be a string")
+        if not isinstance(self.updated_at, str):
+            raise TypeError("updated_at must be a string")
+        if len(self.id) == 0:
+            raise ValueError("id cannot be empty")
+        if len(self.name) == 0:
+            raise ValueError("name cannot be empty")
+        if len(self.name) > 50:
+            raise ValueError("name cannot be longer than 50 characters")
+        return True
