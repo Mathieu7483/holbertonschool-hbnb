@@ -22,3 +22,30 @@ class Place(BaseModel):
     def add_amenity(self, amenity):
         """Add an amenity to the place."""
         self.amenities.append(amenity)
+
+    @property
+    def validate(self):
+        """Validate the attributes of the Place instance."""
+        if not isinstance(self.title, str):
+            raise TypeError("title must be a string")
+        if not isinstance(self.description, str):
+            raise TypeError("description must be a string")
+        if not isinstance(self.price, (int, float)):
+            raise TypeError("price must be a number")
+        if not isinstance(self.latitude, (int, float)):
+            raise TypeError("latitude must be a number")
+        if not isinstance(self.longitude, (int, float)):
+            raise TypeError("longitude must be a number")
+        if not isinstance(self.owner, User):
+            raise TypeError("owner must be a User instance")
+        if len(self.title) == 0:
+            raise ValueError("title cannot be empty")
+        if len(self.title) > 100:
+            raise ValueError("title cannot be longer than 100 characters")
+        if self.price < 0:
+            raise ValueError("price must be non-negative")
+        if not (-90 <= self.latitude <= 90):
+            raise ValueError("latitude must be between -90 and 90")
+        if not (-180 <= self.longitude <= 180):
+            raise ValueError("longitude must be between -180 and 180")
+        return True
