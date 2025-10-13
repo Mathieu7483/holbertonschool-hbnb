@@ -40,6 +40,14 @@ class User(BaseModel):
             raise ValueError("first_name cannot be empty")
         if len(self.last_name) == 0:
             raise ValueError("last_name cannot be empty")
+        if len(self.id) == 0:
+            raise ValueError("id cannot be empty")
+        if len(self.first_name) > 50:
+            raise ValueError("first_name cannot be longer than 50 characters")
+        if len(self.last_name) > 50:
+            raise ValueError("last_name cannot be longer than 50 characters")
+        if len(self.email) > 100:
+            raise ValueError("email cannot be longer than 100 characters")
         return True
     def __str__(self):
         return f"User(id={self.id}, first_name={self.first_name}, last_name={self.last_name})"
