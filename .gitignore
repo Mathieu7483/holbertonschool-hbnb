@@ -27,3 +27,4 @@ main*.py
 *.xml
 # Ignorer le dossier de l'environnement virtuel Python
 venv/
+
