@@ -1,5 +1,6 @@
 from hbnb.app.models.basemodel import BaseModel
 
+
 class Place(BaseModel):
     def __init__(self, title, description, price, latitude, longitude, owner):
         super().__init__()

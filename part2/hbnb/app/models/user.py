@@ -1,4 +1,6 @@
 from hbnb.app.models.basemodel import BaseModel
+import uuid
+from datetime import datetime
 
 class User(BaseModel):
     def __init__(self, id : str, first_name : str, last_name : str, email : str, is_admin :bool, created_at, updtaed_at):
