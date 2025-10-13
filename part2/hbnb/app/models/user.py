@@ -1,8 +1,8 @@
-from hbnb.app.models.basemodel import BaseModel
+from app.models.basemodel import BaseModel
 
 
 class User(BaseModel):
-    def __init__(self, id : str, first_name : str, last_name : str, email : str, is_admin :bool, created_at, updtaed_at):
+    def __init__(self, id : str, first_name : str, last_name : str, email : str, is_admin :bool, created_at, updated_at):
         super().__init__()
         self.id = id
         self.first_name = first_name
@@ -10,7 +10,7 @@ class User(BaseModel):
         self.email = email
         self.is_admin = is_admin
         self.created_at = created_at
-        self.updated_at = updtaed_at
+        self.updated_at = updated_at
         self.users = [] #list to store related users
 
     def add_user(self, user):
