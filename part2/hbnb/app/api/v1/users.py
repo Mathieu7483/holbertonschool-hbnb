@@ -1,17 +1,17 @@
 from flask_restx import Namespace, Resource, fields
 from app.services import facade
 
-api = Namespace('users', description='User operations')
+users_ns = Namespace('users', description='User operations')
 
 # Define the user model for input validation and documentation
-user_model = api.model('User', {
+user_model = users_ns.model('User', {
     'first_name': fields.String(required=True, description='First name of the user'),
     'last_name': fields.String(required=True, description='Last name of the user'),
     'email': fields.String(required=True, description='Email of the user')
 })
 
 # Model for user response (without password and internal fields)
-user_response_model = api.model('UserResponse', {
+user_response_model = users_ns.model('UserResponse', {
     'id': fields.String(description='User ID'),
     'first_name': fields.String(description='First name of the user'),
     'last_name': fields.String(description='Last name of the user'),
@@ -21,24 +21,24 @@ user_response_model = api.model('UserResponse', {
     'updated_at': fields.String(description='Last update date')
 })
 
-@api.route('/')
+@users_ns.route('/')
 class UserList(Resource):
-    @api.doc('list_users')
-    @api.marshal_list_with(user_response_model)
-    @api.response(200, 'List of users retrieved successfully')
+    @users_ns.doc('list_users')
+    @users_ns.marshal_list_with(user_response_model)
+    @users_ns.response(200, 'List of users retrieved successfully')
     def get(self):
         """Retrieve the list of all users"""
         users = facade.get_all_users()
         return users, 200
 
-    @api.doc('create_user')
-    @api.expect(user_model, validate=True)
-    @api.response(201, 'User successfully created')
-    @api.response(400, 'Email already registered')
-    @api.response(400, 'Invalid input data')
+    @users_ns.doc('create_user')
+    @users_ns.expect(user_model, validate=True)
+    @users_ns.response(201, 'User successfully created')
+    @users_ns.response(400, 'Email already registered')
+    @users_ns.response(400, 'Invalid input data')
     def post(self):
         """Register a new user"""
-        user_data = api.payload
+        user_data = users_ns.payload
 
         # Check if email already exists
         existing_user = facade.get_user_by_email(user_data['email'])
@@ -65,11 +65,11 @@ class UserList(Resource):
             traceback.print_exc()
             return {'error': f'Error: {str(e)}'}, 400
 
-@api.route('/<user_id>')
+@users_ns.route('/<user_id>')
 class UserResource(Resource):
-    @api.doc('get_user')
-    @api.response(200, 'User details retrieved successfully')
-    @api.response(404, 'User not found')
+    @users_ns.doc('get_user')
+    @users_ns.response(200, 'User details retrieved successfully')
+    @users_ns.response(404, 'User not found')
     def get(self, user_id):
         """Get user details by ID"""
         user = facade.get_user(user_id)
@@ -86,19 +86,19 @@ class UserResource(Resource):
         }, 200
 
     # ===== METHODE PUT - MISE À JOUR D'UN UTILISATEUR =====
-    @api.doc('update_user')
-    @api.expect(user_model, validate=True)
-    @api.response(200, 'User successfully updated')
-    @api.response(404, 'User not found')
-    @api.response(400, 'Email already registered')
-    @api.response(400, 'Invalid input data')
+    @users_ns.doc('update_user')
+    @users_ns.expect(user_model, validate=True)
+    @users_ns.response(200, 'User successfully updated')
+    @users_ns.response(404, 'User not found')
+    @users_ns.response(400, 'Email already registered')
+    @users_ns.response(400, 'Invalid input data')
     def put(self, user_id):
         """Update user information"""
         user = facade.get_user(user_id)
         if not user:
             return {'error': 'User not found'}, 404
 
-        user_data = api.payload
+        user_data = users_ns.payload
 
         # Check if new email is already in use by another user
         if 'email' in user_data and user_data['email'] != user.email:
