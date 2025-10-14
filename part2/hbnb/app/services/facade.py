@@ -2,6 +2,7 @@ from uuid import uuid4
 from datetime import datetime
 from app.persistence.repository import InMemoryRepository
 from app.models.user import User
+from app.models.amenity import Amenity
 
 class HBnBFacade:
     def __init__(self):
@@ -13,11 +14,9 @@ class HBnBFacade:
     # ===== USER METHODS =====
     def create_user(self, user_data):
         """Create a new user"""
-        # Generate ID and timestamps
         user_id = str(uuid4())
         now = datetime.now().isoformat()
         
-        # Create user with all required parameters
         user = User(
             id=user_id,
             first_name=user_data.get('first_name'),
@@ -28,10 +27,7 @@ class HBnBFacade:
             updated_at=now
         )
         
-        # Validate user
         user.validate
-        
-        # Add to repository
         self.user_repo.add(user)
         return user
 
@@ -57,19 +53,34 @@ class HBnBFacade:
     # ===== AMENITY METHODS =====
     def create_amenity(self, amenity_data):
         """Create a new amenity"""
-        pass
+        amenity_id = str(uuid4())
+        now = datetime.now().isoformat()
+        
+        amenity = Amenity(
+            id=amenity_id,
+            name=amenity_data.get('name'),
+            created_at=now,
+            updated_at=now
+        )
+        
+        amenity.validate
+        self.amenity_repo.add(amenity)
+        return amenity
 
     def get_amenity(self, amenity_id):
         """Retrieve an amenity by ID"""
-        pass
+        return self.amenity_repo.get(amenity_id)
 
     def get_all_amenities(self):
         """Retrieve all amenities"""
-        pass
+        return self.amenity_repo.get_all()
 
     def update_amenity(self, amenity_id, amenity_data):
         """Update an amenity"""
-        pass
+        amenity = self.amenity_repo.get(amenity_id)
+        if amenity:
+            amenity.update(amenity_data)
+        return amenity
 
     # ===== PLACE METHODS =====
     def create_place(self, place_data):
