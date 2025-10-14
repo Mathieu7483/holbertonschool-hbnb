@@ -3,8 +3,9 @@ from app.models.user import User
 
 
 class Place(BaseModel):
-    def __init__(self, title, description, price, latitude, longitude, owner):
+    def __init__(self, id, title, description, price, latitude, longitude, owner):
         super().__init__()
+        self.id = id
         self.title = title
         self.description = description
         self.price = price
