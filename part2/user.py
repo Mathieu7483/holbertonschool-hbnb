@@ -7,6 +7,8 @@ from base_model import Base_Model
 class user(Base_Model):
     def __init__(self, first_name, last_name, email, is_admin=False):
         supper().__init__()
+	assert len(first_name) <= 50
+	assert len(last_name) <= 50
         assert '@' in email and '.' in email
         self.first_name = first_name
         self.last_name = last_name
