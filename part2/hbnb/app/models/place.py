@@ -3,7 +3,7 @@ from app.models.user import User
 
 
 class Place(BaseModel):
-    def __init__(self, id, title, description, price, latitude, longitude, owner):
+    def __init__(self, id, title, description, price, latitude, longitude, owner, created_at, updated_at):
         super().__init__()
         self.id = id
         self.title = title
@@ -12,6 +12,8 @@ class Place(BaseModel):
         self.latitude = latitude
         self.longitude = longitude
         self.owner = owner
+        self.created_at = created_at
+        self.updated_at = updated_at
         self.reviews = []  # List to store related reviews
         self.amenities = []  # List to store related amenities
 
@@ -34,6 +36,8 @@ class Place(BaseModel):
     @property
     def validate(self):
         """Validate the attributes of the Place instance."""
+        if not isinstance(self.id, str):
+            raise TypeError("id must be a string")
         if not isinstance(self.title, str):
             raise TypeError("title must be a string")
         if not isinstance(self.description, str):
@@ -46,6 +50,10 @@ class Place(BaseModel):
             raise TypeError("longitude must be a number")
         if not isinstance(self.owner, User):
             raise TypeError("owner must be a User instance")
+        if not isinstance(self.created_at, str):
+            raise TypeError("created_at must be a string")
+        if not isinstance(self.updated_at, str):
+            raise TypeError("updated_at must be a string")
         if len(self.title) == 0:
             raise ValueError("title cannot be empty")
         if len(self.title) > 100:
@@ -57,3 +65,30 @@ class Place(BaseModel):
         if not (-180 <= self.longitude <= 180):
             raise ValueError("longitude must be between -180 and 180")
         return True
+
+    def __str__(self):
+        return f"Place(id={self.id}, title={self.title}, owner={self.owner})"
+
+    def to_dict(self):
+        """Return a dictionary representation of the Place instance."""
+        return {
+            "id": self.id,
+            "title": self.title,
+            "description": self.description,
+            "price": self.price,
+            "latitude": self.latitude,
+            "longitude": self.longitude,
+            "owner": self.owner.to_dict() if self.owner else None,
+            "amenities": [amenity.to_dict() for amenity in self.amenities],
+            "created_at": self.created_at,
+            "updated_at": self.updated_at
+        }
+
+    def update(self, data):
+        """Update the attributes of the Place instance based on the provided dictionary."""
+        for key, value in data.items():
+            if hasattr(self, key) and key not in ['id', 'created_at', 'owner']:
+                setattr(self, key, value)
+        self.validate  # Validate the updated attributes
+        self.save()  # Update the updated_at timestamp
+        return self
