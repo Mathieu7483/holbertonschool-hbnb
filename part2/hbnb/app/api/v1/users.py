@@ -109,6 +109,7 @@ class UserResource(Resource):
         try:
             # Update user using the model's update method
             updated_user = user.update(user_data)
+            print(updated_user)
             return {
                 'id': updated_user.id,
                 'first_name': updated_user.first_name,
@@ -118,5 +119,7 @@ class UserResource(Resource):
                 'created_at': updated_user.created_at,
                 'updated_at': updated_user.updated_at
             }, 200
+
         except (TypeError, ValueError) as e:
             return {'error': str(e)}, 400
+        
