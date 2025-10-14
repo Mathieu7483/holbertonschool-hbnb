@@ -8,11 +8,6 @@ class Amenity(BaseModel):
         self.name = name
         self.created_at = created_at
         self.updated_at = updated_at
-        self.amenities = [] #list to store related amenities
-    
-    def add_amenity(self, amenity):
-        """Add an amenity to a place"""
-        self.amenities.append(amenity)
 
     @property
     def validate(self):
@@ -32,3 +27,22 @@ class Amenity(BaseModel):
         if len(self.name) > 50:
             raise ValueError("name cannot be longer than 50 characters")
         return True
+
+    def __str__(self):
+        return f"Amenity(id={self.id}, name={self.name})"
+
+    def to_dict(self):
+        """Return a dictionary representation of the Amenity instance."""
+        return {
+            "id": self.id,
+            "name": self.name,
+        }
+
+    def update(self, data):
+        """Update the attributes of the Amenity instance based on the provided dictionary."""
+        for key, value in data.items():
+            if hasattr(self, key):
+                setattr(self, key, value)
+        self.validate  # Validate the updated attributes
+        self.save()  # Update the updated_at timestamp
+        return self
