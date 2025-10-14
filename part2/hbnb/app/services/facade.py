@@ -3,6 +3,8 @@ from datetime import datetime
 from app.persistence.repository import InMemoryRepository
 from app.models.user import User
 from app.models.amenity import Amenity
+from app.models.place import Place
+from app.models.review import Review
 
 class HBnBFacade:
     def __init__(self):
@@ -85,41 +87,68 @@ class HBnBFacade:
     # ===== PLACE METHODS =====
     def create_place(self, place_data):
         """Create a new place"""
-        pass
+        place_id = str(uuid4())
+        now = datetime.now().isoformat()
+        
+        place = Place(
+            id=place_id,
+            name=place_data.get('name'),
+            created_at=now,
+            updated_at=now
+        )
+        
+        place.validate
+        self.place_repo.add(place)
+        return place
 
     def get_place(self, place_id):
         """Retrieve a place by ID"""
-        pass
+        return self.place_repo.get(place_id)
 
     def get_all_places(self):
         """Retrieve all places"""
-        pass
+        return self.place_repo.get_all()
 
     def update_place(self, place_id, place_data):
         """Update a place"""
-        pass
+        place = self.place_repo.get(place_id)
+        if place:
+            place.update(place_data)
+        return place
 
     # ===== REVIEW METHODS =====
     def create_review(self, review_data):
         """Create a new review"""
-        pass
+        review_id = str(uuid4())
+        now = datetime.now().isoformat()
+        
+        review = Review(
+            id=review_id,
+            name=review_data.get('name'),
+            created_at=now,
+            updated_at=now
+        )
+        
+        review.validate
+        self.review_repo.add(review)
+        return review
 
     def get_review(self, review_id):
         """Retrieve a review by ID"""
-        pass
+        return self.review_repo.get(review_id)
 
     def get_all_reviews(self):
         """Retrieve all reviews"""
-        pass
+        return self.review_repo.get_all()
 
     def get_reviews_by_place(self, place_id):
         """Retrieve all reviews for a specific place"""
-        pass
+        return self.review_repo.get_by_attribute('place', place_id)
 
     def update_review(self, review_id, review_data):
         """Update a review"""
-        pass
-
-    def delete_review(self, review_id):
-        """Delete a review"""
-        pass
+        review = self.review_repo.get(review_id)
+        if review:
+            review.update(review_data)
+        return review
+    
