@@ -1,3 +1,5 @@
+from uuid import uuid4
+from datetime import datetime
 from app.persistence.repository import InMemoryRepository
 from app.models.user import User
 
@@ -11,7 +13,25 @@ class HBnBFacade:
     # ===== USER METHODS =====
     def create_user(self, user_data):
         """Create a new user"""
-        user = User(**user_data)
+        # Generate ID and timestamps
+        user_id = str(uuid4())
+        now = datetime.now().isoformat()
+        
+        # Create user with all required parameters
+        user = User(
+            id=user_id,
+            first_name=user_data.get('first_name'),
+            last_name=user_data.get('last_name'),
+            email=user_data.get('email'),
+            is_admin=user_data.get('is_admin', False),
+            created_at=now,
+            updated_at=now
+        )
+        
+        # Validate user
+        user.validate
+        
+        # Add to repository
         self.user_repo.add(user)
         return user
 
@@ -32,7 +52,6 @@ class HBnBFacade:
         user = self.user_repo.get(user_id)
         if user:
             user.update(user_data)
-            self.user_repo.update(user_id, user)
         return user
 
     # ===== AMENITY METHODS =====
