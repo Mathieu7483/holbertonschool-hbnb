@@ -30,10 +30,6 @@ class User(BaseModel):
             raise TypeError("email must be a string")
         if not isinstance(self.is_admin, bool):
             raise TypeError("is_admin must be a boolean")
-        if not isinstance(self.created_at, str):
-            raise TypeError("created_at must be a string")
-        if not isinstance(self.updated_at, str):
-            raise TypeError("updated_at must be a string")
         if "@" not in self.email or "." not in self.email:
             raise ValueError("email must be a valid email address")
         if len(self.first_name) == 0:
