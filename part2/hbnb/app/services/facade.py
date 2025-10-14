@@ -90,31 +90,95 @@ class HBnBFacade:
         place_id = str(uuid4())
         now = datetime.now().isoformat()
         
+        # Get the owner by ID
+        owner = self.get_user(place_data.get('owner_id'))
+        if not owner:
+            raise LookupError(f"Owner with ID '{place_data.get('owner_id')}' not found")
+        
         place = Place(
             id=place_id,
-            name=place_data.get('name'),
+            title=place_data.get('title'),
+            description=place_data.get('description'),
+            price=place_data.get('price'),
+            latitude=place_data.get('latitude'),
+            longitude=place_data.get('longitude'),
+            owner=owner,
             created_at=now,
             updated_at=now
         )
         
         place.validate
         self.place_repo.add(place)
-        return place
+        
+        # Retourner un dictionnaire
+        return {
+            'id': place.id,
+            'title': place.title,
+            'description': place.description,
+            'price': place.price,
+            'latitude': place.latitude,
+            'longitude': place.longitude,
+            'owner': place.owner.to_dict() if place.owner else None,
+            'amenities': [amenity.to_dict() for amenity in place.amenities],
+            'created_at': place.created_at,
+            'updated_at': place.updated_at
+        }
 
     def get_place(self, place_id):
         """Retrieve a place by ID"""
-        return self.place_repo.get(place_id)
+        place = self.place_repo.get(place_id)
+        if place:
+            return {
+                'id': place.id,
+                'title': place.title,
+                'description': place.description,
+                'price': place.price,
+                'latitude': place.latitude,
+                'longitude': place.longitude,
+                'owner': place.owner.to_dict() if place.owner else None,
+                'amenities': [amenity.to_dict() for amenity in place.amenities],
+                'created_at': place.created_at,
+                'updated_at': place.updated_at
+            }
+        return None
 
     def get_all_places(self):
         """Retrieve all places"""
-        return self.place_repo.get_all()
+        places = self.place_repo.get_all()
+        return [
+            {
+                'id': place.id,
+                'title': place.title,
+                'description': place.description,
+                'price': place.price,
+                'latitude': place.latitude,
+                'longitude': place.longitude,
+                'owner': place.owner.to_dict() if place.owner else None,
+                'amenities': [amenity.to_dict() for amenity in place.amenities],
+                'created_at': place.created_at,
+                'updated_at': place.updated_at
+            }
+            for place in places
+        ]
 
     def update_place(self, place_id, place_data):
         """Update a place"""
         place = self.place_repo.get(place_id)
         if place:
             place.update(place_data)
-        return place
+            return {
+                'id': place.id,
+                'title': place.title,
+                'description': place.description,
+                'price': place.price,
+                'latitude': place.latitude,
+                'longitude': place.longitude,
+                'owner': place.owner.to_dict() if place.owner else None,
+                'amenities': [amenity.to_dict() for amenity in place.amenities],
+                'created_at': place.created_at,
+                'updated_at': place.updated_at
+            }
+        return None
 
     # ===== REVIEW METHODS =====
     def create_review(self, review_data):
@@ -151,4 +215,3 @@ class HBnBFacade:
         if review:
             review.update(review_data)
         return review
-    
