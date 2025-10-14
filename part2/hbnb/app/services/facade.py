@@ -110,7 +110,7 @@ class HBnBFacade:
         place.validate
         self.place_repo.add(place)
         
-        # Retourner un dictionnaire
+        # Return enriched dictionary representation
         return {
             'id': place.id,
             'title': place.title,
