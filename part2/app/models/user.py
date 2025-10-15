@@ -17,9 +17,12 @@ class User(BaseModel):
     def to_dict(self):
         base = super().to_dict()
         base.update({
+            "id": self.id,
             "first_name": self.first_name,
             "last_name": self.last_name,
             "email": self.email,
-            "is_admin": self.is_admin
+            "is_admin": self.is_admin,
+            "created_at": self.created_at.isoformat(),
+            "updated_at": self.updated_at.isoformat()
         })
         return base
