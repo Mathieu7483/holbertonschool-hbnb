@@ -1,1 +1,2 @@
-# this module contains the repositories of persistance
+# Declares the persistence package, which contains repository implementations for data storage.
+
