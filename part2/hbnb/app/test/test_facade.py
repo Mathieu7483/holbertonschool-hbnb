@@ -9,6 +9,7 @@ from datetime import datetime
 
 class BaseFacadeTest(unittest.TestCase):
 
+    # On mocke le dépôt de base pour tous les tests
     @patch('app.services.facade.InMemoryRepository') 
     def setUp(self, MockRepository):
         self.facade = HBnBFacade()
@@ -28,6 +29,7 @@ class TestUserFacade(BaseFacadeTest):
             'email': 'alice@example.com'
         }
         
+        # Le Facade va créer l'objet avec des valeurs par défaut pour l'ID et les dates
         new_user = self.facade.create_user(user_data)
 
         self.assertIsInstance(new_user, User)
@@ -48,28 +50,49 @@ class TestPlaceFacade(BaseFacadeTest):
     
     @patch('app.services.facade.uuid4', return_value='new-place-id-456')
     def test_create_place_success(self, mock_uuid):
-        # Utilisation de MagicMock pour l'owner (comme dans la version précédente)
-        mock_owner = MagicMock(spec=User, id='owner-id-123')
+        now_str = datetime.now().isoformat()
+        owner_id = 'owner-id-123'
+        
+        # 1. Créer une VRAIE instance User pour satisfaire Place.validate
+        owner_instance = User(
+            id=owner_id, first_name='Test', last_name='Owner', 
+            email='test@owner.com', is_admin=False, created_at=now_str, updated_at=now_str
+        )
+        
+        # 2. Configurer le Mock du dépôt d'utilisateur pour retourner cette instance
+        # lorsque le Facade appelle self.get_user(owner_id) via le dépôt.
+        self.user_repo_mock.get.return_value = owner_instance
         
         place_data = {
             'title': 'Chalet en montagne',
             'description': 'Superbe vue',
             'price': 200,
-            'owner': mock_owner,
+            'owner_id': owner_id, # Le Facade récupère l'owner via cet ID
             'latitude': 45.0,
             'longitude': 6.0
         }
         
-        new_place = self.facade.create_place(place_data)
-
-        self.assertIsInstance(new_place, Place)
-        self.assertEqual(new_place.id, 'new-place-id-456')
-        self.place_repo_mock.add.assert_called_once_with(new_place)
+        new_place_dict = self.facade.create_place(place_data) # Retourne un dict
+        
+        # Vérifications
+        self.user_repo_mock.get.assert_called_once_with(owner_id)
+        self.place_repo_mock.add.assert_called_once() # Vérifie que Place a été ajouté
+        self.assertEqual(new_place_dict['id'], 'new-place-id-456')
+        self.assertIsInstance(new_place_dict, dict)
+        self.assertEqual(new_place_dict['owner']['id'], owner_id) # Vérifie l'owner dans le dict retourné
 
     def test_get_place(self):
+        # Création d'un mock d'Owner
         mock_owner_with_dict = MagicMock(spec=User, id='owner-id-mocked')
-        mock_owner_with_dict.to_dict.return_value = {'id': 'owner-id-mocked', 'email': 'mock@test.com'}
+        # to_dict doit inclure les clés de BaseModel (id, created_at, updated_at) pour la cohérence
+        mock_owner_with_dict.to_dict.return_value = {
+            'id': 'owner-id-mocked', 
+            'email': 'mock@test.com',
+            'created_at': 'mock_date',
+            'updated_at': 'mock_date'
+        }
 
+        # CORRECTION pour l'AttributeError: Ajout de 'amenities'
         mock_place = MagicMock(
             spec=Place, 
             id='place-id-a-mocked', 
@@ -78,14 +101,18 @@ class TestPlaceFacade(BaseFacadeTest):
             price=100,
             latitude=45.0,
             longitude=6.0,
-            owner=mock_owner_with_dict
+            owner=mock_owner_with_dict,
+            amenities=[], # <-- AJOUTÉ/CONFIRMÉ
+            # to_dict est appelé sur les éléments amenities, nous devons le simuler aussi sur le mock d'Amenity si la liste n'est pas vide
         )
         self.place_repo_mock.get.return_value = mock_place
 
-        place_retrieved = self.facade.get_place('place-id-a')
+        place_retrieved_dict = self.facade.get_place('place-id-a') # Retourne un dict
 
         self.place_repo_mock.get.assert_called_once_with('place-id-a')
-        self.assertEqual(place_retrieved, mock_place)
+        self.assertEqual(place_retrieved_dict['id'], 'place-id-a-mocked')
+        self.assertEqual(place_retrieved_dict['owner']['id'], 'owner-id-mocked')
+        self.assertIsInstance(place_retrieved_dict, dict)
 
 class TestReviewFacade(BaseFacadeTest):
     
@@ -101,7 +128,7 @@ class TestReviewFacade(BaseFacadeTest):
             'user': mock_user
         }
         
-        new_review = self.facade.create_review(review_data) # Problème à corriger dans facade.py
+        new_review = self.facade.create_review(review_data)
 
         self.assertIsInstance(new_review, Review)
         self.assertEqual(new_review.id, 'new-review-id-789')
