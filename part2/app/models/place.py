@@ -33,7 +33,7 @@ class Place(BaseModel):
             "latitude": self.latitude,
             "longitude": self.longitude,
             "created_at": self.created_at.isoformat(),
-            "updated_at": self.updated_at.isoformat()
+            "updated_at": self.updated_at.isoformat(),
             "owner": self.owner.to_dict() if self.owner else None,
             "amenities": [amenity.to_dict() for amenity in self.amenities]
         })
