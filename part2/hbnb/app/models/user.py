@@ -50,9 +50,9 @@ class User(BaseModel):
     def to_dict(self):
         """Return a dictionary representation of the User instance."""
         return {
-            "id": self.id,
             "first_name": self.first_name,
             "last_name": self.last_name,
+            "email": self.email,
         }
     def update(self, data):
         """Update the attributes of the User instance based on the provided dictionary."""
