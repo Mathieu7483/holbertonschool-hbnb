@@ -85,7 +85,7 @@ class UserResource(Resource):
             'updated_at': user.updated_at
         }, 200
 
-    # ===== METHODE PUT - MISE À JOUR D'UN UTILISATEUR =====
+    # ===== METHODE PUT - UPDATED USER METHOD =====
     @users_ns.doc('update_user')
     @users_ns.expect(user_model, validate=True)
     @users_ns.response(200, 'User successfully updated')
