@@ -74,5 +74,3 @@ def test_place_creation_and_relationships():
 
 # Exécution du test
 test_place_creation_and_relationships()
-
-# Note : Assurez-vous d'avoir les imports corrects pour BaseModel, Amenity et Review dans votre environnement.
