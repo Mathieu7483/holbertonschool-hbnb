@@ -24,17 +24,17 @@ class Place(BaseModel):
         self.amenities.append(amenity)
 
     def to_dict(self):
-		base = super().to_dict()
-		base.update({
-			"id": self.id,
-			"title": self.title,
-			"description": self.description,
-			"price": self.price,
-			"latitude": self.latitude,
-			"longitude": self.longitude,
-			"created_at": self.created_at.isoformat(),
+        base = super().to_dict()
+        base.update({
+            "id": self.id,
+            "title": self.title,
+            "description": self.description,
+            "price": self.price,
+            "latitude": self.latitude,
+            "longitude": self.longitude,
+            "created_at": self.created_at.isoformat(),
             "updated_at": self.updated_at.isoformat()
-			"owner": self.owner.to_dict() if self.owner else None,
-        	"amenities": [amenity.to_dict() for amenity in self.amenities]
-		})
-		return base
+            "owner": self.owner.to_dict() if self.owner else None,
+            "amenities": [amenity.to_dict() for amenity in self.amenities]
+        })
+        return base
