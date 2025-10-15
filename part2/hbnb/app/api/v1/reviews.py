@@ -1,62 +1,119 @@
 from flask_restx import Namespace, Resource, fields
-from app.services import facade
+from app import HBnB_FACADE
+facade = HBnB_FACADE
 
 reviews_ns = Namespace('reviews', description='Review operations')
 
-# Define the review model for input validation and documentation
-review_model = reviews_ns.model('Review', {
+# --- NESTED MODELS (For the response) ---
+
+# Model for user data (simplified)
+user_nested_model = reviews_ns.model('ReviewUser', {
+    'id': fields.String(description='User ID'),
+    'first_name': fields.String(description='First name of the owner'),
+    'email': fields.String(description='Email of the owner')
+})
+
+# Model for place data (simplified)
+place_nested_model = reviews_ns.model('ReviewPlace', {
+    'id': fields.String(description='Place ID'),
+    'title': fields.String(description='Title of the place')
+})
+
+# Define the review input model (receives IDs)
+review_input_model = reviews_ns.model('ReviewInput', {
     'text': fields.String(required=True, description='Text of the review'),
     'rating': fields.Integer(required=True, description='Rating of the place (1-5)'),
-    'user_id': fields.String(required=True, description='ID of the user'),
-    'place_id': fields.String(required=True, description='ID of the place')
+    'user_id': fields.String(required=True, description='ID of the user who wrote the review'), 
+    'place_id': fields.String(required=True, description='ID of the place being reviewed')
+})
+
+# Model for the complete response (uses nested objects)
+review_response_model = reviews_ns.model('ReviewResponse', {
+    'id': fields.String(description='Review ID'),
+    'text': fields.String(description='Text of the review'),
+    'rating': fields.Integer(description='Rating of the place (1-5)'),
+    'user': fields.Nested(user_nested_model, description='User details'),
+    'place': fields.Nested(place_nested_model, description='Place details'),
+    'created_at': fields.String(description='Creation date'),
+    'updated_at': fields.String(description='Last update date')
 })
 
 @reviews_ns.route('/')
 class ReviewList(Resource):
-    @reviews_ns.expect(review_model)
+    @reviews_ns.doc('create_review')
+    @reviews_ns.expect(review_input_model, validate=True)
+    @reviews_ns.marshal_with(review_response_model, code=201)
     @reviews_ns.response(201, 'Review successfully created')
     @reviews_ns.response(400, 'Invalid input data')
+    @reviews_ns.response(404, 'User or Place not found')
     def post(self):
         """Register a new review"""
-        # Placeholder for the logic to register a new review
-        pass
+        review_data = reviews_ns.payload
+        
+        # 1. Check for User and Place existence
+        user = facade.get_user(review_data.get('user_id'))
+        place = facade.get_place(review_data.get('place_id'))
 
+        if not user:
+            reviews_ns.abort(404, message=f"User with ID '{review_data.get('user_id')}' not found")
+        if not place:
+            reviews_ns.abort(404, message=f"Place with ID '{review_data.get('place_id')}' not found")
+            
+        # 2. Replace IDs with model objects for Facade consumption
+        review_data['user'] = user
+        review_data['place'] = place
+        
+        try:
+            new_review = facade.create_review(review_data)
+            # Facade returns a Review object. Flask-RESTx will marshal it.
+            return new_review, 201
+        except Exception as e:
+            reviews_ns.abort(400, message=str(e))
+            
+    @reviews_ns.doc('list_reviews')
+    @reviews_ns.marshal_list_with(review_response_model)
     @reviews_ns.response(200, 'List of reviews retrieved successfully')
     def get(self):
         """Retrieve a list of all reviews"""
-        # Placeholder for logic to return a list of all reviews
-        pass
+        # Facade returns a list of Review objects.
+        reviews = facade.get_all_reviews()
+        return reviews, 200
 
 @reviews_ns.route('/<review_id>')
 class ReviewResource(Resource):
+    @reviews_ns.doc('get_review')
+    @reviews_ns.marshal_with(review_response_model)
     @reviews_ns.response(200, 'Review details retrieved successfully')
     @reviews_ns.response(404, 'Review not found')
     def get(self, review_id):
         """Get review details by ID"""
-        # Placeholder for the logic to retrieve a review by ID
-        pass
+        review = facade.get_review(review_id)
+        if not review:
+            reviews_ns.abort(404, message=f"Review with ID '{review_id}' not found")
+        
+        return review, 200
 
-    @reviews_ns.expect(review_model)
-    @reviews_ns.response(200, 'Review updated successfully')
-    @reviews_ns.response(404, 'Review not found')
-    @reviews_ns.response(400, 'Invalid input data')
-    def put(self, review_id):
-        """Update a review's information"""
-        # Placeholder for the logic to update a review by ID
-        pass
-
-    @reviews_ns.response(200, 'Review deleted successfully')
+    @reviews_ns.doc('delete_review')
+    @reviews_ns.response(204, 'Review deleted successfully (No Content)')
     @reviews_ns.response(404, 'Review not found')
     def delete(self, review_id):
-        """Delete a review"""
-        # Placeholder for the logic to delete a review
-        pass
+        """Delete a review (Not implemented yet)"""
+        # Placeholder for delete logic
+        reviews_ns.abort(501, message="Delete method not implemented for reviews.")
 
 @reviews_ns.route('/places/<place_id>/reviews')
 class PlaceReviewList(Resource):
+    @reviews_ns.doc('list_place_reviews')
+    @reviews_ns.marshal_list_with(review_response_model)
     @reviews_ns.response(200, 'List of reviews for the place retrieved successfully')
     @reviews_ns.response(404, 'Place not found')
     def get(self, place_id):
         """Get all reviews for a specific place"""
-        # Placeholder for logic to return a list of reviews for a place
-        pass
+        # 1. Check if the Place exists (optional but recommended for a clean 404)
+        place = facade.get_place(place_id)
+        if not place:
+            reviews_ns.abort(404, message=f"Place with ID '{place_id}' not found")
+        
+        # 2. Retrieve reviews via the Facade
+        reviews = facade.get_reviews_by_place(place_id)
+        return reviews, 200
