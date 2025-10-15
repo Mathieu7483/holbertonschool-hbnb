@@ -68,7 +68,6 @@ class Place(BaseModel):
     def to_dict(self):
         """Return a dictionary representation of the Place instance."""
         return {
-            "id": self.id,
             "title": self.title,
             "description": self.description,
             "price": self.price,
@@ -76,8 +75,6 @@ class Place(BaseModel):
             "longitude": self.longitude,
             "owner": self.owner.to_dict() if self.owner else None,
             "amenities": [amenity.to_dict() for amenity in self.amenities],
-            "created_at": self.created_at,
-            "updated_at": self.updated_at
         }
 
     def update(self, data):
