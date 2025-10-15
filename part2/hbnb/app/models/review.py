@@ -18,6 +18,17 @@ class Review(BaseModel):
         """Add a review to the place."""
         self.reviews.append(review)
 
+    def to_dict(self):
+        """Return a dictionary representation of the Review instance."""
+        review_dict = super().to_dict()
+        review_dict.update({
+            "text": self.text,
+            "rating": self.rating,
+            "place_id": self.place.id if self.place else None,
+            "user_id": self.user.id if self.user else None
+        })
+        return review_dict
+
     @property
     def validate(self):
         """Validate the attributes of the Review instance."""
