@@ -34,7 +34,6 @@ class Amenity(BaseModel):
     def to_dict(self):
         """Return a dictionary representation of the Amenity instance."""
         return {
-            "id": self.id,
             "name": self.name,
         }
 
