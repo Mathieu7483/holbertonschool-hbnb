@@ -1,8 +1,7 @@
 from flask_restx import Namespace, Resource, fields
-from app.services.facade import HBnBFacade # Ensure the corrected facade is imported
+from app import HBnB_FACADE
+facade = HBnB_FACADE
 
-# Initialize the facade to be used in the routes
-facade = HBnBFacade()
 places_ns = Namespace('places', description='Place operations')
 
 # --- NESTED DATA MODELS (For API Response) ---
