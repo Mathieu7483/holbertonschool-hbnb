@@ -187,8 +187,11 @@ class HBnBFacade:
         now = datetime.now().isoformat()
         
         review = Review(
-            id=review_id,
-            name=review_data.get('name'),
+            id=review_id,  
+            text=review_data.get('text'),
+            rating=review_data.get('rating'),
+            place=review_data.get('place'),
+            user=review_data.get('user'),
             created_at=now,
             updated_at=now
         )
