@@ -50,10 +50,6 @@ class Place(BaseModel):
             raise TypeError("longitude must be a number")
         if not isinstance(self.owner, User):
             raise TypeError("owner must be a User instance")
-        if not isinstance(self.created_at, str):
-            raise TypeError("created_at must be a string")
-        if not isinstance(self.updated_at, str):
-            raise TypeError("updated_at must be a string")
         if len(self.title) == 0:
             raise ValueError("title cannot be empty")
         if len(self.title) > 100:
