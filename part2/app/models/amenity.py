@@ -1,7 +1,7 @@
 from app.models.base import BaseModel
 
 
-class Amenity(Base_Model):
+class Amenity(BaseModel):
     def __init__(self,name):
         super().__init__()
         assert len(name) <= 50
