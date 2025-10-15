@@ -3,6 +3,8 @@ from app.services import facade
 
 api = Namespace('users', description='User operations')
 
+user = {}
+
 user_model = api.model('User', {
     'first_name': fields.String(required=True),
     'last_name': fields.String(required=True),
