@@ -43,7 +43,7 @@ class Place(BaseModel):
         if not isinstance(self.description, str):
             raise TypeError("description must be a string")
         if not isinstance(self.price, (int, float)):
-            raise TypeError("price must be a number")
+            raise TypeError("price must be a positive number")
         if not isinstance(self.latitude, (int, float)):
             raise TypeError("latitude must be a number")
         if not isinstance(self.longitude, (int, float)):
@@ -67,7 +67,8 @@ class Place(BaseModel):
 
     def to_dict(self):
         """Return a dictionary representation of the Place instance."""
-        return {
+        place_dict = super().to_dict()
+        place_dict.update({
             "title": self.title,
             "description": self.description,
             "price": self.price,
@@ -75,7 +76,8 @@ class Place(BaseModel):
             "longitude": self.longitude,
             "owner": self.owner.to_dict() if self.owner else None,
             "amenities": [amenity.to_dict() for amenity in self.amenities],
-        }
+        })
+        return place_dict
 
     def update(self, data):
         """Update the attributes of the Place instance based on the provided dictionary."""
