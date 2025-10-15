@@ -1,5 +1,6 @@
 from flask_restx import Namespace, Resource, fields
-from app.services import facade
+from app import HBnB_FACADE
+facade = HBnB_FACADE
 
 users_ns = Namespace('users', description='User operations')
 
