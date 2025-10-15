@@ -33,9 +33,11 @@ class Amenity(BaseModel):
 
     def to_dict(self):
         """Return a dictionary representation of the Amenity instance."""
-        return {
+        amenity_dict = super().to_dict()
+        amenity_dict.update({
             "name": self.name,
-        }
+        })
+        return amenity_dict
 
     def update(self, data):
         """Update the attributes of the Amenity instance based on the provided dictionary."""
