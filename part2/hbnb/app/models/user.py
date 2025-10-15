@@ -45,15 +45,20 @@ class User(BaseModel):
         if len(self.email) > 100:
             raise ValueError("email cannot be longer than 100 characters")
         return True
+        
     def __str__(self):
         return f"User(id={self.id}, first_name={self.first_name}, last_name={self.last_name})"
+    
     def to_dict(self):
         """Return a dictionary representation of the User instance."""
-        return {
+        user_dict = super().to_dict()
+        user_dict.update({
             "first_name": self.first_name,
             "last_name": self.last_name,
             "email": self.email,
-        }
+        })
+        return user_dict
+    
     def update(self, data):
         """Update the attributes of the User instance based on the provided dictionary."""
         for key, value in data.items():
