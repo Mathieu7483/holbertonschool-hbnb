@@ -16,9 +16,8 @@ Facade Pattern: Implementation of the Facade design pattern to simplify complex 
 Business Logic Classes: Implementation of entity models (partial CRUD) with relationship management and attribute validation.
 Serialization: Composing API responses to include extended attributes and related object data (e.g., the owner's username for a Place).
 
-# 📂 Exercise Content
-This project implements the application structure and API endpoints for the following entities:
-
+# Exercice Conten
+t
 0. Project Setup and Package Initialization:
 
 Setting up the modular directory structure.
@@ -30,8 +29,6 @@ hbnb/
 │   ├── __init__.py
 │   ├── api/
 │   │   ├── __init__.py
-│   │   ├── v1/
-│   │       ├── __init__.py
 │   │       ├── users.py
 │   │       ├── places.py
 │   │       ├── reviews.py
@@ -87,21 +84,46 @@ Handling retrieval of reviews related to a specific place.
 Implementation of basic validation for all entity models.
 Manual black-box testing phase using cURL to verify proper functionality, HTTP status codes, and input/output formats for each endpoint.
 
+## 🧠 Key Concepts Implemented
 
+* ✅ Modular application structure
+* ✅ Flask app factory pattern (`create_app`)
+* ✅ flask-restx setup with Swagger
+* ✅ In-memory repository following the Repository Pattern
+* ✅ Facade layer to decouple API and logic
+* ✅ Project ready for future integration with SQLAlchemy
+
+## ⚙️ Getting Started
+
+### 🔹 Install dependencies
+
+We recommend using a virtual environment:
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+pip install flask flask-restx
+```
+
+### 🔹 Run the application
+
+```bash
+python3 run.py
+```
 
 # 🛠️ Technologies and Tools
 
-Language: Python 3.8.5
-Web Framework: Flask
-API: flask-restx (for structuring and Swagger documentation)
-Testing Tools: cURL, Postman
-Design: Facade Pattern, Repository Pattern
+* Language: Python 3.8.5
+* Web Framework: Flask
+* API: flask-restx (for structuring and Swagger documentation)
+* Testing Tools: cURL, Postman
+* Design: Facade Pattern, Repository Pattern
 
 
 # ✍️ Authors
 
 <div align="center">
-  
+
 | Author | Role | GitHub | Email |
 |--------|------|--------|-------|
 | **Florian Hadjar** | Co-Developer | [@Boubouche1709](https://github.com/Boubouche1709) | 10482@holbertonstudents.com |
