@@ -1,5 +1,6 @@
 from flask_restx import Namespace, Resource, fields
 from app.services import facade
+from flask import request
 
 api = Namespace('places', description='Place operations')
 
@@ -12,19 +13,27 @@ place_model = api.model('Place', {
     'owner_id': fields.String(required=True)
 })
 
+
+partial_place_model = api.model('PartialPlace', {
+    'title': fields.String(),
+    'description': fields.String(),
+    'price': fields.Float(),
+    'latitude': fields.Float(),
+    'longitude': fields.Float(),
+    'owner_id': fields.String()
+})
+
 @api.route('/')
 class PlaceList(Resource):
     @api.expect(place_model, validate=True)
     def post(self):
         data = api.payload
-        place = facade.create_place(data)
-        if not place:
+        owner = facade.get_user(data['owner_id'])
+        if not owner:
             return {'error': 'Invalid owner or data'}, 400
+        place = facade.create_place(data)
         return place.to_dict(), 201
 
-    def get(self):
-        places = facade.get_all_places()
-        return [place.to_dict() for place in places], 200
 
 @api.route('/<string:place_id>')
 class PlaceDetail(Resource):
