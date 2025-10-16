@@ -39,3 +39,9 @@ class ReviewDetail(Resource):
             return {'error': 'Review not found'}, 404
         updated = facade.update_review(review_id, api.payload)
         return updated.to_dict(), 200
+
+    def delete(self, review_id):
+        success = facade.delete_review(review_id)
+        if not success:
+            return {'error': 'Review not found'}, 404
+        return {'massage': 'Review deleted'}, 200
