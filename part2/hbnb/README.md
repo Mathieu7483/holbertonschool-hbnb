@@ -16,9 +16,9 @@ Facade Pattern: Implementation of the Facade design pattern to simplify complex 
 Business Logic Classes: Implementation of entity models (partial CRUD) with relationship management and attribute validation.
 Serialization: Composing API responses to include extended attributes and related object data (e.g., the owner's username for a Place).
 
-# Exercice Content
+# 📂Exercice Content
 
-0. Project Setup and Package Initialization:
+### **0. Project Setup and Package Initialization**
 
 Setting up the modular directory structure.
 Configuring the Flask application and flask-restx.
