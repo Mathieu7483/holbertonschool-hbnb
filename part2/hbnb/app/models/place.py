@@ -1,89 +1,56 @@
 from app.models.basemodel import BaseModel
 from app.models.user import User
-
+# from typing import Optional, List # Omitted as requested
 
 class Place(BaseModel):
-    def __init__(self, id, title, description, price, latitude, longitude, owner, created_at, updated_at):
-        super().__init__()
-        self.id = id
+    def __init__(self, id=None, title=None, description=None, price=0, latitude=0.0, longitude=0.0, owner=None, created_at=None, updated_at=None):
+        
+        # Call the parent constructor to handle ID, created_at, and updated_at.
+        super().__init__(id=id, created_at=created_at, updated_at=updated_at)
+        
+        # Specific attributes for Place
         self.title = title
         self.description = description
         self.price = price
         self.latitude = latitude
         self.longitude = longitude
-        self.owner = owner
-        self.created_at = created_at
-        self.updated_at = updated_at
-        self.reviews = []  # List to store related reviews
-        self.amenities = []  # List to store related amenities
+        self.owner = owner 
+        
+        # Relationship lists (stores object references)
+        self.amenities = []
+        self.reviews = []
+        
+        self.validate()
 
-    def add_review(self, review):
-        """Add a review to the place."""
-        from app.models.review import Review
-        if not isinstance(review, Review):
-            raise TypeError("review must be an instance of the Review class.")
-        if review not in self.reviews:
-            self.reviews.append(review)
+    # CRUCIAL: Add the overloaded update method for PUT operations.
+    def update(self, data: dict):
+        """
+        Overloads BaseModel.update to apply data changes, then re-validate the object.
+        """
+        super().update(data)
+        self.validate()
 
-    def add_amenity(self, amenity):
-        """Add an amenity to the place."""
-        from app.models.amenity import Amenity
-        if not isinstance(amenity, Amenity):
-            raise TypeError("amenity must be an instance of the Amenity class.")
-        if amenity not in self.amenities:
-            self.amenities.append(amenity)
-
-    @property
     def validate(self):
         """Validate the attributes of the Place instance."""
-        if not isinstance(self.id, str):
-            raise TypeError("id must be a string")
-        if not isinstance(self.title, str):
-            raise TypeError("title must be a string")
-        if not isinstance(self.description, str):
-            raise TypeError("description must be a string")
-        if not isinstance(self.price, (int, float)):
-            raise TypeError("price must be a positive number")
-        if not isinstance(self.latitude, (int, float)):
-            raise TypeError("latitude must be a number")
-        if not isinstance(self.longitude, (int, float)):
-            raise TypeError("longitude must be a number")
-        if not isinstance(self.owner, User):
-            raise TypeError("owner must be a User instance")
-        if len(self.title) == 0:
-            raise ValueError("title cannot be empty")
-        if len(self.title) > 100:
-            raise ValueError("title cannot be longer than 100 characters")
-        if self.price < 0:
-            raise ValueError("price must be positive")
+        if not isinstance(self.owner, User) or self.price < 0:
+            raise ValueError("Invalid owner or price must be non-negative")
         if not (-90 <= self.latitude <= 90):
-            raise ValueError("latitude must be between -90 and 90")
+             raise ValueError("Latitude must be between -90 and 90")
         if not (-180 <= self.longitude <= 180):
-            raise ValueError("longitude must be between -180 and 180")
+             raise ValueError("Longitude must be between -180 and 180")
         return True
-
-    def __str__(self):
-        return f"Place(id={self.id}, title={self.title}, owner={self.owner})"
 
     def to_dict(self):
         """Return a dictionary representation of the Place instance."""
         place_dict = super().to_dict()
         place_dict.update({
-            "title": self.title,
-            "description": self.description,
+            "title": self.title, 
             "price": self.price,
-            "latitude": self.latitude,
-            "longitude": self.longitude,
+            # Note: We return the owner object's dictionary representation
             "owner": self.owner.to_dict() if self.owner else None,
-            "amenities": [amenity.to_dict() for amenity in self.amenities],
+            # We only return the list of amenities as dicts, not the full objects
+            "amenities": [a.to_dict() for a in self.amenities], 
+            # Useful for API endpoints: count the number of reviews
+            "reviews_count": len(self.reviews) 
         })
         return place_dict
-
-    def update(self, data):
-        """Update the attributes of the Place instance based on the provided dictionary."""
-        for key, value in data.items():
-            if hasattr(self, key) and key not in ['id', 'created_at', 'owner']:
-                setattr(self, key, value)
-        self.validate  # Validate the updated attributes
-        self.save()  # Update the updated_at timestamp
-        return self
