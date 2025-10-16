@@ -57,32 +57,19 @@ class HBnBFacade:
         self.place_repo.update(place_id, data)
         return self.place_repo.get(place_id)
 
-    # REVIEW
-    def create_review(self, data):
-        user = self.user_repo.get(data['user_id'])
-        place = self.place_repo.get(data['place_id'])
-        if not user or not place:
-            return None
-        review = Review(
-            text=data['text'],
-            rating=data['rating'],
-            place=place,
-            user=user
-        )
-        self.review_repo.add(review)
-        place.add_review(review)
-        user.reviews.append(review)
-        return review
+    def delete_review(self, review_id):
+    review = self.review_repo.get(review_id)
+    if not review:
+        return False
 
-    def get_review(self, review_id):
-        return self.review_repo.get(review_id)
+    if review.user and review in review.user.reviews:
+        review.user.reviews.remove(review)
+    if review.place and review in review.place.reviews:
+        review.place.reviews.remove(review)
 
-    def get_all_reviews(self):
-        return self.review_repo.get_all()
+    self.review_repo.delete(review_id)
+    return True
 
-    def update_review(self, review_id, data):
-        self.review_repo.update(review_id, data)
-        return self.review_repo.get(review_id)
 
     # AMENITY
     def create_amenity(self, data):
