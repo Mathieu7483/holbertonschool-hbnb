@@ -4,63 +4,73 @@
 
 # HBnB - BL and API (Part 2)
 
-# 📝 Description
-This project represents the second implementation phase of the HBnB application, focused on building the Business Logic and Presentation (RESTful API) layers. It involves transforming the previous UML design into functional code by defining the main entities (User, Place, Review, Amenity) and exposing their functionalities through RESTful endpoints.
-Particular attention is paid to Separation of Concerns by using the Facade Pattern to link the API to the business core, and the In-Memory Repository Pattern for temporary data management.
+## 📆 Project Structure
 
-# 📚 Key Concepts
+This project follows a modular structure to ensure maintainability and scalability. The current setup implements the foundation for the Business Logic Layer (BLL), the API, and the in-memory persistence layer.
 
-Modular Architecture: Structuring a Python/Flask application into layers (presentation, business_logic, persistence).
-RESTful API with Flask: Using the Flask framework and the flask-restx extension for routing, data schema definition, and Swagger documentation.
-Facade Pattern: Implementation of the Facade design pattern to simplify complex interactions between the Presentation layer and Business Logic.
-Business Logic Classes: Implementation of entity models (partial CRUD) with relationship management and attribute validation.
-Serialization: Composing API responses to include extended attributes and related object data (e.g., the owner's username for a Place).
+```
+hbnb/
+├── app/
+│   ├── __init__.py
+│   ├── api/
+│   │   ├── __init__.py
+│   │   └── v1/
+│   │       ├── __init__.py
+│   │       ├── users.py
+│   │       ├── places.py
+│   │       ├── reviews.py
+│   │       └── amenities.py
+│   ├── models/
+│   │   ├── __init__.py
+│   │   ├── user.py
+│   │   ├── place.py
+│   │   ├── review.py
+│   │   └── amenity.py
+│   ├── services/
+│   │   ├── __init__.py
+│   │   └── facade.py
+│   └── persistence/
+│       ├── __init__.py
+│       └── repository.py
+├── config.py
+├── requirements.txt
+├── run.py
+└── README.md
+```
 
-# 📂 Exercise Content
-This project implements the application structure and API endpoints for the following entities:
+## 🧠 Key Concepts Implemented
 
-0. Project Setup and Package Initialization:
+* ✅ Modular application structure
+* ✅ Flask app factory pattern (`create_app`)
+* ✅ flask-restx setup with Swagger
+* ✅ In-memory repository following the Repository Pattern
+* ✅ Facade layer to decouple API and logic
+* ✅ Project ready for future integration with SQLAlchemy
 
-Setting up the modular directory structure.
-Configuring the Flask application and flask-restx.
-Implementing the Facade Pattern and an In-Memory Repository for temporary object storage.
+## ⚙️ Getting Started
 
+### 🔹 Install dependencies
 
-1. Core Business Logic Classes:
+We recommend using a virtual environment:
 
-Implementation of base classes and concrete classes: User, Place, Review, and Amenity.
-Defining attributes and relationships between entities.
+```bash
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
 
+### 🔹 Run the application
 
-2. User Endpoints:
+```bash
+python run.py
+```
 
-Implementation of partial CRUD endpoints (POST, GET /users, GET /users/<id>, PUT) for user management (without DELETE and without password in responses).
+## 🔮 Next Steps
 
-
-3. Amenity Endpoints:
-
-Implementation of partial CRUD endpoints (POST, GET /amenities, GET /amenities/<id>, PUT) for amenity management.
-
-
-4. Place Endpoints:
-
-Implementation of partial CRUD endpoints (POST, GET /places, GET /places/<id>, PUT) for place management.
-Handling the inclusion of Owner and Amenities data in responses.
-
-
-5. Review Endpoints:
-
-Implementation of complete CRUD endpoints (POST, GET, PUT, DELETE) for review management (first implementation of deletion).
-Handling retrieval of reviews related to a specific place.
-
-
-6. Testing and Validation:
-
-Implementation of basic validation for all entity models.
-Manual black-box testing phase using cURL to verify proper functionality, HTTP status codes, and input/output formats for each endpoint.
-
-
-
+* Add API endpoints for Users, Places, Reviews, Amenities
+* Implement business logic classes in `models/`
+* Replace in-memory repository with SQLAlchemy in Part 3
+* Add authentication and RBAC
 # 🛠️ Technologies and Tools
 
 Language: Python 3.8.5
