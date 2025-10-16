@@ -80,12 +80,14 @@ class AmenityResource(Resource):
 
         try:
             # Update amenity using the model's update method
-            updated_amenity = amenity.update(amenity_data)
+            updated_amenity = facade.update_amenity(amenity_id, amenity_data)
+            if not updated_amenity:
+                amenities_ns.abort(404, message='Amenity not found')
             return {
                 'id': updated_amenity.id,
                 'name': updated_amenity.name,
                 'created_at': updated_amenity.created_at,
                 'updated_at': updated_amenity.updated_at
             }, 200
-        except (TypeError, ValueError) as e:
-            return {'error': str(e)}, 400
+        except Exception as e:
+            amenities_ns.abort(400, message=str(e))
