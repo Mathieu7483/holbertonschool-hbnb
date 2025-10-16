@@ -56,7 +56,7 @@ We recommend using a virtual environment:
 ```bash
 python3 -m venv venv
 source venv/bin/activate
-pip install -r requirements.txt
+pip install flask flask-restx
 ```
 
 ### 🔹 Run the application
@@ -67,17 +67,16 @@ python3 run.py
 
 ## 🔮 Next Steps
 
-* Add API endpoints for Users, Places, Reviews, Amenities
-* Implement business logic classes in `models/`
 * Replace in-memory repository with SQLAlchemy in Part 3
 * Add authentication and RBAC
+  
 # 🛠️ Technologies and Tools
 
-Language: Python 3.8.5
-Web Framework: Flask
-API: flask-restx (for structuring and Swagger documentation)
-Testing Tools: cURL, Postman
-Design: Facade Pattern, Repository Pattern
+* Language: Python 3.8.5
+* Web Framework: Flask
+* API: flask-restx (for structuring and Swagger documentation)
+* Testing Tools: cURL, Postman
+* Design: Facade Pattern, Repository Pattern
 
 
 # ✍️ Authors
