@@ -27,6 +27,41 @@ UML Knowledge: A basic understanding of UML notation for class, package, and seq
 As this project is a documentation and design exercise, there are no tests to run. The expected deliverables are the UML diagrams and the accompanying documentation.
 
 # 📝 Description Part 2
+This second part of the HBnB project marks the beginning of the implementation phase of the application. After defining the architecture and design in the first stage, the objective here is to bring the software structure to life by developing the presentation layer (API) and the business logic layer using Python and the Flask framework, along with the flask-restx extension.
+This project follows a modular structure to ensure maintainability and scalability. The current setup implements the foundation for the Business Logic Layer (BLL), the API, and the in-memory persistence layer.
+
+## 🎯 Objectives and Tasks
+
+### 1. Set Up the Project Structure
+- Organize the project into a **modular architecture**, following Python and Flask best practices.
+- Create packages for the **Presentation** and **Business Logic** layers.
+
+### 2. Implement the Business Logic Layer
+- Develop core classes for the business entities:
+  `User`, `Place`, `Review`, and `Amenity`.
+- Define **relationships** and **interactions** between entities.
+- Apply the **Facade Design Pattern** to simplify communication between layers.
+
+### 3. Build RESTful API Endpoints
+- Implement **CRUD** (Create, Read, Update, Delete) operations for all entities.
+- Use **flask-restx** to define, document, and organize the API.
+- Implement **data serialization** to include extended attributes (e.g., a `Place` should include the owner’s details and related amenities).
+
+### 4. Test and Validate the API
+- Test endpoints using tools like **Postman** or **cURL**.
+- Validate correct behavior and handle edge cases gracefully.
+
+## 🧠 Project Vision and Scope
+This implementation focuses on creating a **functional and scalable foundation** for the HBnB application.
+
+### **Presentation Layer**
+- Define services and endpoints using **Flask** and **flask-restx**.
+- Ensure clear and logical API paths and parameters.
+
+### **Business Logic Layer**
+- Build the core models and logic driving the application.
+- Handle **data validation**, **relationships**, and **entity interactions**.
+
 
 # 📝 Description Part 3
 
@@ -35,7 +70,7 @@ As this project is a documentation and design exercise, there are no tests to ru
 # ✍️ Authors
 
 <div align="center">
-  
+
 | Author | Role | GitHub | Email |
 |--------|------|--------|-------|
 | **Florian Hadjar** | Co-Developer | [@Boubouche1709](https://github.com/Boubouche1709) | 10482@holbertonstudents.com |
