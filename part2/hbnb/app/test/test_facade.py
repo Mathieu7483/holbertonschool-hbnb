@@ -74,7 +74,9 @@ class TestPlaceFacade(BaseFacadeTest):
             'longitude': 6.0
         }
         
-        new_place_dict = self.facade.create_place(place_data) 
+        new_place = self.facade.create_place(place_data)
+        
+        new_place_dict = new_place.to_dict()
         
         self.user_repo_mock.get.assert_called_once_with(owner_id)
         self.place_repo_mock.add.assert_called_once()
@@ -103,9 +105,17 @@ class TestPlaceFacade(BaseFacadeTest):
             created_at='mock_date',
             updated_at='mock_date'
         )
+        mock_place.to_dict.return_value = {
+            'id': 'place-id-a-mocked',
+            'title': 'Lieu Mocké',
+            'owner': mock_owner_with_dict.to_dict.return_value
+        }
+        
         self.place_repo_mock.get.return_value = mock_place
 
-        place_retrieved_dict = self.facade.get_place('place-id-a')
+        place_retrieved = self.facade.get_place('place-id-a')
+        
+        place_retrieved_dict = place_retrieved.to_dict()
 
         self.place_repo_mock.get.assert_called_once_with('place-id-a')
         self.assertEqual(place_retrieved_dict['id'], 'place-id-a-mocked')
