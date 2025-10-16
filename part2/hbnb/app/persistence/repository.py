@@ -102,12 +102,14 @@ class InMemoryRepository(Repository):
         if entity_type:
             if obj_id in self._storage.get(entity_type, {}):
                 del self._storage[entity_type][obj_id]
+                return True
         else:
             # Search across all types
             for storage in self._storage.values():
                 if obj_id in storage:
                     del storage[obj_id]
-                    return
+                    return True
+        return False
     
     def get_by_attribute(self, attr_name, attr_value, entity_type=None):
         """Find an object by attribute"""
