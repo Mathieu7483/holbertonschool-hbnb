@@ -49,6 +49,16 @@ place_response_model = places_ns.model('PlaceResponse', {
     'updated_at': fields.String(description='Last update date')
 })
 
+place_update_model = places_ns.model('PlaceUpdate', {
+    'title': fields.String(required=False, description='Title of the place'),
+    'description': fields.String(required=False, description='Description of the place'),
+    'price': fields.Float(required=False, description='Price per night'),
+    'latitude': fields.Float(required=False, description='Latitude coordinate'),
+    'longitude': fields.Float(required=False, description='Longitude coordinate'),
+    'owner_id': fields.String(required=False, description='ID of the owner user'), 
+    'amenities': fields.List(fields.String, required=False, description='List of amenity IDs')
+})
+
 
 @places_ns.route('/')
 class PlaceList(Resource):
@@ -102,7 +112,7 @@ class PlaceResource(Resource):
         return place_dict, 200
 
     @places_ns.doc('update_place')
-    @places_ns.expect(place_input_model, validate=True) # Use input model
+    @places_ns.expect(place_update_model, validate=True) # Use input model
     @places_ns.marshal_with(place_response_model)
     @places_ns.response(200, 'Place updated successfully')
     @places_ns.response(404, 'Place not found or related entity not found')
@@ -112,12 +122,12 @@ class PlaceResource(Resource):
         place_data = places_ns.payload
         
         try:
-            updated_place_dict = facade.update_place(place_id, place_data)
+            updated_place = facade.update_place(place_id, place_data)
 
-            if not updated_place_dict:
+            if not updated_place:
                 places_ns.abort(404, message=f"Place with ID '{place_id}' not found")
             
-            return updated_place_dict, 200
+            return updated_place.to_dict(), 200
             
         except LookupError as e:
             places_ns.abort(404, message=str(e))
