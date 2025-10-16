@@ -51,38 +51,63 @@ hbnb/
 ├── README.md
 ```
 
-1. Core Business Logic Classes:
 
-Implementation of base classes and concrete classes: User, Place, Review, and Amenity.
-Defining attributes and relationships between entities.
+### **1. Core Business Logic Classes**
+- Implemented **base and concrete classes**:
+  - `User`
+  - `Place`
+  - `Review`
+  - `Amenity`
+- Defined **attributes** and **relationships** between entities to represent real-world interactions (e.g., a user owns places, a place has reviews and amenities).
 
-
-2. User Endpoints:
-
-Implementation of partial CRUD endpoints (POST, GET /users, GET /users/<id>, PUT) for user management (without DELETE and without password in responses).
-
-
-3. Amenity Endpoints:
-
-Implementation of partial CRUD endpoints (POST, GET /amenities, GET /amenities/<id>, PUT) for amenity management.
-
-
-4. Place Endpoints:
-
-Implementation of partial CRUD endpoints (POST, GET /places, GET /places/<id>, PUT) for place management.
-Handling the inclusion of Owner and Amenities data in responses.
+### **2. User Endpoints**
+Endpoints for **User Management** (partial CRUD implementation):
+| Method | Endpoint | Description |
+|--------|-----------|-------------|
+| `POST` | `/users` | Create a new user |
+| `GET` | `/users` | Retrieve all users |
+| `GET` | `/users/<id>` | Retrieve a specific user by ID |
+| `PUT` | `/users/<id>` | Update user information |
 
 
-5. Review Endpoints:
+### **3. Amenity Endpoints**
+Endpoints for **Amenity Management** (partial CRUD implementation):
+| Method | Endpoint | Description |
+|--------|-----------|-------------|
+| `POST` | `/amenities` | Create a new amenity |
+| `GET` | `/amenities` | Retrieve all amenities |
+| `GET` | `/amenities/<id>` | Retrieve a specific amenity by ID |
+| `PUT` | `/amenities/<id>` | Update an existing amenity |
 
-Implementation of complete CRUD endpoints (POST, GET, PUT, DELETE) for review management (first implementation of deletion).
-Handling retrieval of reviews related to a specific place.
+
+### **4. Place Endpoints**
+Endpoints for **Place Management** (partial CRUD implementation):
+| Method | Endpoint | Description |
+|--------|-----------|-------------|
+| `POST` | `/places` | Create a new place |
+| `GET` | `/places` | Retrieve all places |
+| `GET` | `/places/<id>` | Retrieve a specific place by ID |
+| `PUT` | `/places/<id>` | Update an existing place |
 
 
-6. Testing and Validation:
+### **5. Review Endpoints**
+Endpoints for **Review Management** (complete CRUD implementation):
+| Method | Endpoint | Description |
+|--------|-----------|-------------|
+| `POST` | `/reviews` | Create a new review |
+| `GET` | `/reviews` | Retrieve all reviews |
+| `GET` | `/reviews/<id>` | Retrieve a specific review by ID |
+| `PUT` | `/reviews/<id>` | Update an existing review |
+| `DELETE` | `/reviews/<id>` | Delete a review |
 
-Implementation of basic validation for all entity models.
-Manual black-box testing phase using cURL to verify proper functionality, HTTP status codes, and input/output formats for each endpoint.
+
+### **6. Testing and Validation**
+- Implemented **basic validation rules** across all entity models to ensure data integrity.
+- Performed **manual black-box testing** using **cURL** to verify:
+  - Endpoint functionality
+  - Proper **HTTP status codes**
+  - Correct **input/output formats**
+
 
 ## 🧠 Key Concepts Implemented
 
