@@ -102,7 +102,7 @@ We recommend using a virtual environment:
 ```bash
 python3 -m venv venv
 source venv/bin/activate
-pip install flask flask-restx
+pip install -r requirements.txt
 ```
 
 ### 🔹 Run the application
