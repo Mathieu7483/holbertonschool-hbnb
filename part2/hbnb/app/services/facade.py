@@ -219,15 +219,4 @@ class HBnBFacade:
         Deletes a Review (DELETE), and removes the reference from the parent Place, 
         maintaining data consistency. (Required for Task 5).
         """
-        review = self.review_repo.get(review_id)
-        
-        if not review:
-            return False
-            
-        # Business Logic: Remove the review from the parent Place's list
-        place = review.place 
-        if review in place.reviews:
-            place.reviews.remove(review)
-            
-        # Persistence Logic: Delete the object from the Repository
         return self.review_repo.delete(review_id)
