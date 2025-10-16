@@ -16,10 +16,9 @@ Facade Pattern: Implementation of the Facade design pattern to simplify complex 
 Business Logic Classes: Implementation of entity models (partial CRUD) with relationship management and attribute validation.
 Serialization: Composing API responses to include extended attributes and related object data (e.g., the owner's username for a Place).
 
-# 📂 Exercise Content
-This project implements the application structure and API endpoints for the following entities:
+# 📂Exercice Content
 
-0. Project Setup and Package Initialization:
+### **0. Project Setup and Package Initialization**
 
 Setting up the modular directory structure.
 Configuring the Flask application and flask-restx.
@@ -30,8 +29,6 @@ hbnb/
 │   ├── __init__.py
 │   ├── api/
 │   │   ├── __init__.py
-│   │   ├── v1/
-│   │       ├── __init__.py
 │   │       ├── users.py
 │   │       ├── places.py
 │   │       ├── reviews.py
@@ -54,54 +51,104 @@ hbnb/
 ├── README.md
 ```
 
-1. Core Business Logic Classes:
 
-Implementation of base classes and concrete classes: User, Place, Review, and Amenity.
-Defining attributes and relationships between entities.
+### **1. Core Business Logic Classes**
+- Implemented **base and concrete classes**:
+  - `User`
+  - `Place`
+  - `Review`
+  - `Amenity`
+- Defined **attributes** and **relationships** between entities to represent real-world interactions (e.g., a user owns places, a place has reviews and amenities).
 
-
-2. User Endpoints:
-
-Implementation of partial CRUD endpoints (POST, GET /users, GET /users/<id>, PUT) for user management (without DELETE and without password in responses).
-
-
-3. Amenity Endpoints:
-
-Implementation of partial CRUD endpoints (POST, GET /amenities, GET /amenities/<id>, PUT) for amenity management.
-
-
-4. Place Endpoints:
-
-Implementation of partial CRUD endpoints (POST, GET /places, GET /places/<id>, PUT) for place management.
-Handling the inclusion of Owner and Amenities data in responses.
+### **2. User Endpoints**
+Endpoints for **User Management** (partial CRUD implementation):
+| Method | Endpoint | Description |
+|--------|-----------|-------------|
+| `POST` | `/users` | Create a new user |
+| `GET` | `/users` | Retrieve all users |
+| `GET` | `/users/<id>` | Retrieve a specific user by ID |
+| `PUT` | `/users/<id>` | Update user information |
 
 
-5. Review Endpoints:
-
-Implementation of complete CRUD endpoints (POST, GET, PUT, DELETE) for review management (first implementation of deletion).
-Handling retrieval of reviews related to a specific place.
-
-
-6. Testing and Validation:
-
-Implementation of basic validation for all entity models.
-Manual black-box testing phase using cURL to verify proper functionality, HTTP status codes, and input/output formats for each endpoint.
+### **3. Amenity Endpoints**
+Endpoints for **Amenity Management** (partial CRUD implementation):
+| Method | Endpoint | Description |
+|--------|-----------|-------------|
+| `POST` | `/amenities` | Create a new amenity |
+| `GET` | `/amenities` | Retrieve all amenities |
+| `GET` | `/amenities/<id>` | Retrieve a specific amenity by ID |
+| `PUT` | `/amenities/<id>` | Update an existing amenity |
 
 
+### **4. Place Endpoints**
+Endpoints for **Place Management** (partial CRUD implementation):
+| Method | Endpoint | Description |
+|--------|-----------|-------------|
+| `POST` | `/places` | Create a new place |
+| `GET` | `/places` | Retrieve all places |
+| `GET` | `/places/<id>` | Retrieve a specific place by ID |
+| `PUT` | `/places/<id>` | Update an existing place |
+
+
+### **5. Review Endpoints**
+Endpoints for **Review Management** (complete CRUD implementation):
+| Method | Endpoint | Description |
+|--------|-----------|-------------|
+| `POST` | `/reviews` | Create a new review |
+| `GET` | `/reviews` | Retrieve all reviews |
+| `GET` | `/reviews/<id>` | Retrieve a specific review by ID |
+| `PUT` | `/reviews/<id>` | Update an existing review |
+| `DELETE` | `/reviews/<id>` | Delete a review |
+
+
+### **6. Testing and Validation**
+- Implemented **basic validation rules** across all entity models to ensure data integrity.
+- Performed **manual black-box testing** using **cURL** to verify:
+- Endpoint functionality
+- Proper **HTTP status codes**
+- Correct **input/output formats**
+
+
+## 🧠 Key Concepts Implemented
+
+* ✅ Modular application structure
+* ✅ Flask app factory pattern (`create_app`)
+* ✅ flask-restx setup with Swagger
+* ✅ In-memory repository following the Repository Pattern
+* ✅ Facade layer to decouple API and logic
+* ✅ Project ready for future integration with SQLAlchemy
+
+## ⚙️ Getting Started
+
+### 🔹 Install dependencies
+
+We recommend using a virtual environment:
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
+
+### 🔹 Run the application
+
+```bash
+python3 run.py
+```
 
 # 🛠️ Technologies and Tools
 
-Language: Python 3.8.5
-Web Framework: Flask
-API: flask-restx (for structuring and Swagger documentation)
-Testing Tools: cURL, Postman
-Design: Facade Pattern, Repository Pattern
+* Language: Python 3.8.5
+* Web Framework: Flask
+* API: flask-restx (for structuring and Swagger documentation)
+* Testing Tools: cURL, Postman
+* Design: Facade Pattern, Repository Pattern
 
 
 # ✍️ Authors
 
 <div align="center">
-  
+
 | Author | Role | GitHub | Email |
 |--------|------|--------|-------|
 | **Florian Hadjar** | Co-Developer | [@Boubouche1709](https://github.com/Boubouche1709) | 10482@holbertonstudents.com |
