@@ -16,8 +16,6 @@
 # Ignorer les fichiers __pycache__
 *__pycache__
 # Ignorer les fichiers .txt spécifiquement
-*.txt
-# Ignorer les fichiers .json spécifiquement
 *.json
 # Ignorer les fichiers .csv spécifiquement
 *.csv
