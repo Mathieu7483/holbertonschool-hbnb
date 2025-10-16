@@ -24,7 +24,7 @@ Diagramming Software: Proficiency with a tool like Mermaid.js to create and mana
 UML Knowledge: A basic understanding of UML notation for class, package, and sequence diagrams is required.
 
 # 🚀 Tests
-As this project is a documentation and design exercise, there are no tests to run. The expected deliverables are the UML diagrams and the accompanying documentation.
+As this project is a documentation and design exercise, there are no tests to run. The expected deliverables are the UML diagrams and the accompanying documentation
 
 # 📝 Description Part 2
 This second part of the HBnB project marks the beginning of the implementation phase of the application. After defining the architecture and design in the first stage, the objective here is to bring the software structure to life by developing the presentation layer (API) and the business logic layer using Python and the Flask framework, along with the flask-restx extension.
