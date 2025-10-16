@@ -1,0 +1,68 @@
+ USER ID : 
+ PLACE ID : 
+
+
+Methde POSTMAN USERS
+
+{
+    "first_name": "Mathieu",
+    "last_name": "TestOwner",
+    "email": "mathieu.test@hbnb.com"
+}
+
+
+METHODE POSTMAN PLACE
+{
+    "title": "Chalet du Lac Léman",
+    "description": "Vue magnifique sur le lac, parfait pour le télétravail.",
+    "price": 180.50,
+    "latitude": 46.3948,
+    "longitude": 6.4023,
+    "owner_id": "VOTRE_ID_OWNER_ICI", 
+    "amenities": []
+}
+
+METHODE POSTMAN AMENITY
+{
+    "name": "Wifi haut débit"
+}
+
+
+
+METHODE POSTMAN REVIEW
+{
+    "text": "Excellent séjour, vue imprenable et hôte très accueillant.",
+    "rating": 5,
+    "place_id": "ID PLACE", 
+    "user_id": "ID USER"
+}
+
+
+
+
+
+UPDATE USER
+ {
+    "first_name": "Mathieu_Update",
+    "last_name": "Nouveau_Nom",
+    "email": "nouveau.email@example.com"
+}
+
+UPDATE PLACE
+{
+    "title": "Chalet avec Piscine et Vue",
+    "description": "Nouvelle description après travaux.",
+    "price": 350
+    "amenities": []
+}
+
+UPDATE AMENITY
+{
+    "name": "Piscine Olympique"
+}
+
+UPDATE REVIEW
+{
+    "text": "L'endroit était fantastique, 5 étoiles amplement méritées !",
+    "rating": 5
+}

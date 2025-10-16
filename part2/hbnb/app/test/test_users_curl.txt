@@ -1,0 +1,68 @@
+# ===== TESTS AVEC CURL =====
+# Remplacez http://localhost:5000 par votre URL réelle
+
+# 1. CRÉER UN UTILISATEUR (POST)
+echo "=== TEST 1: Créer un utilisateur ==="
+curl -X POST http://localhost:5000/api/v1/users/ \
+  -H "Content-Type: application/json" \
+  -d '{
+    "first_name": "John",
+    "last_name": "Doe",
+    "email": "john@example.com"
+  }'
+
+# Sauvegardez l'ID retourné pour les tests suivants (exemple: 123abc)
+USER_ID="123abc"
+
+# 2. RÉCUPÉRER TOUS LES UTILISATEURS (GET /)
+echo -e "\n=== TEST 2: Récupérer tous les utilisateurs ==="
+curl -X GET http://localhost:5000/api/v1/users/ \
+  -H "Content-Type: application/json"
+
+# 3. RÉCUPÉRER UN UTILISATEUR PAR ID (GET /<user_id>)
+echo -e "\n=== TEST 3: Récupérer un utilisateur par ID ==="
+curl -X GET http://localhost:5000/api/v1/users/$USER_ID \
+  -H "Content-Type: application/json"
+
+# 4. METTRE À JOUR UN UTILISATEUR (PUT /<user_id>)
+echo -e "\n=== TEST 4: Mettre à jour un utilisateur ==="
+curl -X PUT http://localhost:5000/api/v1/users/$USER_ID \
+  -H "Content-Type: application/json" \
+  -d '{
+    "first_name": "Jane",
+    "last_name": "Smith",
+    "email": "jane@example.com"
+  }'
+
+# 5. TEST - EMAIL DÉJÀ EXISTANT (POST)
+echo -e "\n=== TEST 5: Essayer de créer un utilisateur avec un email existant ==="
+curl -X POST http://localhost:5000/api/v1/users/ \
+  -H "Content-Type: application/json" \
+  -d '{
+    "first_name": "Jane",
+    "last_name": "Smith",
+    "email": "john@example.com"
+  }'
+
+# 6. TEST - UTILISATEUR NON TROUVÉ (GET)
+echo -e "\n=== TEST 6: Récupérer un utilisateur qui n'existe pas ==="
+curl -X GET http://localhost:5000/api/v1/users/invalid_id \
+  -H "Content-Type: application/json"
+
+# 7. TEST - DONNÉES INVALIDES (POST)
+echo -e "\n=== TEST 7: Créer un utilisateur avec données invalides ==="
+curl -X POST http://localhost:5000/api/v1/users/ \
+  -H "Content-Type: application/json" \
+  -d '{
+    "first_name": "John"
+  }'
+
+# 8. TEST - EMAIL INVALIDE (POST)
+echo -e "\n=== TEST 8: Créer un utilisateur avec email invalide ==="
+curl -X POST http://localhost:5000/api/v1/users/ \
+  -H "Content-Type: application/json" \
+  -d '{
+    "first_name": "John",
+    "last_name": "Doe",
+    "email": "invalid-email"
+  }'
