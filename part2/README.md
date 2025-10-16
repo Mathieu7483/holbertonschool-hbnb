@@ -62,7 +62,7 @@ pip install -r requirements.txt
 ### 🔹 Run the application
 
 ```bash
-python run.py
+python3 run.py
 ```
 
 ## 🔮 Next Steps
