@@ -104,9 +104,9 @@ Endpoints for **Review Management** (complete CRUD implementation):
 ### **6. Testing and Validation**
 - Implemented **basic validation rules** across all entity models to ensure data integrity.
 - Performed **manual black-box testing** using **cURL** to verify:
-  - Endpoint functionality
-  - Proper **HTTP status codes**
-  - Correct **input/output formats**
+- Endpoint functionality
+- Proper **HTTP status codes**
+- Correct **input/output formats**
 
 
 ## 🧠 Key Concepts Implemented
