@@ -1,0 +1,28 @@
+# Ne pas ignorer README.md
+!README.md
+# Ignorer les fichiers main.c spécifiquement
+*main.c
+# Ignorer les fichiers de sortie générés par GCC
+*.exe
+# Ignorer les fichiers de sauvegarde de l'éditeur
+*~
+*.bak
+# Ignorer les fichiers de log générés par les tests ou le débogage
+*.log
+#ignore les fichiers .out
+*.out
+# Ignorer les fichiers main.py spécifiquement
+*main.py
+# Ignorer les fichiers __pycache__
+*__pycache__
+# Ignorer les fichiers .txt spécifiquement
+*.json
+# Ignorer les fichiers .csv spécifiquement
+*.csv
+# Ignorer les fichiers main.py spécifiquement
+main*.py
+# Ignorer les fichiers .xml spécifiquement
+*.xml
+# Ignorer le dossier de l'environnement virtuel Python
+venv/
+
