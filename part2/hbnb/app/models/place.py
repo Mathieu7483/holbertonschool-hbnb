@@ -3,23 +3,23 @@ from app.models.user import User
 # from typing import Optional, List # Omitted as requested
 
 class Place(BaseModel):
-    def __init__(self, id=None, title=None, description=None, price=0, latitude=0.0, longitude=0.0, owner=None, created_at=None, updated_at=None):
-        
+    def __init__(self, title=None, description=None, price=0, latitude=0.0, longitude=0.0, owner=None, **kwargs):
+
         # Call the parent constructor to handle ID, created_at, and updated_at.
-        super().__init__(id=id, created_at=created_at, updated_at=updated_at)
-        
+        super().__init__(**kwargs)
+
         # Specific attributes for Place
         self.title = title
         self.description = description
         self.price = price
         self.latitude = latitude
         self.longitude = longitude
-        self.owner = owner 
-        
+        self.owner = owner
+
         # Relationship lists (stores object references)
         self.amenities = []
         self.reviews = []
-        
+
         self.validate()
 
     # CRUCIAL: Add the overloaded update method for PUT operations.
@@ -44,13 +44,13 @@ class Place(BaseModel):
         """Return a dictionary representation of the Place instance."""
         place_dict = super().to_dict()
         place_dict.update({
-            "title": self.title, 
+            "title": self.title,
             "price": self.price,
             # Note: We return the owner object's dictionary representation
             "owner": self.owner.to_dict() if self.owner else None,
             # We only return the list of amenities as dicts, not the full objects
-            "amenities": [a.to_dict() for a in self.amenities], 
+            "amenities": [a.to_dict() for a in self.amenities],
             # Useful for API endpoints: count the number of reviews
-            "reviews_count": len(self.reviews) 
+            "reviews_count": len(self.reviews)
         })
         return place_dict
