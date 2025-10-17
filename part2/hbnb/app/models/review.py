@@ -3,19 +3,19 @@ from app.models.place import Place
 from app.models.user import User
 
 class Review(BaseModel):
-    
+
     # 1. Correct __init__ signature to accept arguments and pass them to the parent.
-    def __init__(self, id=None, text=None, rating=None, place=None, user=None, created_at=None, updated_at=None):
-        
+    def __init__(self, text=None, rating=None, place=None, user=None, **kwargs):
+
         # Call the parent constructor to handle ID, created_at, and updated_at.
-        super().__init__(id=id, created_at=created_at, updated_at=updated_at)
-        
+        super().__init__(**kwargs)
+
         # Specific attributes for Review
         self.text = text
         self.rating = rating
         self.place = place
         self.user = user
-        
+
         # Call validation upon creation
         self.validate()
 
@@ -23,13 +23,13 @@ class Review(BaseModel):
     def update(self, data: dict):
         """
         Overloads BaseModel.update to apply data changes.
-        NOTE: We temporarily comment out self.validate() to prevent a 404 error 
-        after PUT, which is likely caused by the validation trying to re-check 
+        NOTE: We temporarily comment out self.validate() to prevent a 404 error
+        after PUT, which is likely caused by the validation trying to re-check
         related objects that weren't passed in the partial PUT payload.
         """
         # Apply changes and update the 'updated_at' timestamp via BaseModel
-        super().update(data) 
-        
+        super().update(data)
+
         # Re-validate the object's integrity
         # self.validate()  # <--- TEMPORAIREMENT COMMENTÉ POUR RÉSOUDRE LE 404
 
@@ -48,20 +48,20 @@ class Review(BaseModel):
     # 3. Standard validation method (removed @property)
     def validate(self):
         """Validate the attributes of the Review instance."""
-        
+
         # Check instance types for relationships (essential business logic)
         # Note: These checks are too strict for a partial PUT request.
         if not isinstance(self.place, Place) or not isinstance(self.user, User):
             raise TypeError("place and user must be instances of Place and User")
-            
+
         if not isinstance(self.text, str):
             raise TypeError("text must be a string")
         if not isinstance(self.rating, int):
             raise TypeError("rating must be an integer")
-            
+
         if len(self.text) == 0:
             raise ValueError("text cannot be empty")
         if not (1 <= self.rating <= 5):
             raise ValueError("rating must be between 1 and 5")
-            
+
         return True
