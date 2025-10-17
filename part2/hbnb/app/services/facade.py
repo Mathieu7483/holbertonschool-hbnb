@@ -27,6 +27,13 @@ class HBnBFacade:
     
     def create_user(self, user_data: Dict) -> User:
         """Creates a new User instance, validates it, and persists it."""
+        email = user_data.get('email')
+        if not email:
+            raise ValueError("Email is required to create a User.")
+        
+        if self.get_user_by_email(email):
+            raise ValueError(f"User with email '{email}' already exists.")
+        
         user_id = str(uuid4())
         now = datetime.now().isoformat()
         
