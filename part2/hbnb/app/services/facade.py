@@ -71,7 +71,7 @@ class HBnBFacade:
 
     def create_amenity(self, amenity_data: Dict) -> Amenity:
         """Creates a new Amenity instance, validates it, and persists it."""
-        amenity = Amenity(**amentity_data)
+        amenity = Amenity(**amenity_data)
         amenity.validate()
         self.amenity_repo.add(amenity)
         return amenity
