@@ -1,18 +1,13 @@
-Acknowledged, Mathieu. I will now respond **in English** and will keep in mind that you are collaborating with **Florian HADJAR** on the **HBnB - Auth & DB** project.
+<p align="center">
+<img src="https://github.com/Mathieu7483/Aiko78-Photgraphy/blob/main/img/Logo%20de%20hippocampe%20et%20circuits%20%C3%A9lectroniques.png" width="1000">
+</p>
 
-Here is the revised `README.md` for Part 3 of your HBnB project.
-
------
-
-\<p align="center"\>
-\<img src="[https://github.com/Mathieu7483/Aiko78-Photgraphy/blob/main/img/HBnB%20V2%20Auth%20DB.png](https://www.google.com/search?q=https://github.com/Mathieu7483/Aiko78-Photgraphy/blob/main/img/HBnB%2520V2%2520Auth%2520DB.png)"\>
-\</p\>
 
 # HBnB Project - Part 3: Enhanced Backend with Authentication and Database Integration
 
 -----
 
-### 📝 **Project Overview**
+# 📝 **Project Overview**
 
 This third iteration of the HBnB project transforms the backend architecture from a memory-based prototype into a **secure, persistent, and production-ready** system.
 
@@ -25,16 +20,7 @@ This phase establishes a robust foundation, ensuring data integrity, scalability
 
 -----
 
-### 🧑‍💻 **Collaborators**
-
-This project was developed by:
-
-  * **Mathieu GODALIER**
-  * **Florian HADJAR**
-
------
-
-### 🎯 **Learning Objectives and Achieved Skills**
+# 🎯 **Learning Objectives and Achieved Skills**
 
 This project demonstrates proficiency in integrating **Python OOP** and **Flask** with modern database and security services.
 
@@ -60,7 +46,7 @@ This project demonstrates proficiency in integrating **Python OOP** and **Flask*
 
 -----
 
-### 📁 **Core Tasks Breakdown**
+# 📁 **Core Tasks Breakdown**
 
 The project progression moved logically from security implementation to full database integration.
 
@@ -92,7 +78,7 @@ The project progression moved logically from security implementation to full dat
 
 -----
 
-### 🛠️ **Technologies & Dependencies**
+# 🛠️ **Technologies & Dependencies**
 
   * **Language** : Python 3.8+
   * **Framework** : Flask
