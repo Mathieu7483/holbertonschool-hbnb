@@ -27,8 +27,7 @@ def create_app(config_class='config.DevelopmentConfig'):
         version='1.0',
         title='HBnB API',
         description='HBnB Application API',
-        doc='/api/v1/docs'  # URL pour accéder à Swagger UI
-        # Pas de prefix ici pour éviter les conflits
+        doc='/api/v1/docs'  # URL for Swagger UI
     )
     
     # Register API namespaces (blueprints)
@@ -37,7 +36,7 @@ def create_app(config_class='config.DevelopmentConfig'):
     from app.api.v1.reviews import reviews_ns
     from app.api.v1.amenities import amenities_ns
     
-    # Ajouter les namespaces avec leurs chemins complets
+    # Add namespaces without additional prefix
     api.add_namespace(users_ns, path='/api/v1/users')
     api.add_namespace(places_ns, path='/api/v1/places')
     api.add_namespace(reviews_ns, path='/api/v1/reviews')
