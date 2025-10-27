@@ -150,9 +150,10 @@ class UserResource(Resource):
     @users_ns.response(403, 'Forbidden', error_model)
     def get(self, user_id):
         """Retrieve a User by ID"""
-        user = get_jwt_identity()
+        current_user = get_jwt_identity()
         claims = get_jwt()
-        if user != user_id and claims.get("is_admin") is not True:
+        is_admin = claims.get("is_admin", False)
+        if current_user != user_id and is_admin is not True:
             users_ns.abort(403, message="Access forbidden: You can only view your own profile.")
             
         user = facade.get_user(user_id)
@@ -201,7 +202,7 @@ class UserResource(Resource):
 # ----------------------------------------------------
     @users_ns.doc('delete_user', security='jwt')
     @jwt_required()
-    @users_ns.response(204, 'User successfully deleted (No Content)')
+    @users_ns.response(204, 'User successfully deleted', error_model)
     @users_ns.response(404, 'User not found', error_model)
     @users_ns.response(403, 'Forbidden: Admin privilege required', error_model)
     def delete(self, user_id):
