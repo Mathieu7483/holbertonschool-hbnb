@@ -6,8 +6,10 @@ Methde POSTMAN USERS
 
 {
     "first_name": "Mathieu",
-    "last_name": "TestOwner",
-    "email": "mathieu.test@hbnb.com"
+    "last_name": "Dupont",
+    "email": "mathieu.test.user@example.com",
+    "is_admin": false,
+    "password": "Password123!"
 }
 
 
@@ -42,10 +44,9 @@ METHODE POSTMAN REVIEW
 
 
 UPDATE USER
- {
+{
     "first_name": "Mathieu_Update",
     "last_name": "Nouveau_Nom",
-    "email": "nouveau.email@example.com"
 }
 
 UPDATE PLACE
