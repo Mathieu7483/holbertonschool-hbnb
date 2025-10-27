@@ -57,4 +57,3 @@ class User(BaseModel):
         return bcrypt.check_password_hash(self.password, password)
 
 
-    
