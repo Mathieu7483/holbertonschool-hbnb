@@ -86,7 +86,7 @@ class UserListResource(Resource):
     @users_ns.marshal_with(user_response_model, code=201)
     @users_ns.response(201, 'User created successfully')
     @users_ns.response(400, 'Invalid input data', error_model)
-    @users_ns.response(409, 'Email already exists')
+    @users_ns.response(409, 'Email already exists', error_model)
     def post(self):
         """Create a new User"""
         try:
