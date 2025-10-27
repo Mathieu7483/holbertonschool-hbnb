@@ -27,10 +27,24 @@ user_model = users_ns.model('User', {
         description='Whether the user is an admin',
         default=False
     ),
+    'password': fields.String(
+        required=True,
+        description='The user password',
+        example='StrongP@ssw0rd'
+    ),
+})
+
+# Model for basic OUTPUT (base fields without password)
+user_base_output_model = users_ns.model('UserBaseOutput', {
+    'first_name': fields.String(description='The user first name'),
+    'last_name': fields.String(description='The user last name'),
+    'email': fields.String(description='The user email address'),
+    'is_admin': fields.Boolean(description='Whether the user is an admin'),
+    # Password is explicitly omitted here 🔒
 })
 
 # Definition of the response model (with IDs and dates)
-user_response_model = users_ns.inherit('UserResponse', user_model, {
+user_response_model = users_ns.inherit('UserResponse', user_base_output_model, {
     'id': fields.String(
         readOnly=True, 
         description='The unique identifier',
@@ -72,7 +86,7 @@ class UserListResource(Resource):
     @users_ns.marshal_with(user_response_model, code=201)
     @users_ns.response(201, 'User created successfully')
     @users_ns.response(400, 'Invalid input data', error_model)
-    @users_ns.response(409, 'Email already exists')
+    @users_ns.response(409, 'Email already exists', error_model)
     def post(self):
         """Create a new User"""
         try:
@@ -113,6 +127,7 @@ class UserResource(Resource):
     @users_ns.response(400, 'Invalid input data', error_model)
     @users_ns.response(404, 'User not found', error_model)
     @users_ns.response(409, 'Email already exists')
+    @users_ns.response(401, 'Unauthorized', error_model)
     def put(self, user_id):
         """Update an existing User"""
         try:
@@ -129,3 +144,6 @@ class UserResource(Resource):
             if "already exists" in str(e).lower():
                 users_ns.abort(409, message=str(e))
             users_ns.abort(400, message=str(e))
+        except PermissionError as e:
+            if "unauthorized" in str(e).lower():
+                users_ns.abort(401, message=str(e))

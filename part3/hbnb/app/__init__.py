@@ -17,10 +17,10 @@ def create_app(config_class="config.DevelopmentConfig"):
     # Initialize Flask-RESTX API with Swagger documentation
     api = Api(
         app,
-        version='1.0',
+        version='2.0',
         title='HBnB API',
         description='HBnB Application API',
-        doc='/api/v1/docs'  # URL for Swagger UI
+        doc='/api/v2/docs'  # URL for Swagger UI
     )
     
     # Register API namespaces (blueprints)
