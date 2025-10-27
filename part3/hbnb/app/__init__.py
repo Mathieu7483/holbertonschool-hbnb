@@ -1,21 +1,14 @@
 from flask import Flask
 from flask_restx import Api
-from .services.facade import HBnBFacade 
+from .services.facade import HBnBFacade
+from flask_bcrypt import Bcrypt
 
 HBnB_FACADE = HBnBFacade()
 
-def create_app(config_class='config.DevelopmentConfig'):
-    """
-    Application Factory pattern for Flask.
-    
-    Args:
-        config_class (str or object): Configuration class to use.
-                                     Can be a string (import path) or a config object.
-                                     Defaults to 'config.DevelopmentConfig'.
-    
-    Returns:
-        Flask: Configured Flask application instance
-    """
+
+def create_app(config_class="config.DevelopmentConfig"):
+   
+    # Initialize Flask application
     app = Flask(__name__)
     
     # Load configuration from the provided config class
@@ -41,5 +34,8 @@ def create_app(config_class='config.DevelopmentConfig'):
     api.add_namespace(places_ns, path='/api/v1/places')
     api.add_namespace(reviews_ns, path='/api/v1/reviews')
     api.add_namespace(amenities_ns, path='/api/v1/amenities')
-    
+
+    # Initialize Bcrypt for password hashing
+    bcrypt = Bcrypt()
+    bcrypt.init_app(app)
     return app
