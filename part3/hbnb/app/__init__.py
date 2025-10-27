@@ -4,6 +4,7 @@ from .services.facade import HBnBFacade
 from flask_bcrypt import Bcrypt
 from app.extensions import bcrypt, jwt
 
+
 HBnB_FACADE = HBnBFacade()
 
 
@@ -37,12 +38,14 @@ def create_app(config_class="config.DevelopmentConfig"):
     from app.api.v2.places import places_ns
     from app.api.v2.reviews import reviews_ns
     from app.api.v2.amenities import amenities_ns
+    from app.api.v2.auth import auth_ns
 
     # Add namespaces without additional prefix
     api.add_namespace(users_ns, path='/api/v2/users')
     api.add_namespace(places_ns, path='/api/v2/places')
     api.add_namespace(reviews_ns, path='/api/v2/reviews')
     api.add_namespace(amenities_ns, path='/api/v2/amenities')
+    api.add_namespace(auth_ns, path='/api/v2/auth')
 
     # Initialize Bcrypt for password hashing
     bcrypt = Bcrypt()
