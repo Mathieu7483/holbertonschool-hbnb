@@ -2,6 +2,7 @@ from flask import Flask
 from flask_restx import Api
 from .services.facade import HBnBFacade
 from flask_bcrypt import Bcrypt
+from app.extensions import bcrypt, jwt
 
 HBnB_FACADE = HBnBFacade()
 
@@ -13,6 +14,14 @@ def create_app(config_class="config.DevelopmentConfig"):
 
     # Load configuration from the provided config class
     app.config.from_object(config_class)
+
+    # Initialize JWT Manager
+    app.config['JWT_SECRET_KEY'] = app.config.get('SECRET_KEY', 'super-secret')  # Ensure a secret key is set
+    jwt.init_app(app)
+
+    #initialize Bcrypt extension
+    global bcrypt
+    bcrypt.init_app(app)
 
     # Initialize Flask-RESTX API with Swagger documentation
     api = Api(
