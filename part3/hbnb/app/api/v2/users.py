@@ -1,11 +1,40 @@
 from flask import request
 from flask_restx import Resource, Namespace, fields
+from flask_jwt_extended import jwt_required, get_jwt, get_jwt_identity
 from app import HBnB_FACADE
 
 facade = HBnB_FACADE
 
 # Initialization with better description
 users_ns = Namespace('users', description='User management operations')
+
+def admin_required():
+    """Custom decorator to ensure the authenticated user has Admin privilege."""
+    
+    # The intermediate function. It receives the original decorated function (fn)
+    # E.g., fn = UserListResource.get
+    def wrapper(fn): 
+        
+        # The inner function, which is the actual wrapper that replaces fn.
+        # It first enforces JWT validation and then executes the custom logic.
+        @jwt_required()
+        def decorated_view(*args, **kwargs):
+            claims = get_jwt()
+            
+            # Authorization logic: Check the 'is_admin' claim from the JWT payload
+            if claims.get("is_admin", False) is not True:
+                # If claim is False or missing, stop execution and return 403
+                users_ns.abort(403, message="Access forbidden: Admin privilege required.")
+                
+            # If authorization is successful, execute the original function (e.g., the GET method)
+            return fn(*args, **kwargs)
+        
+        # The wrapper returns the decorated view (the secured function)
+        return decorated_view
+    
+    # The initial call to admin_required() returns the wrapper function itself
+    return wrapper
+
 
 # Definition of the input model (for POST/PUT)
 user_model = users_ns.model('User', {
@@ -73,11 +102,14 @@ error_model = users_ns.model('Error', {
 # ----------------------------------------------------
 @users_ns.route('/')
 class UserListResource(Resource):
-    @users_ns.doc('list_users')
+    @users_ns.doc('list_users', security='jwt')
+    @admin_required()
     @users_ns.marshal_list_with(user_response_model)
     @users_ns.response(200, 'Success')
+    @users_ns.response(401, 'Unauthorized', error_model)
+    @users_ns.response(403, 'Forbidden: Admin required', error_model)
     def get(self):
-        """List all users"""
+        """List all users (ADMIN only)"""
         users = facade.get_all_users()
         return [user.to_dict() for user in users], 200
 
@@ -109,18 +141,27 @@ class UserListResource(Resource):
 @users_ns.route('/<string:user_id>')
 @users_ns.param('user_id', 'The user unique identifier')
 class UserResource(Resource):
-    @users_ns.doc('get_user')
+    @users_ns.doc('get_user', security='jwt')
+    @jwt_required()
     @users_ns.marshal_with(user_response_model)
     @users_ns.response(200, 'Success')
     @users_ns.response(404, 'User not found', error_model)
+    @users_ns.response(401, 'Unauthorized', error_model)
+    @users_ns.response(403, 'Forbidden', error_model)
     def get(self, user_id):
         """Retrieve a User by ID"""
+        user = get_jwt_identity()
+        claims = get_jwt()
+        if user != user_id and claims.get("is_admin") is not True:
+            users_ns.abort(403, message="Access forbidden: You can only view your own profile.")
+            
         user = facade.get_user(user_id)
         if user is None:
             users_ns.abort(404, message=f"User with ID {user_id} not found")
         return user.to_dict(), 200
 
-    @users_ns.doc('update_user')
+    @users_ns.doc('update_user', security='jwt')
+    @jwt_required()
     @users_ns.expect(user_model, validate=True)
     @users_ns.marshal_with(user_response_model)
     @users_ns.response(200, 'User updated successfully')
@@ -128,8 +169,13 @@ class UserResource(Resource):
     @users_ns.response(404, 'User not found', error_model)
     @users_ns.response(409, 'Email already exists')
     @users_ns.response(401, 'Unauthorized', error_model)
+    @users_ns.response(403, 'Forbidden', error_model)
     def put(self, user_id):
         """Update an existing User"""
+        user = get_jwt_identity()
+        claims = get_jwt()
+        if user != user_id and claims.get("is_admin") is not True:
+            users_ns.abort(403, message="Access forbidden: You can only modify your own profile.")
         try:
             user_data = request.json
             updated_user = facade.update_user(user_id, user_data)
