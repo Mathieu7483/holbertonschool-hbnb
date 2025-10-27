@@ -1,6 +1,5 @@
-# File: app/api/v1/reviews.py
-
 from flask_restx import Namespace, Resource, fields
+from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 from app import HBnB_FACADE
 # Initialize the Facade (Assumes HBnB_FACADE is defined in app/__init__.py)
 facade = HBnB_FACADE
@@ -56,26 +55,42 @@ review_update_model = reviews_ns.model('ReviewUpdate', {
 @reviews_ns.route('/')
 class ReviewList(Resource):
     
-    @reviews_ns.doc('create_review')
+    @reviews_ns.doc('create_review', security='jwt')
     @reviews_ns.expect(review_input_model, validate=True)
     @reviews_ns.marshal_with(review_response_model, code=201)
     @reviews_ns.response(201, 'Review successfully created')
     @reviews_ns.response(400, 'Invalid input data')
     @reviews_ns.response(404, 'User or Place not found')
+    @jwt_required()
     def post(self):
         """Register a new review"""
+        user_id = get_jwt_identity()
         review_data = reviews_ns.payload
+
+        if review_data.get('user_id') != user_id:
+            reviews_ns.abort(403, message="Unauthorized: Review must be created by the authenticated user.")
         
+        place_id = review_data.get('place_id')
+
         # 1. Check for User and Place existence before calling Facade
-        user = facade.get_user(review_data.get('user_id'))
-        place = facade.get_place(review_data.get('place_id'))
+        user = facade.get_user(user_id)
+        place = facade.get_place(place_id)
 
         if not user:
             reviews_ns.abort(404, message=f"User with ID '{review_data.get('user_id')}' not found")
         if not place:
             reviews_ns.abort(404, message=f"Place with ID '{review_data.get('place_id')}' not found")
-            
-        # 2. Replace IDs with model objects for Facade consumption
+
+
+        # 2. Authorization Check (You cannot review your own place)
+        place_owner_id = place.get('owner', {}).get('id')
+        if place_owner_id == user_id:
+            reviews_ns.abort(400, message="You cannot review your own place.")
+        
+        # 3. Check for Duplication (You have not already reviewed this place)
+        if facade.user_has_reviewed_place(user_id, place_id): # <-- Requires a new Facade method
+            reviews_ns.abort(400, message="You have already reviewed this place.")    
+        # 4. Replace IDs with model objects for Facade consumption
         review_data['user'] = user
         review_data['place'] = place
         
@@ -115,16 +130,28 @@ class ReviewResource(Resource):
         return review, 200
 
     # 🎯 CORRECTION [2G]: Implemented PUT method
-    @reviews_ns.doc('update_review')
+    @reviews_ns.doc('update_review', security='jwt')
     @reviews_ns.expect(review_update_model, validate=True) # Use the partial update model
     @reviews_ns.marshal_with(review_response_model)
     @reviews_ns.response(200, 'Review updated successfully')
     @reviews_ns.response(404, 'Review not found')
     @reviews_ns.response(400, 'Invalid input data')
+    @jwt_required()
     def put(self, review_id):
         """Update a review's content or rating"""
+        user_id = get_jwt_identity()
         review_data = reviews_ns.payload
-        
+
+        review = facade.get_review(review_id)
+        if not review:
+            reviews_ns.abort(404, message=f"Review with ID '{review_id}' not found")
+
+        # Authorization Check: Only the review author can update
+        review_author_id = review.get('user', {}).get('id')
+        if review_author_id != user_id:
+            reviews_ns.abort(403, message="Unauthorized: You can only update your own reviews.")
+
+        # process the update        
         try:
             updated_review = facade.update_review(review_id, review_data)
             
@@ -139,11 +166,20 @@ class ReviewResource(Resource):
 
 
     # 🎯 CORRECTION [3H]: Finalized DELETE method (removed 501 placeholder)
-    @reviews_ns.doc('delete_review')
+    @reviews_ns.doc('delete_review', security='jwt')
     @reviews_ns.response(204, 'Review deleted successfully (No Content)')
     @reviews_ns.response(404, 'Review not found')
+    @jwt_required()
     def delete(self, review_id):
-        """Delete a review by ID"""
+        """Delete a review by ID (Author Only and Admin)"""
+        user_id = get_jwt_identity()
+        review = facade.get_review(review_id)
+        if not review:
+            reviews_ns.abort(404, message=f"Review with ID '{review_id}' not found")
+        # Authorization Check: Only the review author can delete
+        review_author_id = review.get('user', {}).get('id')
+        if review_author_id != user_id:
+            reviews_ns.abort(403, message="Unauthorized: You can only delete your own reviews.")
         # The Facade must handle the deletion of the review and the removal 
         # of the reference from the parent Place object.
         is_deleted = facade.delete_review(review_id)
@@ -153,7 +189,7 @@ class ReviewResource(Resource):
             reviews_ns.abort(404, message=f"Review with ID '{review_id}' not found")
 
         # HTTP 204 No Content is the standard response for a successful DELETE.
-        return '', 204 
+        return 'Review successfully deleted', 204 
 
 # -------------------------------------------------------------
 # Resource: /places/<place_id>/reviews
@@ -176,3 +212,5 @@ class PlaceReviewList(Resource):
         # 2. Retrieve reviews via the Facade (which should return a list of Review objects)
         reviews = facade.get_reviews_by_place(place_id)
         return reviews, 200
+    
+    
