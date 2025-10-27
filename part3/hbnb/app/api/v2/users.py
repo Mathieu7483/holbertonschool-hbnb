@@ -174,10 +174,14 @@ class UserResource(Resource):
         """Update an existing User"""
         user = get_jwt_identity()
         claims = get_jwt()
+        user_data = request.json
         if user != user_id and claims.get("is_admin") is not True:
             users_ns.abort(403, message="Access forbidden: You can only modify your own profile.")
+
+        if 'email' in user_data or 'password' in user_data:
+             # Utilisez 400 car l'utilisateur envoie des données non valides/interdites pour cette route
+             users_ns.abort(400, message="You can only modify first name and last name. Email and password modification is forbidden.")
         try:
-            user_data = request.json
             updated_user = facade.update_user(user_id, user_data)
             if updated_user is None:
                 users_ns.abort(404, message=f"User with ID {user_id} not found")
@@ -190,6 +194,34 @@ class UserResource(Resource):
             if "already exists" in str(e).lower():
                 users_ns.abort(409, message=str(e))
             users_ns.abort(400, message=str(e))
-        except PermissionError as e:
-            if "unauthorized" in str(e).lower():
-                users_ns.abort(401, message=str(e))
+        
+
+# ----------------------------------------------------
+# 3. Resource for a single item : /users/<user_id> (DELETE)
+# ----------------------------------------------------
+    @users_ns.doc('delete_user', security='jwt')
+    @jwt_required()
+    @users_ns.response(204, 'User successfully deleted (No Content)')
+    @users_ns.response(404, 'User not found', error_model)
+    @users_ns.response(403, 'Forbidden: Admin privilege required', error_model)
+    def delete(self, user_id):
+        """Delete a User by ID (ADMIN ONLY)"""
+        claims = get_jwt()
+        
+        # 1. Authorization Check: Must be Admin
+        if claims.get("is_admin", False) is not True:
+            users_ns.abort(403, message="Access forbidden: Admin privilege required.")
+            
+        # 2. Prevent Admin from deleting their own account (Optional but recommended)
+        current_user_id = get_jwt_identity()
+        if user_id == current_user_id:
+             users_ns.abort(403, message="Cannot delete your own admin account.")
+
+        # 3. Proceed with deletion
+        is_deleted = facade.delete_user(user_id)
+        
+        if not is_deleted:
+            users_ns.abort(404, message=f"User with ID {user_id} not found")
+
+        # HTTP 204 No Content is the standard response for a successful DELETE.
+        return 'User successfully delete', 204
