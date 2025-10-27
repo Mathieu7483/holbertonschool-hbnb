@@ -13,7 +13,12 @@ login_model = auth_ns.model('Login', {
 
 @auth_ns.route('/login')
 class Login(Resource):
-    @auth_ns.expect(login_model)
+    @auth_ns.doc('user_login')
+    @auth_ns.expect(login_model, validate=True)
+    @auth_ns.response(200, 'Login successful', token_response_model := auth_ns.model('TokenResponse', {
+        'access_token': fields.String(description='JWT access token')
+    }))
+    @auth_ns.response(401, 'Invalid credentials')
     def post(self):
         """Authenticate user and return a JWT token"""
         credentials = auth_ns.payload  # Get the email and password from the request payload
