@@ -24,10 +24,10 @@ def create_app(config_class="config.DevelopmentConfig"):
     )
     
     # Register API namespaces (blueprints)
-    from app.api.v1.users import users_ns
-    from app.api.v1.places import places_ns
-    from app.api.v1.reviews import reviews_ns
-    from app.api.v1.amenities import amenities_ns
+    from app.api.v2.users import users_ns
+    from app.api.v2.places import places_ns
+    from app.api.v2.reviews import reviews_ns
+    from app.api.v2.amenities import amenities_ns
     
     # Add namespaces without additional prefix
     api.add_namespace(users_ns, path='/api/v1/users')

@@ -1,6 +1,8 @@
 from app.models.basemodel import BaseModel
 # from typing import Optional # Omitted as requested
-import bcrypt
+from flask_bcrypt import Bcrypt
+
+bcrypt = Bcrypt()
 
 
 class User(BaseModel):
