@@ -2,7 +2,7 @@
  PLACE ID : 
 
 
-Methde POSTMAN USERS
+Methde POSTMAN USERS LAMBDA
 
 {
     "first_name": "Mathieu",
@@ -12,6 +12,14 @@ Methde POSTMAN USERS
     "password": "Password123!"
 }
 
+Methde POSTMAN USERS ADMIN
+{
+    "first_name": "Mathieu",
+    "last_name": "GODALIER",
+    "email": "mathieu.admin@example.com",
+    "is_admin": true,
+    "password": "Admin@1234"
+}
 
 METHODE POSTMAN PLACE
 {
