@@ -3,5 +3,5 @@ flask-restx
 flask-SQLAlchemy
 SQLAlchemy
 flask-bcrypt
-flask-JWT-Extended
+flask-jwt-extended
 mysqlclient
