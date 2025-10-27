@@ -16,6 +16,7 @@ class User(BaseModel):
         self.last_name = last_name
         self.email = email
         self.is_admin = is_admin
+        self._password_hash = None
         self.password = password  # Password will be hashed and stored here
 
         self.validate()
@@ -43,7 +44,7 @@ class User(BaseModel):
             "first_name": self.first_name,
             "last_name": self.last_name,
             "email": self.email,
-            "is_admin": self.is_admin
+            "is_admin": self.is_admin,
         })
         return user_dict
 
@@ -55,6 +56,14 @@ class User(BaseModel):
     def verify_password(self, password):
         """Verifies if the provided password matches the hashed password."""
         return bcrypt.check_password_hash(self.password, password)
-
-
-    
+    @property
+    def password(self):
+        """Password property getter (not returning the actual password)."""
+        return self._password_hash
+    @password.setter
+    def password(self, password):
+        """Password property setter that hashes the password."""
+        if password is not None:
+            self._password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
+        else:
+            self._password_hash = None
