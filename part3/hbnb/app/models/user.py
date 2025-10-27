@@ -2,7 +2,7 @@ from app.models.basemodel import BaseModel
 # from typing import Optional # Omitted as requested
 
 class User(BaseModel):
-    def __init__(self, first_name=None, last_name=None, email=None, is_admin=False, **kwargs):
+    def __init__(self, first_name=None, last_name=None, email=None, is_admin=False, password=None, **kwargs):
 
         # Call the parent constructor to handle ID, created_at, and updated_at.
         super().__init__(**kwargs)
@@ -12,6 +12,7 @@ class User(BaseModel):
         self.last_name = last_name
         self.email = email
         self.is_admin = is_admin
+        self.password = password  # Password will be hashed and stored here
 
         self.validate()
 
@@ -41,3 +42,15 @@ class User(BaseModel):
             "is_admin": self.is_admin
         })
         return user_dict
+
+
+    def hash_password(self, password):
+        """Hashes the password before storing it."""
+        self.password = bcrypt.generate_password_hash(password).decode('utf-8')
+
+    def verify_password(self, password):
+    """Verifies if the provided password matches the hashed password."""
+    return bcrypt.check_password_hash(self.password, password)
+
+
+    
