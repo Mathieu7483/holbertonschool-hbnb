@@ -1,4 +1,4 @@
-from hbnb.app.models.base_model import BaseModel
+from hbnb.app.models.basemodel import BaseModel
 from hbnb.app.extensions import db
 
 
