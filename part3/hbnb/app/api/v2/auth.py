@@ -1,6 +1,7 @@
 from flask_restx import Namespace, Resource, fields
 from flask_jwt_extended import create_access_token
 from flask_jwt_extended import jwt_required, get_jwt_identity
+from datetime import timedelta
 from app.services import facade
 
 auth_ns = Namespace('auth', description='Authentication operations')
@@ -22,10 +23,10 @@ class Login(Resource):
     def post(self):
         """Authenticate user and return a JWT token"""
         credentials = auth_ns.payload  # Get the email and password from the request payload
-        
+
         # Step 1: Retrieve the user based on the provided email
         user = facade.get_user_by_email(credentials['email'])
-        
+
         # Step 2: Check if the user exists and the password is correct
         if not user or not user.verify_password(credentials['password']):
             return {'error': 'Invalid credentials'}, 401
@@ -33,9 +34,10 @@ class Login(Resource):
         # Step 3: Create a JWT token with the user's id and is_admin flag
         access_token = create_access_token(
         identity=str(user.id),   # only user ID goes here
-        additional_claims={"is_admin": user.is_admin}  # extra info here
+        additional_claims={"is_admin": user.is_admin},
+	expires_delta=timedelta(hours=3)  # Validate token for 3 hours
         )
-        
+
         # Step 4: Return the JWT token to the client
         return {'access_token': access_token}, 200
 
