@@ -51,6 +51,7 @@ def create_app(config_class="config.DevelopmentConfig"):
     from app.api.v2.reviews import reviews_ns
     from app.api.v2.amenities import amenities_ns
     from app.api.v2.auth import auth_ns
+    from app.api.v2.protected import protected_ns
 
     # Add namespaces with prefix
     api.add_namespace(users_ns, path='/api/v2/users')
@@ -58,6 +59,7 @@ def create_app(config_class="config.DevelopmentConfig"):
     api.add_namespace(reviews_ns, path='/api/v2/reviews')
     api.add_namespace(amenities_ns, path='/api/v2/amenities')
     api.add_namespace(auth_ns, path='/api/v2/auth')
+    api.add_namespace(protected_ns, path='/api/v2/protected')
 
 
     return app
