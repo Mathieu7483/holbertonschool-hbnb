@@ -5,7 +5,10 @@ from app.models.amenity import Amenity
 from app.models.place import Place
 from app.models.review import Review
 from typing import Optional, Dict
-from app.persistence import UserRepository, AmenityRepository, PlaceRepository, ReviewRepository
+from app.persistence.UserRepository import UserRepository
+from app.persistence.PlaceRepository import PlaceRepository
+from app.persistence.ReviewRepository import ReviewRepository
+from app.persistence.AmenityRepository import AmenityRepository
 
 
 class HBnBFacade:

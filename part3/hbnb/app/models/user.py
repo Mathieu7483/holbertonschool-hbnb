@@ -1,5 +1,5 @@
-from hbnb.app.models.basemodel import BaseModel
-from hbnb.app.extensions import db
+from app.models.basemodel import BaseModel
+from app.extensions import db, bcrypt
 
 
 class User(BaseModel):
@@ -61,10 +61,8 @@ class User(BaseModel):
 
     def hash_password(self, password):
         """Hashes the password before storing it."""
-        from hbnb.app import bcrypt
         self.password = bcrypt.generate_password_hash(password).decode('utf-8')
 
     def verify_password(self, password):
         """Verifies if the provided password matches the hashed password."""
-        from hbnb.app import bcrypt
         return bcrypt.check_password_hash(self.password.encode('utf-8'), password)
