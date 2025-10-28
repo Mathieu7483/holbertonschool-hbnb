@@ -166,11 +166,11 @@ class UserResource(Resource):
     @users_ns.expect(user_model, validate=True)
     @users_ns.marshal_with(user_response_model)
     @users_ns.response(200, 'User updated successfully')
-    @users_ns.response(400, 'Invalid input data', error_model)
+    @users_ns.response(400, 'You cannot modify email or password.', error_model)
     @users_ns.response(404, 'User not found', error_model)
     @users_ns.response(409, 'Email already exists')
     @users_ns.response(401, 'Unauthorized', error_model)
-    @users_ns.response(403, 'Forbidden', error_model)
+    @users_ns.response(403, 'Unauthorized action.', error_model)
     def put(self, user_id):
         """Update an existing User"""
         user = get_jwt_identity()
