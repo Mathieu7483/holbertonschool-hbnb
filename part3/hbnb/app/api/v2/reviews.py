@@ -87,7 +87,7 @@ class ReviewList(Resource):
         if place_owner_id == user_id:
             reviews_ns.abort(400, message="You cannot review your own place.")
         
-        # 3. Check for Duplication (You have not already reviewed this place)
+        # 3. Check for Duplication (You have already reviewed this place)
         if facade.user_has_reviewed_place(user_id, place_id): # <-- Requires a new Facade method
             reviews_ns.abort(400, message="You have already reviewed this place.")    
         # 4. Replace IDs with model objects for Facade consumption
@@ -129,7 +129,7 @@ class ReviewResource(Resource):
         
         return review, 200
 
-    # 🎯 CORRECTION [2G]: Implemented PUT method
+    # Implemented PUT method
     @reviews_ns.doc('update_review', security='jwt')
     @reviews_ns.expect(review_update_model, validate=True) # Use the partial update model
     @reviews_ns.marshal_with(review_response_model)
@@ -165,7 +165,7 @@ class ReviewResource(Resource):
             reviews_ns.abort(400, message=str(e))
 
 
-    # 🎯 CORRECTION [3H]: Finalized DELETE method (removed 501 placeholder)
+    # Finalized DELETE method (removed 501 placeholder)
     @reviews_ns.doc('delete_review', security='jwt')
     @reviews_ns.response(204, 'Review deleted successfully (No Content)')
     @reviews_ns.response(404, 'Review not found')
