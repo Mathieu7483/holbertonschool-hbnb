@@ -1,69 +1,70 @@
-from app.models.basemodel import BaseModel
-# from typing import Optional # Omitted as requested
-from flask_bcrypt import Bcrypt
-
-bcrypt = Bcrypt()
+from hbnb.app.models.base_model import BaseModel
+from hbnb.app.extensions import db
 
 
 class User(BaseModel):
-    def __init__(self, first_name=None, last_name=None, email=None, is_admin=False, password=None, **kwargs):
+    """
+    Represents a user in the HBnB application.
 
-        # Call the parent constructor to handle ID, created_at, and updated_at.
-        super().__init__(**kwargs)
+    Inherits:
+        BaseModel: Provides id, created_at, and updated_at.
+    """
 
-        # Specific attributes for User
+    __tablename__ = 'users'
+
+    first_name = db.Column(db.String(50), nullable=False)
+    last_name = db.Column(db.String(50), nullable=False)
+    email = db.Column(db.String(120), nullable=False, unique=True)
+    password = db.Column(db.String(255), nullable=False)
+    is_admin = db.Column(db.Boolean, default=False, nullable=False)
+
+    def __init__(self, first_name, last_name, email, password=None, is_admin=False):
+        """
+        Initialize a new User instance with validation.
+        """
+        super().__init__()
+
+        if len(first_name) > 50:
+            raise ValueError(
+                "Your first name must have less than 50 characters"
+            )
         self.first_name = first_name
+
+        if len(last_name) > 50:
+            raise ValueError(
+                "Your last name must have less than 50 characters"
+            )
         self.last_name = last_name
+
+        if '@' not in email:
+            raise TypeError(
+                "Enter a valid address, e.g. example@gmail.com"
+            )
         self.email = email
+
         self.is_admin = is_admin
-        self._password_hash = None
-        self.password = password  # Password will be hashed and stored here
 
-        self.validate()
-
-    # CRUCIAL: Add the overloaded update method for PUT operations.
-    def update(self, data: dict):
-        """
-        Overloads BaseModel.update to apply data changes, then re-validate the object.
-        """
-        super().update(data)
-        self.validate()
-
-    def validate(self):
-        """Validate the attributes of the User instance."""
-        if not self.first_name or not self.email:
-            raise ValueError("First name or email missing")
-        if "@" not in str(self.email):
-             raise ValueError("Invalid email format")
-        return True
+        if password:
+            self.hash_password(password)
 
     def to_dict(self):
-        """Return a dictionary representation of the User instance."""
-        user_dict = super().to_dict()
-        user_dict.update({
+        """
+        Serialize the user to a dictionary, excluding sensitive fields
+        """
+        return {
+            "id": self.id,
             "first_name": self.first_name,
             "last_name": self.last_name,
             "email": self.email,
-            "is_admin": self.is_admin,
-        })
-        return user_dict
-
+            "is_admin": self.is_admin
+        }
 
     def hash_password(self, password):
         """Hashes the password before storing it."""
+        from hbnb.app import bcrypt
         self.password = bcrypt.generate_password_hash(password).decode('utf-8')
 
     def verify_password(self, password):
         """Verifies if the provided password matches the hashed password."""
-        return bcrypt.check_password_hash(self.password, password)
-    @property
-    def password(self):
-        """Password property getter (not returning the actual password)."""
-        return self._password_hash
-    @password.setter
-    def password(self, password):
-        """Password property setter that hashes the password."""
-        if password is not None:
-            self._password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
-        else:
-            self._password_hash = None
+        from hbnb.app import bcrypt
+        return bcrypt.check_password_hash(self.password.encode('utf-8'), password)
