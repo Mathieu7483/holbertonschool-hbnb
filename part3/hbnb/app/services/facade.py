@@ -109,22 +109,24 @@ class HBnBFacade:
         place = Place(**place_data)
         place.validate()
         self.place_repo.add(place)
-        return place
+        return place.to_dict()
 
     def get_place(self, place_id: str) -> Optional[Place]:
         """Retrieves a Place by ID."""
-        return self.place_repo.get(place_id)
+        place = self.place_repo.get(place_id)
+        return place.to_dict() if place else None
 
     def get_all_places(self) -> list[Place]:
         """Retrieves all Places."""
-        return self.place_repo.get_all()
+        places = self.place_repo.get_all()
+        return [place.to_dict() for place in places]
 
     def update_place(self, place_id: str, place_data: Dict) -> Optional[Place]:
         """Updates a Place's attributes."""
         place = self.place_repo.get(place_id)
         if place:
             place.update(place_data)
-        return place
+        return place.to_dict() if place else None
 
     # ==================================
     # ===== REVIEW METHODS (CRUD+) =====
