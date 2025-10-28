@@ -5,7 +5,8 @@ from app.models.amenity import Amenity
 from app.models.place import Place
 from app.models.review import Review
 from typing import Optional, Dict
-from app.persistence.repository import SQLAlchemyRepository
+from app.persistence import UserRepository, AmenityRepository, PlaceRepository, ReviewRepository
+
 
 class HBnBFacade:
     """
@@ -16,10 +17,10 @@ class HBnBFacade:
 
     def __init__(self):
         # Initializes separate repositories for each entity type.
-        self.user_repository = SQLAlchemyRepository(User)  # Switched to SQLAlchemyRepository
-        self.place_repository = SQLAlchemyRepository(Place)
-        self.review_repository = SQLAlchemyRepository(Review)
-        self.amenity_repository = SQLAlchemyRepository(Amenity)
+        self.user_repository = UserRepository()
+        self.place_repository = PlaceRepository()
+        self.review_repository = ReviewRepository()
+        self.amenity_repository = AmenityRepository()
 
     # ==================================
     # ===== USER METHODS (CRUD) ========
