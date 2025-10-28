@@ -60,10 +60,19 @@ class HBnBFacade:
     def update_user(self, user_id: str, user_data: Dict) -> Optional[User]:
         """Updates a User's attributes."""
         user = self.user_repo.get(user_id)
-        if user:
-            # The model's update method handles attribute assignment, validation, and updated_at timestamp.
-            user.update(user_data)
-        return user
+        if not user:
+            return None
+        # Only allow updating certain fields
+        allowed_fields = {'first_name', 'last_name'}
+        filtered_data = {}
+        for key, value in user_data.items():
+            if key in allowed_fields:
+                filtered_data[key] = value
+    
+        if filtered_data:
+            user.update(filtered_data)
+    
+        return user.to_dict()
 
     # ==================================
     # ===== AMENITY METHODS (CRUD) =====
