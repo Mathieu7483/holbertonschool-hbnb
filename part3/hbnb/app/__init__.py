@@ -30,7 +30,7 @@ def create_app(config_class="config.DevelopmentConfig"):
             'type': 'apiKey',
             'in': 'header',
             'name': 'Authorization',
-            'description': "Entrez le jeton JWT au format: **Bearer <votre_token_jwt>**"
+            'description': "Enter your token here in format: **Bearer <your_token_jwt>**"
         }
     }
 
