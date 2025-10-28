@@ -2,14 +2,24 @@
  PLACE ID : 
 
 
-Methde POSTMAN USERS
+Methde POSTMAN USERS LAMBDA
 
 {
     "first_name": "Mathieu",
-    "last_name": "TestOwner",
-    "email": "mathieu.test@hbnb.com"
+    "last_name": "Dupont",
+    "email": "mathieu.test.user@example.com",
+    "is_admin": false,
+    "password": "Password123!"
 }
 
+Methde POSTMAN USERS ADMIN
+{
+    "first_name": "Mathieu",
+    "last_name": "GODALIER",
+    "email": "mathieu.admin@example.com",
+    "is_admin": true,
+    "password": "Admin@1234"
+}
 
 METHODE POSTMAN PLACE
 {
@@ -42,10 +52,9 @@ METHODE POSTMAN REVIEW
 
 
 UPDATE USER
- {
+{
     "first_name": "Mathieu_Update",
     "last_name": "Nouveau_Nom",
-    "email": "nouveau.email@example.com"
 }
 
 UPDATE PLACE

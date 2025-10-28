@@ -86,6 +86,7 @@ class PlaceList(Resource):
     @places_ns.response(201, 'Place successfully created')
     @places_ns.response(400, 'Invalid input data (validation error)', error_model)
     @places_ns.response(404, 'Owner or Amenity not found', error_model)
+    @places_ns.response(409, 'Place already exists', error_model)
     @jwt_required()
     def post(self):
         """Register a new place (Requires Authentication)"""
@@ -101,8 +102,12 @@ class PlaceList(Resource):
             return new_place_dict, 201
 
         except LookupError as e:
-            places_ns.abort(404, message=str(e))
+            places_ns.abort(404, message='place not found')
         except (TypeError, ValueError) as e:
+            places_ns.abort(400, message=str(e))
+        except Exception as e:
+            if "already exists" in str(e).lower():
+                places_ns.abort(409, message='place already exists')
             places_ns.abort(400, message=str(e))
 
 
