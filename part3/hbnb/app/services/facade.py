@@ -1,11 +1,11 @@
 from uuid import uuid4
 from datetime import datetime
-from app.persistence.repository import InMemoryRepository
 from app.models.user import User
 from app.models.amenity import Amenity
 from app.models.place import Place
 from app.models.review import Review
 from typing import Optional, Dict
+from app.persistence.repository import SQLAlchemyRepository
 
 class HBnBFacade:
     """
@@ -16,10 +16,10 @@ class HBnBFacade:
 
     def __init__(self):
         # Initializes separate repositories for each entity type.
-        self.user_repo: InMemoryRepository = InMemoryRepository()
-        self.place_repo: InMemoryRepository = InMemoryRepository()
-        self.review_repo: InMemoryRepository = InMemoryRepository()
-        self.amenity_repo: InMemoryRepository = InMemoryRepository()
+        self.user_repository = SQLAlchemyRepository(User)  # Switched to SQLAlchemyRepository
+        self.place_repository = SQLAlchemyRepository(Place)
+        self.review_repository = SQLAlchemyRepository(Review)
+        self.amenity_repository = SQLAlchemyRepository(Amenity)
 
     # ==================================
     # ===== USER METHODS (CRUD) ========
@@ -37,29 +37,26 @@ class HBnBFacade:
         user = User(**user_data)
 
         # Validation is handled within the User model's __init__
-        # (or should be called here if not in __init__)
-        # Note: The line 'user.validate' is likely intended to be 'user.validate()',
-        # but the BaseModel update handles this implicitly in the project's design.
         user.validate()
-        self.user_repo.add(user)
+        self.user_repository.add(user)
         return user
 
     def get_user(self, user_id: str) -> Optional[User]:
         """Retrieves a User by ID."""
-        return self.user_repo.get(user_id)
+        return self.user_repository.get(user_id)
 
     def get_all_users(self) -> list[User]:
         """Retrieves all Users."""
-        return self.user_repo.get_all()
+        return self.user_repository.get_all()
 
     def get_user_by_email(self, email: str) -> Optional[User]:
         """Retrieves a User by email attribute."""
         # Requires the InMemoryRepository to implement 'get_by_attribute'
-        return self.user_repo.get_by_attribute('email', email)
+        return self.user_repository.get_by_attribute('email', email)
 
     def update_user(self, user_id: str, user_data: Dict) -> Optional[User]:
         """Updates a User's attributes."""
-        user = self.user_repo.get(user_id)
+        user = self.user_repository.get(user_id)
         if not user:
             return None
         # Only allow updating certain fields
@@ -82,20 +79,20 @@ class HBnBFacade:
         """Creates a new Amenity instance, validates it, and persists it."""
         amenity = Amenity(**amenity_data)
         amenity.validate()
-        self.amenity_repo.add(amenity)
+        self.amenity_repository.add(amenity)
         return amenity
 
     def get_amenity(self, amenity_id: str) -> Optional[Amenity]:
         """Retrieves an Amenity by ID."""
-        return self.amenity_repo.get(amenity_id)
+        return self.amenity_repository.get(amenity_id)
 
     def get_all_amenities(self) -> list[Amenity]:
         """Retrieves all Amenities."""
-        return self.amenity_repo.get_all()
+        return self.amenity_repository.get_all()
 
     def update_amenity(self, amenity_id: str, amenity_data: Dict) -> Optional[Amenity]:
         """Updates an Amenity's attributes."""
-        amenity = self.amenity_repo.get(amenity_id)
+        amenity = self.amenity_repository.get(amenity_id)
         if amenity:
             amenity.update(amenity_data)
         return amenity
@@ -117,22 +114,22 @@ class HBnBFacade:
         place_data['owner'] = owner
         place = Place(**place_data)
         place.validate()
-        self.place_repo.add(place)
+        self.place_repository.add(place)
         return place.to_dict()
 
     def get_place(self, place_id: str) -> Optional[Place]:
         """Retrieves a Place by ID."""
-        place = self.place_repo.get(place_id)
+        place = self.place_repository.get(place_id)
         return place.to_dict() if place else None
 
     def get_all_places(self) -> list[Place]:
         """Retrieves all Places."""
-        places = self.place_repo.get_all()
+        places = self.place_repository.get_all()
         return [place.to_dict() for place in places]
 
     def update_place(self, place_id: str, place_data: Dict) -> Optional[Place]:
         """Updates a Place's attributes."""
-        place = self.place_repo.get(place_id)
+        place = self.place_repository.get(place_id)
         if place:
             place.update(place_data)
         return place.to_dict() if place else None
@@ -157,7 +154,7 @@ class HBnBFacade:
 
         review = Review(**review_data)
         review.validate()
-        self.review_repo.add(review)
+        self.review_repository.add(review)
 
         if not hasattr(place, 'reviews'):
             place.reviews = []
@@ -167,11 +164,11 @@ class HBnBFacade:
 
     def get_review(self, review_id: str) -> Optional[Review]:
         """Retrieves a Review by ID."""
-        return self.review_repo.get(review_id)
+        return self.review_repository.get(review_id)
 
     def get_all_reviews(self) -> list[Review]:
         """Retrieves all Reviews."""
-        return self.review_repo.get_all()
+        return self.review_repository.get_all()
 
     def get_reviews_by_place(self, place_id: str) -> list[Review]:
         """
@@ -183,11 +180,11 @@ class HBnBFacade:
             return []
 
         # Find reviews where the 'place' attribute is the Place object
-        return self.review_repo.get_by_attribute('place', place_obj)
+        return self.review_repository.get_by_attribute('place', place_obj)
 
     def update_review(self, review_id: str, review_data: Dict) -> Optional[Review]:
         """Updates a Review's attributes (PUT)."""
-        review = self.review_repo.get(review_id)
+        review = self.review_repository.get(review_id)
         if review:
             review.update(review_data)
         return review
@@ -197,4 +194,4 @@ class HBnBFacade:
         Deletes a Review (DELETE), and removes the reference from the parent Place,
         maintaining data consistency. (Required for Task 5).
         """
-        return self.review_repo.delete(review_id)
+        return self.review_repository.delete(review_id)
