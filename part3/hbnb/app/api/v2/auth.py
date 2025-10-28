@@ -35,7 +35,7 @@ class Login(Resource):
         access_token = create_access_token(
         identity=str(user.id),   # only user ID goes here
         additional_claims={"is_admin": user.is_admin},
-	expires_delta=timedelta(hours=3)  # Validate token for 3 hours
+	    expires_delta=timedelta(hours=3)  # Validate token for 3 hours
         )
 
         # Step 4: Return the JWT token to the client

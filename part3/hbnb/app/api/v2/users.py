@@ -36,7 +36,7 @@ def admin_required():
     return wrapper
 
 
-# Definition of the input model (for POST/PUT)
+# Definition of the input model (for POST)
 user_model = users_ns.model('User', {
     'first_name': fields.String(
         required=True, 
@@ -60,6 +60,20 @@ user_model = users_ns.model('User', {
         required=True,
         description='The user password',
         example='StrongP@ssw0rd'
+    ),
+})
+
+# New model for updating a user (PUT) - only first_name and last_name allowed
+user_update_model = users_ns.model('UserUpdate', {
+    'first_name': fields.String(
+        required=False, 
+        description='The user first name',
+        example='John'
+    ),
+    'last_name': fields.String(
+        required=False,
+        description='The user last name',
+        example='Doe'
     ),
 })
 
@@ -163,7 +177,7 @@ class UserResource(Resource):
 
     @users_ns.doc('update_user', security='jwt')
     @jwt_required()
-    @users_ns.expect(user_model, validate=True)
+    @users_ns.expect(user_update_model, validate=True)
     @users_ns.marshal_with(user_response_model)
     @users_ns.response(200, 'User updated successfully')
     @users_ns.response(400, 'You cannot modify email or password.', error_model)
@@ -175,8 +189,9 @@ class UserResource(Resource):
         """Update an existing User"""
         user = get_jwt_identity()
         claims = get_jwt()
-        user_data = request.json
-        if user != user_id and claims.get("is_admin") is not True:
+        user_data = users_ns.payload
+        is_admin = claims.get("is_admin", False)
+        if user != user_id and not is_admin:
             users_ns.abort(403, message="Access forbidden: You can only modify your own profile.")
 
         if 'email' in user_data or 'password' in user_data:
@@ -186,7 +201,7 @@ class UserResource(Resource):
             updated_user = facade.update_user(user_id, user_data)
             if updated_user is None:
                 users_ns.abort(404, message=f"User with ID {user_id} not found")
-            return updated_user.to_dict(), 200
+            return updated_user, 200
         except ValueError as e:
             # Handle validation errors
             users_ns.abort(400, message=str(e))

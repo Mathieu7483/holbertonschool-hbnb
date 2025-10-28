@@ -186,10 +186,8 @@ class PlaceResource(Resource):
             
             # Assuming update_place returns an object with .to_dict() or the facade is adjusted 
             # to return a dict consistent with get_place(). Let's return the dict directly:
-            if isinstance(updated_place, dict):
-                 return updated_place, 200
-            else:
-                 return updated_place.to_dict(), 200 
+          
+            return updated_place, 200 
             
         except LookupError as e:
             places_ns.abort(404, message=str(e))

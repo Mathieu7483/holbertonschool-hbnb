@@ -3,10 +3,11 @@ from flask_restx import Api
 from .services.facade import HBnBFacade
 from flask_bcrypt import Bcrypt
 from app.extensions import bcrypt, jwt
+from flask_sqlalchemy import SQLAlchemy
 
 
 HBnB_FACADE = HBnBFacade()
-
+db = SQLAlchemy()
 
 def create_app(config_class="config.DevelopmentConfig"):
 
@@ -45,7 +46,10 @@ def create_app(config_class="config.DevelopmentConfig"):
         security='jwt'
     )
 
-    # 6. Register API namespaces (blueprints)
+    # 6. Initialize database
+    db.init_app(app)
+
+    # 7. Register API namespaces (blueprints)
     from app.api.v2.users import users_ns
     from app.api.v2.places import places_ns
     from app.api.v2.reviews import reviews_ns
