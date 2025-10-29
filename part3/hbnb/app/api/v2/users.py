@@ -150,24 +150,25 @@ class UserListResource(Resource):
     def post(self):
         """Create a new User"""
         try:
-            user_data = request.get_json()
+            user_data = request.json
             new_user = facade.create_user(user_data)
             return new_user.to_dict(), 201
         except ValueError as e:
+            # Handle validation errors (email format, missing fields, etc.)
             users_ns.abort(400, message=str(e))
         except Exception as e:
+            # Handle other errors (email already exists, etc.)
             if "already exists" in str(e).lower():
                 users_ns.abort(409, message=str(e))
             users_ns.abort(400, message=str(e))
 
 
 # ----------------------------------------------------
-# 2. Resource for a single item : /users/<user_id> (GET, PUT, DELETE)
+# 2. Resource for a single item : /users/<user_id> (GET one, PUT)
 # ----------------------------------------------------
 @users_ns.route('/<string:user_id>')
 @users_ns.param('user_id', 'The user unique identifier')
 class UserResource(Resource):
-    
     @users_ns.doc('get_user', security='jwt')
     @jwt_required()
     @users_ns.marshal_with(user_response_model)
@@ -180,7 +181,6 @@ class UserResource(Resource):
         current_user = get_jwt_identity()
         claims = get_jwt()
         is_admin = claims.get("is_admin", False)
-        
         if current_user != user_id and is_admin is not True:
             users_ns.abort(403, message="Access forbidden: You can only view your own profile.")
             
@@ -194,68 +194,67 @@ class UserResource(Resource):
     @users_ns.expect(user_update_model, validate=True)
     @users_ns.marshal_with(user_response_model)
     @users_ns.response(200, 'User updated successfully')
-    @users_ns.response(400, 'Invalid input', error_model)
+    @users_ns.response(400, 'You cannot modify email or password.', error_model)
     @users_ns.response(404, 'User not found', error_model)
+    @users_ns.response(409, 'Email already exists')
     @users_ns.response(401, 'Unauthorized', error_model)
-    @users_ns.response(403, 'Forbidden', error_model)
+    @users_ns.response(403, 'Unauthorized action.', error_model)
     def put(self, user_id):
-        """Update user's first_name and last_name only"""
-        current_user = get_jwt_identity()
+        """Update an existing User"""
+        user = get_jwt_identity()
         claims = get_jwt()
+        user_data = users_ns.payload
         is_admin = claims.get("is_admin", False)
-        
-        # Authorization: only the user themselves or an admin
-        if current_user != user_id and not is_admin:
+        if user != user_id and not is_admin:
             users_ns.abort(403, message="Access forbidden: You can only modify your own profile.")
 
-        try:
-            user_data = request.get_json()
-        except Exception:
-            users_ns.abort(400, message="Invalid JSON data")
-        
-        if not user_data:
-            users_ns.abort(400, message="No data provided")
-        
+        if 'email' in user_data or 'password' in user_data:
+             # Utilisez 400 car l'utilisateur envoie des données non valides/interdites pour cette route
+             users_ns.abort(400, message="You can only modify first name and last name. Email and password modification is forbidden.")
         try:
             updated_user = facade.update_user(user_id, user_data)
             if updated_user is None:
                 users_ns.abort(404, message=f"User with ID {user_id} not found")
-            
-            return updated_user.to_dict(), 200
-            
+            return updated_user, 200
         except ValueError as e:
+            # Handle validation errors
             users_ns.abort(400, message=str(e))
         except Exception as e:
+            # Handle other errors
             if "already exists" in str(e).lower():
                 users_ns.abort(409, message=str(e))
             users_ns.abort(400, message=str(e))
+        
 
+# ----------------------------------------------------
+# 3. Resource for a single item : /users/<user_id> (DELETE)
+# ----------------------------------------------------
     @users_ns.doc('delete_user', security='jwt')
     @jwt_required()
-    @users_ns.response(204, 'User successfully deleted')
+    @users_ns.response(204, 'User successfully deleted', error_model)
     @users_ns.response(404, 'User not found', error_model)
     @users_ns.response(403, 'Forbidden: Admin privilege required', error_model)
     def delete(self, user_id):
         """Delete a User by ID (ADMIN ONLY)"""
         claims = get_jwt()
         
-        # Authorization Check: Must be Admin
+        # 1. Authorization Check: Must be Admin
         if claims.get("is_admin", False) is not True:
             users_ns.abort(403, message="Access forbidden: Admin privilege required.")
             
-        # Prevent Admin from deleting their own account
+        # 2. Prevent Admin from deleting their own account (Optional but recommended)
         current_user_id = get_jwt_identity()
         if user_id == current_user_id:
-            users_ns.abort(403, message="Cannot delete your own admin account.")
+             users_ns.abort(403, message="Cannot delete your own admin account.")
 
-        # Proceed with deletion
+        # 3. Proceed with deletion
         is_deleted = facade.delete_user(user_id)
         
         if not is_deleted:
             users_ns.abort(404, message=f"User with ID {user_id} not found")
 
-        return '', 204
-
+        # HTTP 204 No Content is the standard response for a successful DELETE.
+        return 'User successfully delete', 204
 
 # ----------------------------------------------------
 # 3. Resource for admin updates : /users/<user_id>/admin (PUT)
@@ -274,7 +273,7 @@ class UserAdminResource(Resource):
     @users_ns.response(400, 'Invalid input', error_model)
     @users_ns.response(409, 'Email already exists', error_model)
     def put(self, user_id):
-        """Update any user field (Admin only) - including email and password"""
+        """Update user (Admin only)"""
         
         try:
             user_data = request.get_json()
