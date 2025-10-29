@@ -10,18 +10,12 @@ class BaseModel(db.Model):
     __abstract__ = True  # This ensures SQLAlchemy does not create a table for BaseModel
 
     id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, nullable=False,default=datetime.utcnow, onupdate=datetime.utcnow)
 
     # Core attributes are set to None by default, allowing the Facade to pass existing values.
     def __init__(self, **kwargs):
-
-        now = datetime.now().isoformat()
-
-        # Attributes with default values if not provided
-        self.id = kwargs.get('id', str(uuid.uuid4()))
-        self.created_at = kwargs.get('created_at', now)
-        self.updated_at = kwargs.get('updated_at', now)
+        super().__init__(**kwargs)
 
     def save(self):
         """Update the updated_at timestamp whenever the object is modified."""
