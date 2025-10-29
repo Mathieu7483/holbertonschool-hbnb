@@ -58,22 +58,34 @@ class HBnBFacade:
         # Requires the InMemoryRepository to implement 'get_by_attribute'
         return self.user_repository.get_by_attribute('email', email)
 
-    def update_user(self, user_id: str, user_data: Dict) -> Optional[User]:
-        """Updates a User's attributes."""
+    def update_user(self, user_id: str, user_data: Dict, is_admin_request: bool = False) -> Optional[User]:
         user = self.user_repository.get(user_id)
         if not user:
             return None
-        # Only allow updating certain fields
+
         allowed_fields = {'first_name', 'last_name'}
-        filtered_data = {}
+
+        if is_admin_request:
+            allowed_fields.update({'email', 'password', 'is_admin'})
+
+        data_to_update = {}
+
         for key, value in user_data.items():
             if key in allowed_fields:
-                filtered_data[key] = value
-    
-        if filtered_data:
-            user.update(filtered_data)
-    
-        return user.to_dict()
+                if key == 'password':
+                    if value:
+                        # If a hashing helper exists use it, otherwise store raw (avoid crash)
+                        if hasattr(self, 'hash_password') and callable(getattr(self, 'hash_password')):
+                            data_to_update['password'] = self.hash_password(value)
+                        else:
+                            data_to_update['password'] = value
+                else:
+                    data_to_update[key] = value
+
+        if data_to_update:
+            user.update(data_to_update)
+
+        return user
     
     def delete_user(self, user_id: str) -> bool:
         """Deletes a User by ID."""

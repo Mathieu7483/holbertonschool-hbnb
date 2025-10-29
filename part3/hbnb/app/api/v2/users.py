@@ -8,6 +8,7 @@ facade = HBnB_FACADE
 # Initialization with better description
 users_ns = Namespace('users', description='User management operations')
 
+
 def admin_required():
     """Custom decorator to ensure the authenticated user has Admin privilege."""
     
@@ -77,6 +78,30 @@ user_update_model = users_ns.model('UserUpdate', {
     ),
 })
 
+#model for updating user as admin
+user_admin_update_model = users_ns.model('UserAdminUpdate', {
+    'first_name': fields.String(
+        required=False, 
+        description='The user first name',
+        example='John'
+    ),
+    'last_name': fields.String(
+        required=False,
+        description='The user last name',
+        example='Doe'
+    ),
+    'email': fields.String(
+        required=False,
+        description=' The user email address',
+        example='john.doe@example.com'
+    ),
+    'password': fields.String(
+        required=False,
+        description='The user password',
+        example='StrongP@ssw0rd'
+    )
+})
+    
 # Model for basic OUTPUT (base fields without password)
 user_base_output_model = users_ns.model('UserBaseOutput', {
     'first_name': fields.String(description='The user first name'),
@@ -210,6 +235,7 @@ class UserResource(Resource):
                 users_ns.abort(409, message=str(e))
             users_ns.abort(400, message=str(e))
         
+         
 
 # ----------------------------------------------------
 # 3. Resource for a single item : /users/<user_id> (DELETE)
@@ -240,3 +266,43 @@ class UserResource(Resource):
 
         # HTTP 204 No Content is the standard response for a successful DELETE.
         return 'User successfully delete', 204
+    
+
+
+# ----------------------------------------------------
+# 4. Resource for a single item : /users/<user_id>/admin (PUT) - Admin can update any field
+# ----------------------------------------------------
+@users_ns.route('/<string:user_id>/admin')
+@users_ns.param('user_id', 'The user unique identifier')
+class UserAdminResource(Resource):
+    @users_ns.doc('update_user_by_admin', security='jwt')
+    @jwt_required()
+    @users_ns.expect(user_admin_update_model, validate=True)
+    @users_ns.marshal_with(user_response_model)
+    @users_ns.response(200, 'User updated successfully')
+    @users_ns.response(400, 'You cannot modify email or password.', error_model)
+    @users_ns.response(404, 'User not found', error_model)
+    @users_ns.response(401, 'Unauthorized', error_model)
+    @users_ns.response(403, 'Unauthorized action.', error_model)
+    def put(self, user_id):
+        """Update an existing User by admin """
+        user = get_jwt_identity()
+        claims = get_jwt()
+        user_data = users_ns.payload
+        is_admin = claims.get("is_admin", True)
+
+        try:
+            updated_user = facade.update_user(user_id, user_data)
+            
+            if updated_user is None:
+                users_ns.abort(404, message=f"User with ID {user_id} not found")
+                
+            return updated_user, 200 
+            
+        except ValueError as e:
+            users_ns.abort(400, message=str(e))
+            
+        except Exception as e:
+            if "already exists" in str(e).lower():
+                users_ns.abort(409, message=str(e))
+            users_ns.abort(400, message=str(e))
