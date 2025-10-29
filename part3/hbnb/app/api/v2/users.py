@@ -195,7 +195,6 @@ class UserResource(Resource):
             users_ns.abort(403, message="Access forbidden: You can only modify your own profile.")
 
         if 'email' in user_data or 'password' in user_data:
-             # Utilisez 400 car l'utilisateur envoie des données non valides/interdites pour cette route
              users_ns.abort(400, message="You can only modify first name and last name. Email and password modification is forbidden.")
         try:
             updated_user = facade.update_user(user_id, user_data)
