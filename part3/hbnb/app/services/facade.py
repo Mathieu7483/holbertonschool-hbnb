@@ -74,6 +74,11 @@ class HBnBFacade:
             user.update(filtered_data)
     
         return user.to_dict()
+    
+    def delete_user(self, user_id: str) -> bool:
+        """Deletes a User by ID."""
+        return self.user_repository.delete(user_id)
+    
 
     # ==================================
     # ===== AMENITY METHODS (CRUD) =====
