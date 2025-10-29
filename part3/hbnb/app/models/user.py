@@ -18,6 +18,19 @@ class User(BaseModel):
     password = db.Column(db.String(255), nullable=False)
     is_admin = db.Column(db.Boolean, default=False, nullable=False)
 
+    def validate(self):
+        """
+        Runs validation checks on the user instance attributes.
+        Raises ValueError if validation fails.
+        """
+        if not self.first_name or len(self.first_name) == 0:
+             raise ValueError("First name cannot be empty")
+             
+        if '@' not in self.email:
+             raise ValueError("Invalid email address format.")
+
+        return self
+
     def __init__(self, first_name, last_name, email, password=None, is_admin=False):
         """
         Initialize a new User instance with validation.
