@@ -1,7 +1,11 @@
 from app.models.basemodel import BaseModel
-# from typing import Optional # Omitted as requested
+from app.extensions import db
+
 
 class Amenity(BaseModel):
+    __tablename__ = 'amenities'
+    name = db.Column(db.String(50), nullable=False)
+
     def __init__(self, name=None, **kwargs):
 
         # Call the parent constructor to handle ID, created_at, and updated_at.
