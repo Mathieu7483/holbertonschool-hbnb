@@ -18,6 +18,19 @@ class User(BaseModel):
     password = db.Column(db.String(255), nullable=False)
     is_admin = db.Column(db.Boolean, default=False, nullable=False)
 
+    def validate(self):
+        """
+        Runs validation checks on the user instance attributes.
+        Raises ValueError if validation fails.
+        """
+        if not self.first_name or len(self.first_name) == 0:
+             raise ValueError("First name cannot be empty")
+             
+        if '@' not in self.email:
+             raise ValueError("Invalid email address format.")
+
+        return self
+
     def __init__(self, first_name, last_name, email, password=None, is_admin=False):
         """
         Initialize a new User instance with validation.
@@ -66,3 +79,28 @@ class User(BaseModel):
     def verify_password(self, password):
         """Verifies if the provided password matches the hashed password."""
         return bcrypt.check_password_hash(self.password.encode('utf-8'), password)
+    
+    def update_from_dict(self, data):
+        """Updates user attributes from a dictionary with validation."""
+        # Validate before updating
+        if 'first_name' in data:
+            if len(data['first_name']) > 50:
+                raise ValueError("Your first name must have less than 50 characters")
+            self.first_name = data['first_name']
+        
+        if 'last_name' in data:
+            if len(data['last_name']) > 50:
+                raise ValueError("Your last name must have less than 50 characters")
+            self.last_name = data['last_name']
+        
+        if 'email' in data:
+            if '@' not in data['email']:
+                raise ValueError("Enter a valid address, e.g. example@gmail.com")
+            self.email = data['email']
+        
+        if 'is_admin' in data:
+            self.is_admin = data['is_admin']
+        
+        # CRUCIAL: Hash password if provided
+        if 'password' in data and data['password']:
+            self.hash_password(data['password'])

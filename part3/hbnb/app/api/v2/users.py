@@ -8,31 +8,22 @@ facade = HBnB_FACADE
 # Initialization with better description
 users_ns = Namespace('users', description='User management operations')
 
+
 def admin_required():
     """Custom decorator to ensure the authenticated user has Admin privilege."""
     
-    # The intermediate function. It receives the original decorated function (fn)
-    # E.g., fn = UserListResource.get
     def wrapper(fn): 
-        
-        # The inner function, which is the actual wrapper that replaces fn.
-        # It first enforces JWT validation and then executes the custom logic.
         @jwt_required()
         def decorated_view(*args, **kwargs):
             claims = get_jwt()
             
-            # Authorization logic: Check the 'is_admin' claim from the JWT payload
             if claims.get("is_admin", False) is not True:
-                # If claim is False or missing, stop execution and return 403
                 users_ns.abort(403, message="Access forbidden: Admin privilege required.")
                 
-            # If authorization is successful, execute the original function (e.g., the GET method)
             return fn(*args, **kwargs)
         
-        # The wrapper returns the decorated view (the secured function)
         return decorated_view
     
-    # The initial call to admin_required() returns the wrapper function itself
     return wrapper
 
 
@@ -77,13 +68,36 @@ user_update_model = users_ns.model('UserUpdate', {
     ),
 })
 
+# Model for updating user as admin
+user_admin_update_model = users_ns.model('UserAdminUpdate', {
+    'first_name': fields.String(
+        required=False, 
+        description='The user first name',
+        example='John'
+    ),
+    'last_name': fields.String(
+        required=False,
+        description='The user last name',
+        example='Doe'
+    ),
+    'email': fields.String(
+        required=False,
+        description='The user email address',
+        example='john.doe@example.com'
+    ),
+    'password': fields.String(
+        required=False,
+        description='The user password',
+        example='StrongP@ssw0rd'
+    )
+})
+    
 # Model for basic OUTPUT (base fields without password)
 user_base_output_model = users_ns.model('UserBaseOutput', {
     'first_name': fields.String(description='The user first name'),
     'last_name': fields.String(description='The user last name'),
     'email': fields.String(description='The user email address'),
     'is_admin': fields.Boolean(description='Whether the user is an admin'),
-    # Password is explicitly omitted here 🔒
 })
 
 # Definition of the response model (with IDs and dates)
@@ -241,3 +255,44 @@ class UserResource(Resource):
 
         # HTTP 204 No Content is the standard response for a successful DELETE.
         return 'User successfully delete', 204
+
+# ----------------------------------------------------
+# 3. Resource for admin updates : /users/<user_id>/admin (PUT)
+# ----------------------------------------------------
+@users_ns.route('/<string:user_id>/admin')
+@users_ns.param('user_id', 'The user unique identifier')
+class UserAdminResource(Resource):
+    
+    @users_ns.doc('update_user_by_admin', security='jwt')
+    @admin_required()
+    @users_ns.expect(user_admin_update_model, validate=True)
+    @users_ns.marshal_with(user_response_model)
+    @users_ns.response(200, 'User updated successfully')
+    @users_ns.response(404, 'User not found', error_model)
+    @users_ns.response(403, 'Forbidden: Admin required', error_model)
+    @users_ns.response(400, 'Invalid input', error_model)
+    @users_ns.response(409, 'Email already exists', error_model)
+    def put(self, user_id):
+        """Update user (Admin only)"""
+        
+        try:
+            user_data = request.get_json()
+        except Exception:
+            users_ns.abort(400, message="Invalid JSON data")
+        
+        if not user_data:
+            users_ns.abort(400, message="No data provided")
+        
+        try:
+            updated_user = facade.update_user(user_id, user_data)
+            if updated_user is None:
+                users_ns.abort(404, message=f"User with ID {user_id} not found")
+            
+            return updated_user.to_dict(), 200
+            
+        except ValueError as e:
+            users_ns.abort(400, message=str(e))
+        except Exception as e:
+            if "already exists" in str(e).lower():
+                users_ns.abort(409, message=str(e))
+            users_ns.abort(400, message=str(e))

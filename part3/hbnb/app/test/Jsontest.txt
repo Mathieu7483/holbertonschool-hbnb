@@ -5,12 +5,14 @@
 Methde POSTMAN USERS LAMBDA
 
 {
-    "first_name": "Mathieu",
-    "last_name": "Dupont",
-    "email": "mathieu.test.user@example.com",
-    "is_admin": false,
-    "password": "Password123!"
-}
+    "id": "9c1e068d-c1fb-4998-bc0f-b9ce914e273a",
+    "created_at": null,
+    "updated_at": null,
+    "first_name": "John",
+    "last_name": "Doe",
+    "email": "john.doe@example.com",
+    "is_admin": false
+  },
 
 Methde POSTMAN USERS ADMIN
 {
@@ -19,7 +21,8 @@ Methde POSTMAN USERS ADMIN
     "email": "mathieu.admin@example.com",
     "is_admin": true,
     "password": "Admin@1234"
-}
+}*id : 2ebe9e2b-583e-4c1f-996d-75f612b29b15
+token : eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc2MTcyOTk0MCwianRpIjoiZjQwYjIwN2MtN2FlZi00ZmEyLTg1YTYtODQyNjkyNThiNjA3IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjJlYmU5ZTJiLTU4M2UtNGMxZi05OTZkLTc1ZjYxMmIyOWIxNSIsIm5iZiI6MTc2MTcyOTk0MCwiY3NyZiI6ImZlNTBjZjA4LTliNWMtNDVhZS05YTRiLTU5YjA3Nzg5YzdkNSIsImV4cCI6MTc2MTc0MDc0MCwiaXNfYWRtaW4iOnRydWV9.w3GcrnOQBQufvXDafADWeOtJ1-RjjFxvMXylmnfe0X0
 
 METHODE POSTMAN PLACE
 {
