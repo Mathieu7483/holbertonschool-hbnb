@@ -54,15 +54,19 @@ class Place(BaseModel):
 
     def to_dict(self):
         """Return a dictionary representation of the Place instance."""
+        # start with the base dictionary
         place_dict = super().to_dict()
+        
+        # add Place-specific fields
         place_dict.update({
             "title": self.title,
+            "description": self.description,
             "price": self.price,
-            # Note: We return the owner object's dictionary representation
+            "latitude": self.latitude,
+            "longitude": self.longitude,  
+            "owner_id": self.owner_id,        
             "owner": self.owner.to_dict() if self.owner else None,
-            # We only return the list of amenities as dicts, not the full objects
-            "amenities": [a.to_dict() for a in self.amenities],
-            # Useful for API endpoints: count the number of reviews
-            "reviews_count": len(self.reviews)
+            "amenities": [a.to_dict() for a in self.amenities] if self.amenities else [],
+            "reviews_count": len(self.reviews) if self.reviews else 0
         })
         return place_dict
