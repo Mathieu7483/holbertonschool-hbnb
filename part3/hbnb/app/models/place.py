@@ -1,9 +1,21 @@
 from app.models.basemodel import BaseModel
 from app.models.user import User
+from app.extensions import db
 # from typing import Optional, List # Omitted as requested
 
 class Place(BaseModel):
-    def __init__(self, title=None, description=None, price=0, latitude=0.0, longitude=0.0, owner=None, **kwargs):
+    __tablename__ = 'places'
+
+    title = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.Text, nullable=True)
+    price = db.Column(db.Float, nullable=False, default=0.0)
+    latitude = db.Column(db.Float, nullable=False, default=0.0)
+    longitude = db.Column(db.Float, nullable=False, default=0.0)
+    owner_id = db.Column(db.String(60), db.ForeignKey('users.id'), nullable=False)
+   
+
+
+    def __init__(self, title=None, description=None, price=0, latitude=0.0, longitude=0.0, owner=None, amenities=None, **kwargs):
 
         # Call the parent constructor to handle ID, created_at, and updated_at.
         super().__init__(**kwargs)
@@ -17,7 +29,7 @@ class Place(BaseModel):
         self.owner = owner
 
         # Relationship lists (stores object references)
-        self.amenities = []
+        self.amenities = amenities if amenities is not None else []
         self.reviews = []
 
         self.validate()
