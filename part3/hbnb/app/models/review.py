@@ -1,8 +1,16 @@
 from app.models.basemodel import BaseModel
 from app.models.place import Place
 from app.models.user import User
+from app.extensions import db
 
 class Review(BaseModel):
+    __tablename__ = 'reviews'
+    text = db.Column(db.Text, nullable=False)
+    rating = db.Column(db.Integer, nullable=False)
+    place_id = db.Column(db.String(60), db.ForeignKey('places.id'), nullable=False)
+    user_id = db.Column(db.String(60), db.ForeignKey('users.id'), nullable=False)
+    place = db.relationship('Place', backref='reviews', lazy=True)
+    user = db.relationship('User', backref='reviews', lazy=True)
 
     # 1. Correct __init__ signature to accept arguments and pass them to the parent.
     def __init__(self, text=None, rating=None, place=None, user=None, **kwargs):
