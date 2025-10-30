@@ -19,7 +19,9 @@ class BaseModel(db.Model):
 
     def save(self):
         """Update the updated_at timestamp whenever the object is modified."""
-        self.updated_at = datetime.now().isoformat()
+        self.updated_at = datetime.utcnow()
+        db.session.add(self)
+        db.session.commit()
 
     def update(self, data: dict):
         """
@@ -36,9 +38,13 @@ class BaseModel(db.Model):
                 setattr(self, key, value)
 
         # Update the timestamp, proving the object has changed. Crucial for tests.
-        self.save()
+        self.updated_at = datetime.utcnow()
+        db.session.commit()
 
     def to_dict(self):
         """Return a dictionary representation of the object."""
-        result = self.__dict__.copy()
-        return result
+        return {
+            'id': self.id,
+            'created_at': self.created_at.isoformat() if self.created_at else None,
+            'updated_at': self.updated_at.isoformat() if self.updated_at else None
+        }

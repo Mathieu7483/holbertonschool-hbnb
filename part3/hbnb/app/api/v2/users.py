@@ -54,6 +54,32 @@ user_model = users_ns.model('User', {
     ),
 })
 
+user_model_response_by_admin = users_ns.model('ModelAdmin', {
+    'first_name': fields.String(
+        required=True, 
+        description='The user first name',
+        example='John'
+    ),
+    'last_name': fields.String(
+        description='The user last name',
+        example='Doe'
+    ),
+    'email': fields.String(
+        required=True, 
+        description='The user email address',
+        example='john.doe@example.com'
+    ),
+    'is_admin': fields.Boolean(
+        description='Whether the user is an admin',
+        default=False
+    ),
+    'password': fields.String(
+        required=True,
+        description='The user password',
+        example='StrongP@ssw0rd'
+    ),
+})
+
 # New model for updating a user (PUT) - only first_name and last_name allowed
 user_update_model = users_ns.model('UserUpdate', {
     'first_name': fields.String(
@@ -181,7 +207,7 @@ class UserResource(Resource):
         current_user = get_jwt_identity()
         claims = get_jwt()
         is_admin = claims.get("is_admin", False)
-        if current_user != user_id and is_admin is not True:
+        if current_user != user_id and not is_admin:
             users_ns.abort(403, message="Access forbidden: You can only view your own profile.")
             
         user = facade.get_user(user_id)
@@ -201,15 +227,14 @@ class UserResource(Resource):
     @users_ns.response(403, 'Unauthorized action.', error_model)
     def put(self, user_id):
         """Update an existing User"""
-        user = get_jwt_identity()
-        claims = get_jwt()
-        user_data = users_ns.payload
-        is_admin = claims.get("is_admin", False)
-        if user != user_id and not is_admin:
+        current_user_id = get_jwt_identity()
+        if current_user_id != user_id:
             users_ns.abort(403, message="Access forbidden: You can only modify your own profile.")
+            
+        user_data = users_ns.payload
 
-        if 'email' in user_data or 'password' in user_data:
-             # Utilisez 400 car l'utilisateur envoie des données non valides/interdites pour cette route
+        if 'email' in user_data or 'password' in user_data or 'is_admin' in user_data:
+             # use 400 Bad Request for invalid fields
              users_ns.abort(400, message="You can only modify first name and last name. Email and password modification is forbidden.")
         try:
             updated_user = facade.update_user(user_id, user_data)
@@ -264,9 +289,9 @@ class UserResource(Resource):
 class UserAdminResource(Resource):
     
     @users_ns.doc('update_user_by_admin', security='jwt')
-    @admin_required()
     @users_ns.expect(user_admin_update_model, validate=True)
-    @users_ns.marshal_with(user_response_model)
+    @users_ns.marshal_with(user_model_response_by_admin)
+    @admin_required()
     @users_ns.response(200, 'User updated successfully')
     @users_ns.response(404, 'User not found', error_model)
     @users_ns.response(403, 'Forbidden: Admin required', error_model)
@@ -275,16 +300,13 @@ class UserAdminResource(Resource):
     def put(self, user_id):
         """Update user (Admin only)"""
         
-        try:
-            user_data = request.get_json()
-        except Exception:
-            users_ns.abort(400, message="Invalid JSON data")
+        user_data = users_ns.payload
         
         if not user_data:
             users_ns.abort(400, message="No data provided")
         
         try:
-            updated_user = facade.update_user(user_id, user_data)
+            updated_user = facade.update_user_by_admin(user_id, user_data)
             if updated_user is None:
                 users_ns.abort(404, message=f"User with ID {user_id} not found")
             

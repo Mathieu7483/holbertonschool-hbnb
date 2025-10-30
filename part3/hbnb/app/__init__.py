@@ -1,28 +1,36 @@
 from flask import Flask
 from flask_restx import Api
-from .services.facade import HBnBFacade
-from flask_bcrypt import Bcrypt
 from app.extensions import bcrypt, jwt, db
 
+# Import models to ensure they are registered with SQLAlchemy
+import app.models
 
-
-HBnB_FACADE = HBnBFacade()
+HBnB_FACADE = None
 
 def create_app(config_class="config.DevelopmentConfig"):
-    # App Factory function to create and configure the Flask application
-
+    """App Factory function to create and configure the Flask application"""
+    global HBnB_FACADE
+    
     # 1. Initialize Flask application
     app = Flask(__name__)
 
     # 2. Load configuration from the provided config class
     app.config.from_object(config_class)
 
-    # 3.# initialize extensions
+    # 3. Initialize extensions
     jwt.init_app(app)
     bcrypt.init_app(app)
     db.init_app(app)
 
-    # 4. DEFINE Swagger Authorizations
+    # create database tables
+    with app.app_context():
+        db.create_all()
+        
+        if HBnB_FACADE is None:
+            from .services.facade import HBnBFacade
+            HBnB_FACADE = HBnBFacade()
+
+    # 4. Define Swagger Authorizations
     authorizations = {
         'jwt': {
             'type': 'apiKey',
@@ -57,5 +65,8 @@ def create_app(config_class="config.DevelopmentConfig"):
     api.add_namespace(amenities_ns, path='/api/v2/amenities')
     api.add_namespace(auth_ns, path='/api/v2/auth')
 
-
     return app
+
+def get_facade():
+    """Helper function to get the facade instance"""
+    return HBnB_FACADE
