@@ -40,12 +40,7 @@ class AmenityList(Resource):
         try:
             # Create new amenity
             new_amenity = facade.create_amenity(amenity_data)
-            return {
-                'id': new_amenity.id,
-                'name': new_amenity.name,
-                'created_at': new_amenity.created_at,
-                'updated_at': new_amenity.updated_at
-            }, 201
+            return new_amenity.to_dict(), 201
         except (TypeError, ValueError) as e:
             return {'error': str(e)}, 400
 
