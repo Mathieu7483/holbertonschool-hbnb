@@ -1,7 +1,13 @@
-from app.models.basemodel import BaseModel
+from app.models.basemodel import BaseModel 
 from app.models.user import User
 from app.extensions import db
+from sqlalchemy import Table, Column, String, Text, Float, ForeignKey
 # from typing import Optional, List # Omitted as requested
+
+place_amenity = Table('place_amenity', db.Model.metadata,
+    db.Column('place_id', String(36), ForeignKey('places.id'), primary_key=True),
+    db.Column('amenity_id', String(36), ForeignKey('amenities.id'), primary_key=True)
+    )
 
 class Place(BaseModel):
     __tablename__ = 'places'
@@ -12,8 +18,12 @@ class Place(BaseModel):
     latitude = db.Column(db.Float, nullable=False, default=0.0)
     longitude = db.Column(db.Float, nullable=False, default=0.0)
     owner_id = db.Column(db.String(60), db.ForeignKey('users.id'), nullable=False)
-   
 
+    owner = db.relationship('User', backref='places')
+    amenities = db.relationship('Amenity', secondary='place_amenity', backref='places')
+    reviews = db.relationship('Review', backref='reviewed_place', cascade='all, delete-orphan')
+   
+    
 
     def __init__(self, title=None, description=None, price=0, latitude=0.0, longitude=0.0, owner=None, amenities=None, **kwargs):
 
