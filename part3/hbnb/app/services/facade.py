@@ -186,6 +186,16 @@ class HBnBFacade:
         if not place:
             return None
         
+        # Gestion des amenities (AJOUT DE LOGIQUE AMENITY)
+        amenity_ids = place_data.pop('amenities', None)
+        if amenity_ids is not None:
+            amenity_objects = db.session.scalars(
+                db.select(Amenity).filter(Amenity.id.in_(amenity_ids))
+            ).all()
+            if len(amenity_objects) != len(amenity_ids):
+                raise ValueError("One or more amenities not found.")
+            place.amenities = amenity_objects  # Remplace l'ancienne liste
+
         # Protect non-modifiable fields like owner_id
         place_data.pop('owner_id', None)
         
@@ -201,19 +211,45 @@ class HBnBFacade:
         return True
 
     # ==================================
-    # ===== REVIEW METHODS (CRUD) ======
+    # ===== REVIEW METHODS (CRUD/CUSTOM) ======
     # ==================================
+    
+    # NOUVELLE MÉTHODE REQUISE POUR LE CHECK DANS L'API
+    def user_has_reviewed_place(self, user_id: str, place_id: str) -> bool:
+        """Vérifie si un utilisateur a déjà écrit une revue pour un lieu donné."""
+        # Nécessite que le ReviewRepository ait une méthode get_by_attributes (ou équivalent)
+        existing_review = self.review_repository.get_by_attributes(
+            user_id=user_id,
+            place_id=place_id
+        )
+        return existing_review is not None
+    
+    # MODIFICATION DE LA SIGNATURE ET DE LA LOGIQUE
+    # L'API est corrigée pour passer review_data propre (contenant place_id et user_id)
+    def create_review(self, review_data: Dict) -> Review:
+        """Creates a new review."""
+        
+        place_id = review_data.get('place_id')
+        user_id = review_data.get('user_id')
+        
+        if not place_id or not user_id:
+            raise ValueError("place_id and user_id are required in review_data.")
 
-    def create_review(self, review_data: Dict, place_id: str, user_id: str) -> Review:
-        """Creates a new review for a place by a user."""
-        if not self.get_place(place_id):
+        place = self.get_place(place_id)
+        user = self.get_user(user_id)
+        
+        if not place:
             raise ValueError(f"Place with ID '{place_id}' not found.")
-        if not self.get_user(user_id):
+        if not user:
             raise ValueError(f"User with ID '{user_id}' not found.")
 
-        # Add IDs to the data dictionary
-        review_data['place_id'] = place_id
-        review_data['user_id'] = user_id
+        # LOGIQUE D'AUTORISATION (pour la cohérence avec le test)
+        if place.owner_id == user_id:
+             raise ValueError("Owner cannot review their own place.") # L'API doit retourner 400
+
+        # LOGIQUE DE DUPLICATION (celle qui a causé l'AttributeError)
+        if self.user_has_reviewed_place(user_id, place_id):
+             raise ValueError("User has already reviewed this place.") # L'API doit retourner 400
 
         new_review = Review(**review_data)
         self.review_repository.add(new_review)
