@@ -146,15 +146,30 @@ class HBnBFacade:
     # ==================================
 
     def create_place(self, place_data: Dict) -> Place:
-        """Creates a new place."""
-        if 'owner_id' not in place_data:
+        owner_id = place_data.get('owner_id')
+        if not owner_id:
             raise ValueError("owner_id is required to create a place.")
-        if not self.get_user(place_data['owner_id']):
-            raise ValueError(f"Owner with ID '{place_data['owner_id']}' not found.")
+        if not self.get_user(owner_id):
+            raise ValueError(f"Owner with ID '{owner_id}' not found.")
 
-        # The ORM handles linking via owner_id, no need to assign the 'owner' object
+        # 1. Pop 'amenities' IDs
+        amenity_ids = place_data.pop('amenities', []) 
+        
+        # 2. Create Place instance with simple attributes
         new_place = Place(**place_data)
+        
+        # 3. Convert IDs to Amenity objects and link them
+        if amenity_ids:
+            # Fetch Amenity objects using the IDs
+            amenity_objects = db.session.scalars(
+                db.select(Amenity).filter(Amenity.id.in_(amenity_ids))
+            ).all()
+            
+            new_place.amenities.extend(amenity_objects)
+
+        # 4. Save
         self.place_repository.add(new_place)
+        
         return new_place
 
     def get_all_places(self) -> list[Place]:
