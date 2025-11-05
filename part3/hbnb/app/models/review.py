@@ -12,7 +12,7 @@ class Review(BaseModel):
 
 
     def to_dict(self):
-        """Sérialisation complète de la Review, en utilisant la sérialisation imbriquée pour les objets liés."""
+        """complete serialization of the review."""
         data = super().to_dict()
         data.update({
             "text": self.text,
