@@ -7,13 +7,12 @@ class Review(BaseModel):
     text = db.Column(db.Text, nullable=False)
     rating = db.Column(db.Integer, nullable=False)
 
-    # Clés étrangères (le type doit être cohérent avec l'ID du BaseModel)
     place_id = db.Column(db.String(36), db.ForeignKey('places.id'), nullable=False)
     user_id = db.Column(db.String(36), db.ForeignKey('users.id'), nullable=False)
 
-    # --- SUPPRESSION DE __init__, validate, update ---
 
     def to_dict(self):
+        """Sérialisation complète de la Review, en utilisant la sérialisation imbriquée pour les objets liés."""
         data = super().to_dict()
         data.update({
             "text": self.text,
@@ -21,9 +20,12 @@ class Review(BaseModel):
             "place_id": self.place_id,
             "user_id": self.user_id,
         })
-        # Optionnel: inclure les objets liés s'ils sont chargés
+
         if self.user:
-            data['user'] = self.user.to_dict()
-        if hasattr(self, 'place') and self.place: # 'place' existe grâce au backref
-             data['place'] = self.place.to_dict()
+            # Assuming User model has a simple to_dict() or to_nested_dict() for the nested output
+            data['user'] = self.user.to_dict() 
+            
+        if hasattr(self, 'place') and self.place: 
+            data['place'] = self.place.to_nested_dict() 
+            
         return data
