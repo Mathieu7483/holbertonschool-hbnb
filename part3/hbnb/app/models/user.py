@@ -20,25 +20,24 @@ class User(BaseModel):
 
     @property
     def password(self):
-        """Empêche la lecture directe du mot de passe."""
+        """To not see the password directly"""
         raise AttributeError('password is not a readable attribute')
 
     @password.setter
     def password(self, password_text):
         """
-        Génère un hash à partir du mot de passe en clair et le stocke 
-        dans la colonne 'password_hash'.
+        Generate à hash password.
         """
         self.password_hash = bcrypt.generate_password_hash(password_text).decode('utf-8')
 
     def verify_password(self, password_text):
-        """Vérifie si le mot de passe fourni correspond au hash stocké."""
+        """Verification of the hash."""
         if not self.password_hash:
             return False
         return bcrypt.check_password_hash(self.password_hash, password_text)
 
     def to_dict(self):
-        """Sérialise l'objet User."""
+        """Serialization of the object User."""
         data = super().to_dict()
         data.update({
             "first_name": self.first_name,
