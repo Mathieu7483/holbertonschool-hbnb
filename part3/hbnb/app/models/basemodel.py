@@ -10,25 +10,25 @@ class BaseModel(db.Model):
     updated_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     def save(self):
-        """Sauvegarde l'objet dans la session et commit."""
+        """save the object and commit it."""
         db.session.add(self)
         db.session.commit()
 
     def delete(self):
-        """Supprime l'objet de la base de données."""
+        """delete on the database."""
         db.session.delete(self)
         db.session.commit()
 
     def update(self, data: dict):
-        """Met à jour les attributs à partir d'un dictionnaire."""
+        """update the attributes."""
         for key, value in data.items():
-            # Vérifie si l'attribut existe sur le modèle avant de l'assigner
+            # verification if attribute is on the model
             if hasattr(self, key):
                 setattr(self, key, value)
-        db.session.commit() # Commit les changements
+        db.session.commit() # Commit the changes
 
     def to_dict(self):
-        """Sérialise les champs de base."""
+        """Serialize the data"""
         return {
             'id': self.id,
             'created_at': self.created_at.isoformat() if self.created_at else None,
