@@ -83,7 +83,7 @@ class ReviewList(Resource):
 
 
         # 2. Authorization Check (You cannot review your own place)
-        place_owner_id = place.get('owner', {}).get('id')
+        place_owner_id = place.owner_id
         if place_owner_id == user_id:
             reviews_ns.abort(400, message="You cannot review your own place.")
         
@@ -147,7 +147,7 @@ class ReviewResource(Resource):
             reviews_ns.abort(404, message=f"Review with ID '{review_id}' not found")
 
         # Authorization Check: Only the review author can update
-        review_author_id = review.get('user', {}).get('id')
+        review_author_id = review.user_id
         if review_author_id != user_id:
             reviews_ns.abort(403, message="Unauthorized: You can only update your own reviews.")
 
@@ -171,25 +171,26 @@ class ReviewResource(Resource):
     @reviews_ns.response(404, 'Review not found')
     @jwt_required()
     def delete(self, review_id):
-        """Delete a review by ID (Author Only and Admin)"""
         user_id = get_jwt_identity()
+        claims = get_jwt()
+        is_admin = claims.get("is_admin", False)
+        
         review = facade.get_review(review_id)
+        
         if not review:
             reviews_ns.abort(404, message=f"Review with ID '{review_id}' not found")
-        # Authorization Check: Only the review author can delete
-        review_author_id = review.get('user', {}).get('id')
-        if review_author_id != user_id:
+            
+        review_author_id = review.user_id 
+        
+        if review_author_id != user_id and not is_admin:
             reviews_ns.abort(403, message="Unauthorized: You can only delete your own reviews.")
-        # The Facade must handle the deletion of the review and the removal 
-        # of the reference from the parent Place object.
+        
         is_deleted = facade.delete_review(review_id)
         
         if not is_deleted:
-            # If the facade returns False, the ID was not found.
             reviews_ns.abort(404, message=f"Review with ID '{review_id}' not found")
 
-        # HTTP 204 No Content is the standard response for a successful DELETE.
-        return 'Review successfully deleted', 204 
+        return None, 204
 
 # -------------------------------------------------------------
 # Resource: /places/<place_id>/reviews
