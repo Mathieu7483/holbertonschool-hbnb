@@ -8,11 +8,15 @@ class UserRepository(SQLAlchemyRepository):
 
     def get_user_by_email(self, email):
         return self.model.query.filter_by(email=email).first()
-    def delete(self, obj_id):
-        """Delete a user by ID"""
-        user = self.get(obj_id)
-        if user:
-            db.session.delete(user)
+    def delete(self, obj):
+        """Deletes a given object from the database."""
+        if not obj:
+            return False 
+        try:
+            db.session.delete(obj)
             db.session.commit()
             return True
-        return False
+        except Exception as e:
+            db.session.rollback()
+            print(f"Error deleting object: {e}")
+            return False
