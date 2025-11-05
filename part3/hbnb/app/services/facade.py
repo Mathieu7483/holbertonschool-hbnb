@@ -2,8 +2,11 @@
 
 from typing import Optional, Dict
 from app.models import User, Amenity, Place, Review
-from app.persistence import UserRepository, PlaceRepository, ReviewRepository, AmenityRepository
 from app.extensions import db
+from app.persistence.UserRepository import UserRepository
+from app.persistence.PlaceRepository import PlaceRepository
+from app.persistence.ReviewRepository import ReviewRepository
+from app.persistence.AmenityRepository import AmenityRepository
 
 class HBnBFacade:
     """
