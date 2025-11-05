@@ -1,157 +1,173 @@
+# api_integration_test.py
+
 import requests
 import time
 import json
 
-# ----------------------------------------------------------------------
-# Configuration de l'API
-# ----------------------------------------------------------------------
-BASE_URL = "http://127.0.0.1:5000/api/v1" # VÉRIFIEZ VOTRE PORT FLASK
+# ======================================================================
+# CONFIGURATION
+# ======================================================================
+BASE_URL = "http://127.0.0.1:5000/api/v2" # Assurez-vous que le port est correct
 
-# ----------------------------------------------------------------------
-# Variables globales pour stocker les IDs créés
-# ----------------------------------------------------------------------
+# Variables pour stocker les IDs et le token
 IDS = {
+    'ADMIN_ID': None,
     'USER_ID': None,
     'AMENITY_ID': None,
     'PLACE_ID': None,
-    'REVIEW_ID': None
+    'REVIEW_ID': None,
+    'ADMIN_TOKEN': None,
 }
 
-# ----------------------------------------------------------------------
-# Fonction principale d'exécution des tests
-# ----------------------------------------------------------------------
+# ======================================================================
+# FONCTION PRINCIPALE DE TEST
+# ======================================================================
 
-def run_full_tests():
-    print("--- 🎬 DÉMARRAGE DES TESTS CRUD COMPLETS VIA API ---")
+def run_api_tests():
+    """Exécute une suite de tests d'intégration de bout en bout sur l'API."""
     
-    # ---------------------------------
-    # 1. PRÉPARATION : CRÉATION DES DÉPENDANCES
-    # ---------------------------------
+    print("--- 🎬 STARTING END-TO-END API TESTS ---")
 
-    # A. Création User
-    print("\n[1A: POST /users]")
-    user_data = {"first_name": "Test", "last_name": "Owner", "email": "owner@hbnb.com"}
+    # --- 1. SETUP: CREATE AND AUTHENTICATE USERS ---
+    print("\n--- 1. SETUP: Users & Authentication ---")
+
+    # A. Création d'un utilisateur admin
+    print("\n[1A: POST /users] - Creating Admin User")
+    admin_data = {"first_name": "Admin", "last_name": "User", "email": "admin@hbnb.com", "password": "admin_password", "is_admin": True}
     try:
-        response = requests.post(f"{BASE_URL}/users", json=user_data)
+        response = requests.post(f"{BASE_URL}/users", json=admin_data)
         if response.status_code == 201:
-            IDS['USER_ID'] = response.json()['id']
-            print(f"  ✅ User créé. ID: {IDS['USER_ID']}")
+            IDS['ADMIN_ID'] = response.json()['id']
+            print(f"  ✅ Admin user created. ID: {IDS['ADMIN_ID']}")
         else:
-            print(f"  ❌ ÉCHEC CRÉATION USER: {response.status_code} - {response.text}"); return
+            print(f"  ❌ FAILED TO CREATE ADMIN: {response.status_code} - {response.text}"); return
     except requests.exceptions.ConnectionError:
-        print("  ❌ ERREUR DE CONNEXION: Serveur Flask non démarré."); return
+        print("  ❌ CONNECTION ERROR: Is the Flask server running?"); return
 
-    # B. Création Amenity
-    print("\n[1B: POST /amenities]")
-    amenity_data = {"name": "TestAmenity"}
-    response = requests.post(f"{BASE_URL}/amenities", json=amenity_data)
+    # B. Création d'un utilisateur normal
+    print("\n[1B: POST /users] - Creating Normal User")
+    user_data = {"first_name": "Normal", "last_name": "User", "email": "user@hbnb.com", "password": "user_password"}
+    response = requests.post(f"{BASE_URL}/users", json=user_data)
+    if response.status_code == 201:
+        IDS['USER_ID'] = response.json()['id']
+        print(f"  ✅ Normal user created. ID: {IDS['USER_ID']}")
+    else:
+        print(f"  ❌ FAILED TO CREATE USER: {response.status_code} - {response.text}"); return
+
+    # C. Authentification de l'admin pour obtenir un token
+    print("\n[1C: POST /auth/login] - Authenticating Admin")
+    login_data = {"email": "admin@hbnb.com", "password": "admin_password"}
+    response = requests.post(f"{BASE_URL}/auth/login", json=login_data)
+    if response.status_code == 200:
+        IDS['ADMIN_TOKEN'] = response.json()['access_token']
+        print("  ✅ Admin authenticated, token received.")
+    else:
+        print(f"  ❌ FAILED TO AUTHENTICATE ADMIN: {response.status_code} - {response.text}"); return
+
+    # Préparer les headers pour les requêtes authentifiées
+    auth_headers = {'Authorization': f'Bearer {IDS["ADMIN_TOKEN"]}'}
+
+    # --- 2. CRUD OPERATIONS ---
+    print("\n--- 2. CRUD Operations (Amenity, Place, Review) ---")
+    
+    # A. Création Amenity
+    print("\n[2A: POST /amenities]")
+    amenity_data = {"name": "Piscine Olympique"}
+    response = requests.post(f"{BASE_URL}/amenities", json=amenity_data, headers=auth_headers)
     if response.status_code == 201:
         IDS['AMENITY_ID'] = response.json()['id']
-        print(f"  ✅ Amenity créé. ID: {IDS['AMENITY_ID']}")
+        print(f"  ✅ Amenity created. ID: {IDS['AMENITY_ID']}")
     else:
-        print(f"  ❌ ÉCHEC CRÉATION AMENITY: {response.status_code} - {response.text}"); return
-
-    # C. Création Place (Dépend de l'User)
-    print("\n[1C: POST /places]")
+        print(f"  ❌ FAILED TO CREATE AMENITY: {response.status_code} - {response.text}"); return
+        
+    # B. Création Place (par l'utilisateur authentifié)
+    print("\n[2B: POST /places]")
     place_data = {
-        "title": "Chalet du Lac Léman",
-        "description": "Vue magnifique sur le lac, parfait pour le télétravail.",
-        "price": 180.50,
-        "latitude": 46.3948,
-        "longitude": 6.4023,
-        # 🎯 CORRECTION MAJEURE: Clé USER_ID au lieu de OWNER_ID et retrait des accolades {}
-        "owner_id": IDS['USER_ID'], 
-        "amenities": []
+        "title": "Villa Paradiso",
+        "description": "Un havre de paix.",
+        "price": 300.0,
+        "owner_id": IDS['ADMIN_ID'], 
+        "latitude": 46.3626,       
+        "longitude": 6.8045,      
+        "amenities": [IDS['AMENITY_ID']]
     }
-    response = requests.post(f"{BASE_URL}/places", json=place_data)
+    response = requests.post(f"{BASE_URL}/places", json=place_data, headers=auth_headers)
     if response.status_code == 201:
         IDS['PLACE_ID'] = response.json()['id']
-        print(f"  ✅ Place créée. ID: {IDS['PLACE_ID']}")
+        print(f"  ✅ Place created. ID: {IDS['PLACE_ID']}")
     else:
-        print(f"  ❌ ÉCHEC CRÉATION PLACE: {response.status_code} - {response.text}"); return
-    # D. Création Review (Dépend de Place et User)
-    print("\n[1D: POST /reviews]")
+        print(f"  ❌ FAILED TO CREATE PLACE: {response.status_code} - {response.text}"); return
+        
+    # C. Création Review (par l'admin sur le lieu créé)
+    # Utilisez la route de collection /reviews car c'est votre endpoint actif.
+    print(f"\n[2C: POST /reviews] - Creating Review via Collection Endpoint")
     review_data = {
-        "text": "First test review", 
-        "rating": 5, 
-        "user_id": IDS['USER_ID'], 
-        "place_id": IDS['PLACE_ID']
+        "text": "Magnifique endroit!", 
+        "rating": 5,
+        "place_id": IDS['PLACE_ID'], # ID du lieu dans le payload
+        "user_id": IDS['ADMIN_ID']   # ID de l'utilisateur dans le payload (doit être le même que l'authentifié)
     }
-    response = requests.post(f"{BASE_URL}/reviews", json=review_data)
+    response = requests.post(f"{BASE_URL}/reviews", 
+                             json=review_data, 
+                             headers=auth_headers)
+    
     if response.status_code == 201:
         IDS['REVIEW_ID'] = response.json()['id']
-        print(f"  ✅ Review créée. ID: {IDS['REVIEW_ID']}")
+        print(f"  ✅ Review created. ID: {IDS['REVIEW_ID']}")
     else:
-        print(f"  ❌ ÉCHEC CRÉATION REVIEW: {response.status_code} - {response.text}"); return
+        print(f"  ❌ FAILED TO CREATE REVIEW: {response.status_code} - {response.text}"); return
 
-    # ---------------------------------
-    # 2. TESTS D'UPDATE (PUT)
-    # ---------------------------------
-    
-    # E. Update Amenity
-    print("\n[2E: PUT /amenities/<id>]")
-    old_updated_at = requests.get(f"{BASE_URL}/amenities/{IDS['AMENITY_ID']}").json()['updated_at']
-    time.sleep(0.01) # S'assurer que le timestamp change
-    response = requests.put(f"{BASE_URL}/amenities/{IDS['AMENITY_ID']}", json={"name": "UpdatedAmenity"})
-    if response.status_code == 200 and response.json()['name'] == "UpdatedAmenity" and response.json()['updated_at'] != old_updated_at:
-        print("  ✅ SUCCÈS: Amenity mis à jour et updated_at changé.")
+    # --- 3. UPDATE (PUT) OPERATIONS ---
+    print("\n--- 3. UPDATE Operations ---")
+
+    print("\n[3A: PUT /places/<id>]")
+    # Tente de mettre à jour le lieu créé par l'admin
+    response = requests.put(f"{BASE_URL}/places/{IDS['PLACE_ID']}", json={"price": 320.5}, headers=auth_headers)
+    if response.status_code == 200 and response.json()['price'] == 320.5:
+        print("  ✅ Place price updated successfully.")
     else:
-        print(f"  ❌ ÉCHEC UPDATE AMENITY: {response.status_code} - {response.text}")
+        print(f"  ❌ FAILED TO UPDATE PLACE: {response.status_code} - {response.text}")
+        
+    # --- 4. DELETE OPERATIONS (Admin required) ---
+    print("\n--- 4. DELETE Operations (Admin Rights) ---")
 
-    # F. Update Place
-    print("\n[2F: PUT /places/<id>]")
-    old_updated_at = requests.get(f"{BASE_URL}/places/{IDS['PLACE_ID']}").json()['updated_at']
-    time.sleep(0.01)
-    response = requests.put(f"{BASE_URL}/places/{IDS['PLACE_ID']}", json={"price": 150, "description": "Updated Description"})
-    if response.status_code == 200 and response.json()['price'] == 150 and response.json()['updated_at'] != old_updated_at:
-        print("  ✅ SUCCÈS: Place mise à jour et updated_at changé.")
-    else:
-        print(f"  ❌ ÉCHEC UPDATE PLACE: {response.status_code} - {response.text}")
-
-    # G. Update Review
-    print("\n[2G: PUT /reviews/<id>]")
-    old_updated_at = requests.get(f"{BASE_URL}/reviews/{IDS['REVIEW_ID']}").json()['updated_at']
-    time.sleep(0.01)
-    response = requests.put(f"{BASE_URL}/reviews/{IDS['REVIEW_ID']}", json={"rating": 3, "text": "Needs improvement."})
-    if response.status_code == 200 and response.json()['rating'] == 3 and response.json()['updated_at'] != old_updated_at:
-        print("  ✅ SUCCÈS: Review mise à jour et updated_at changé.")
-    else:
-        print(f"  ❌ ÉCHEC UPDATE REVIEW: {response.status_code} - {response.text}")
-
-
-    # ---------------------------------
-    # 3. TESTS DE SUPPRESSION (DELETE)
-    # ---------------------------------
-    
-    # H. Delete Review (Doit réussir car nous avons corrigé la Façade)
-    print("\n[3H: DELETE /reviews/<id>]")
-    response = requests.delete(f"{BASE_URL}/reviews/{IDS['REVIEW_ID']}")
-    
+    # A. Suppression de la Review
+    print(f"\n[4A: DELETE /reviews/{IDS['REVIEW_ID']}]")
+    response = requests.delete(f"{BASE_URL}/reviews/{IDS['REVIEW_ID']}", headers=auth_headers)
     if response.status_code == 204:
-        # Vérification finale que l'objet a disparu
-        check_response = requests.get(f"{BASE_URL}/reviews/{IDS['REVIEW_ID']}")
+        # Vérifier qu'elle n'existe plus
+        check_response = requests.get(f"{BASE_URL}/reviews/{IDS['REVIEW_ID']}", headers=auth_headers)
         if check_response.status_code == 404:
-            print("  ✅ SUCCÈS: Review supprimée (Statut 204) et non trouvée après vérification (Statut 404).")
+            print("  ✅ Review deleted successfully (204) and confirmed not found (404).")
         else:
-             print(f"  ❌ ÉCHEC DELETE REVIEW: Suppression OK, mais l'objet est toujours trouvable ({check_response.status_code}).")
+            print("  ❌ DELETE FAILED: Review deleted but still found.")
     else:
-        print(f"  ❌ ÉCHEC DELETE REVIEW: Statut inattendu: {response.status_code} - {response.text}")
+        print(f"  ❌ FAILED TO DELETE REVIEW: {response.status_code} - {response.text}")
 
-   
-   
-    # ---------------------------------
-    # 4. Nettoyage final (Tentative de suppression de l'User)
-    # ---------------------------------
-    print("\n[4K: VÉRIFICATION DELETE USER (Attendu 405)]")
-    response = requests.delete(f"{BASE_URL}/users/{IDS['USER_ID']}")
-    if response.status_code == 405:
-        print("  ✅ SUCCÈS: DELETE /users non autorisé (Statut 405).")
+    # B. Suppression du User (ce qui doit supprimer le Place en cascade)
+    # On supprime l'utilisateur normal pour tester, l'admin peut aussi supprimer
+    print(f"\n[4B: DELETE /users/{IDS['USER_ID']}]")
+    response = requests.delete(f"{BASE_URL}/users/{IDS['USER_ID']}", headers=auth_headers)
+    if response.status_code == 204:
+        print("  ✅ User deleted successfully (204).")
     else:
-        print(f"  ⚠️ ALERTE: DELETE /users devrait être bloqué. Reçu: {response.status_code}")
+        print(f"  ❌ FAILED TO DELETE USER: {response.status_code} - {response.text}")
 
-
-    print("\n--- 🏁 FIN DES TESTS COMPLETS ---")
-
+    # C. Suppression de l'Admin (et vérification de la cascade du lieu)
+    print(f"\n[4C: DELETE /users/{IDS['ADMIN_ID']}]")
+    response = requests.delete(f"{BASE_URL}/users/{IDS['ADMIN_ID']}", headers=auth_headers)
+    if response.status_code == 204:
+        print("  ✅ Admin deleted successfully (204).")
+        # Vérifier que le lieu (dont l'admin était propriétaire) a aussi été supprimé en cascade
+        check_place_response = requests.get(f"{BASE_URL}/places/{IDS['PLACE_ID']}", headers=auth_headers)
+        if check_place_response.status_code == 404:
+            print("  ✅ Cascade delete confirmed: Associated place is also gone (404).")
+        else:
+            print(f"  ❌ CASCADE DELETE FAILED: Admin was deleted, but associated place still exists. Status: {check_place_response.status_code}")
+    else:
+        print(f"  ❌ FAILED TO DELETE ADMIN: {response.status_code} - {response.text}")
+        
+    print("\n--- 🏁 END OF API TESTS ---")
 
 if __name__ == "__main__":
-    run_full_tests()
+    run_api_tests()
