@@ -160,8 +160,7 @@ class PlaceResource(Resource):
             places_ns.abort(404, message=f"Place with ID '{place_id}' not found")
             
         # 2. Authorization Check (Owner ID from the fetched place vs. current user ID)
-        # Note: We check against the nested 'owner' dictionary as dictated by facade.get_place()
-        place_owner_id = place.get('owner', {}).get('id')
+        place_owner_id = place.owner_id
         
         # Authorization logic: Only the owner OR an admin can update
         is_admin = claims.get("is_admin", False)
