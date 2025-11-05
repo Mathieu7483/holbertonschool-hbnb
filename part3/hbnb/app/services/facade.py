@@ -1,5 +1,3 @@
-# app/services/facade.py
-
 from typing import Optional, Dict
 from app.models import User, Amenity, Place, Review
 from app.extensions import db
@@ -186,7 +184,7 @@ class HBnBFacade:
         if not place:
             return None
         
-        # Gestion des amenities (AJOUT DE LOGIQUE AMENITY)
+        # Amenity management (ADDING AMENITY LOGIC)
         amenity_ids = place_data.pop('amenities', None)
         if amenity_ids is not None:
             amenity_objects = db.session.scalars(
@@ -194,7 +192,7 @@ class HBnBFacade:
             ).all()
             if len(amenity_objects) != len(amenity_ids):
                 raise ValueError("One or more amenities not found.")
-            place.amenities = amenity_objects  # Remplace l'ancienne liste
+            place.amenities = amenity_objects  # Replaces the old list
 
         # Protect non-modifiable fields like owner_id
         place_data.pop('owner_id', None)
@@ -214,18 +212,18 @@ class HBnBFacade:
     # ===== REVIEW METHODS (CRUD/CUSTOM) ======
     # ==================================
     
-    # NOUVELLE MÉTHODE REQUISE POUR LE CHECK DANS L'API
+    # NEW METHOD REQUIRED FOR API CHECK
     def user_has_reviewed_place(self, user_id: str, place_id: str) -> bool:
-        """Vérifie si un utilisateur a déjà écrit une revue pour un lieu donné."""
-        # Nécessite que le ReviewRepository ait une méthode get_by_attributes (ou équivalent)
+        """Checks if a user has already written a review for a given place."""
+        # Requires the ReviewRepository to have a get_by_attributes (or equivalent) method
         existing_review = self.review_repository.get_by_attributes(
             user_id=user_id,
             place_id=place_id
         )
         return existing_review is not None
     
-    # MODIFICATION DE LA SIGNATURE ET DE LA LOGIQUE
-    # L'API est corrigée pour passer review_data propre (contenant place_id et user_id)
+    # MODIFICATION OF SIGNATURE AND LOGIC
+    # The API is corrected to pass clean review_data (containing place_id and user_id)
     def create_review(self, review_data: Dict) -> Review:
         """Creates a new review."""
         
@@ -243,13 +241,13 @@ class HBnBFacade:
         if not user:
             raise ValueError(f"User with ID '{user_id}' not found.")
 
-        # LOGIQUE D'AUTORISATION (pour la cohérence avec le test)
+        # AUTHORIZATION LOGIC (for consistency with the test)
         if place.owner_id == user_id:
-             raise ValueError("Owner cannot review their own place.") # L'API doit retourner 400
-
-        # LOGIQUE DE DUPLICATION (celle qui a causé l'AttributeError)
+             raise ValueError("Owner cannot review their own place.") # API should return 403 Forbidden
+        
+        # DUPLICATION LOGIC (the one that caused the previous error)
         if self.user_has_reviewed_place(user_id, place_id):
-             raise ValueError("User has already reviewed this place.") # L'API doit retourner 400
+             raise ValueError("User has already reviewed this place.") # API should return 409 Conflict
 
         new_review = Review(**review_data)
         self.review_repository.add(new_review)
