@@ -86,13 +86,12 @@ class HBnBFacade:
 
     def delete_user(self, user_id: str) -> bool:
         """Deletes a user by their ID."""
-        user = self.get_user(user_id)
-        if not user:
+        user_to_delete = self.get_user(user_id)
+        if not user_to_delete:
             return False
         
-        # The cascade configured in the User model will handle deleting
-        # associated places and reviews.
-        self.user_repository.delete(user)
+        self.user_repository.delete(user_to_delete)
+        
         return True
 
     # ==================================
