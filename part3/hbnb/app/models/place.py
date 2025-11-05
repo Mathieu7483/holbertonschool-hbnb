@@ -21,14 +21,14 @@ class Place(BaseModel):
     amenities = db.relationship('Amenity', secondary=place_amenity, backref=db.backref('places', lazy='dynamic'))
 
     def to_nested_dict(self):
-        """Sérialisation simplifiée pour les objets imbriqués (ex: dans une Review)."""
+        """Serialization."""
         return {
             "id": self.id,
             "title": self.title,
         }
 
     def to_dict(self):
-        """Sérialisation complète pour les réponses principales de l'API."""
+        """Serialization complete to the data."""
         data = super().to_dict()
         data.update({
             "title": self.title,
