@@ -1,8 +1,6 @@
 from app.models.basemodel import BaseModel
 from app.extensions import db
-# from app.models.associations import place_amenity # si dans un fichier séparé
 
-# Table d'association
 place_amenity = db.Table('place_amenity',
     db.Column('place_id', db.String(36), db.ForeignKey('places.id'), primary_key=True),
     db.Column('amenity_id', db.String(36), db.ForeignKey('amenities.id'), primary_key=True)
@@ -19,13 +17,18 @@ class Place(BaseModel):
 
     owner_id = db.Column(db.String(36), db.ForeignKey('users.id'), nullable=False)
 
-    # --- RELATIONS ---
     reviews = db.relationship('Review', backref='place', cascade="all, delete-orphan", lazy=True)
     amenities = db.relationship('Amenity', secondary=place_amenity, backref=db.backref('places', lazy='dynamic'))
 
-    # --- SUPPRESSION DE __init__, validate, update ---
+    def to_nested_dict(self):
+        """Sérialisation simplifiée pour les objets imbriqués (ex: dans une Review)."""
+        return {
+            "id": self.id,
+            "title": self.title,
+        }
 
     def to_dict(self):
+        """Sérialisation complète pour les réponses principales de l'API."""
         data = super().to_dict()
         data.update({
             "title": self.title,
@@ -34,8 +37,8 @@ class Place(BaseModel):
             "latitude": self.latitude,
             "longitude": self.longitude,
             "owner_id": self.owner_id,
-            "owner": self.owner.to_dict() if self.owner else None,
-            "amenities": [a.to_dict() for a in self.amenities],
+            "owner": self.owner.to_dict() if self.owner else None, 
+            "amenities": [a.to_dict() for a in self.amenities], 
             "reviews_count": len(self.reviews) if self.reviews else 0
         })
         return data
