@@ -253,7 +253,7 @@ class HBnBFacade:
         self.review_repository.add(new_review)
         return new_review
 
-    def get_reviews_for_place(self, place_id: str) -> list[Review]:
+    def get_reviews_by_place(self, place_id: str) -> list[Review]:
         """Retrieves all reviews for a specific place."""
         place = self.get_place(place_id)
         if not place:
