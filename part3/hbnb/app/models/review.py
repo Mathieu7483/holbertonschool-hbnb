@@ -1,8 +1,16 @@
 from app.models.basemodel import BaseModel
 from app.models.place import Place
 from app.models.user import User
+from app.extensions import db
 
 class Review(BaseModel):
+    __tablename__ = 'reviews'
+
+    text = db.Column(db.Text, nullable=False)
+    rating = db.Column(db.Integer, nullable=False)
+
+    place_id = db.Column(db.String(60), db.ForeignKey('places.id'), nullable=False)
+    user_id = db.Column(db.String(60), db.ForeignKey('users.id'), nullable=False)
 
     # 1. Correct __init__ signature to accept arguments and pass them to the parent.
     def __init__(self, text=None, rating=None, place=None, user=None, **kwargs):
@@ -16,6 +24,11 @@ class Review(BaseModel):
         self.place = place
         self.user = user
 
+        if place:
+            self.place_id = place.id
+        
+        if user:
+            self.user_id = user.id
         # Call validation upon creation
         self.validate()
 
@@ -31,7 +44,7 @@ class Review(BaseModel):
         super().update(data)
 
         # Re-validate the object's integrity
-        # self.validate()  # <--- TEMPORAIREMENT COMMENTÉ POUR RÉSOUDRE LE 404
+        self.validate()
 
     def to_dict(self):
         """Return a dictionary representation of the Review instance."""
@@ -41,7 +54,8 @@ class Review(BaseModel):
             "rating": self.rating,
             # Ensure safe access to linked object IDs
             "place_id": self.place.id if self.place else None,
-            "user_id": self.user.id if self.user else None
+            "user_id": self.user.id if self.user else None,
+            "reviewed_place_id": self.reviewed_place.id if hasattr(self, 'reviewed_place') and self.reviewed_place else None
         })
         return review_dict
 

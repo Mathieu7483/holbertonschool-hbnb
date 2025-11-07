@@ -1,11 +1,15 @@
 from uuid import uuid4
 from datetime import datetime
-from app.persistence.repository import InMemoryRepository
 from app.models.user import User
 from app.models.amenity import Amenity
 from app.models.place import Place
 from app.models.review import Review
 from typing import Optional, Dict
+from app.persistence.UserRepository import UserRepository
+from app.persistence.PlaceRepository import PlaceRepository
+from app.persistence.ReviewRepository import ReviewRepository
+from app.persistence.AmenityRepository import AmenityRepository
+
 
 class HBnBFacade:
     """
@@ -16,10 +20,10 @@ class HBnBFacade:
 
     def __init__(self):
         # Initializes separate repositories for each entity type.
-        self.user_repo: InMemoryRepository = InMemoryRepository()
-        self.place_repo: InMemoryRepository = InMemoryRepository()
-        self.review_repo: InMemoryRepository = InMemoryRepository()
-        self.amenity_repo: InMemoryRepository = InMemoryRepository()
+        self.user_repository = UserRepository()
+        self.place_repository = PlaceRepository()
+        self.review_repository = ReviewRepository()
+        self.amenity_repository = AmenityRepository()
 
     # ==================================
     # ===== USER METHODS (CRUD) ========
@@ -30,51 +34,75 @@ class HBnBFacade:
         email = user_data.get('email')
         if not email:
             raise ValueError("Email is required to create a User.")
-        
+
         if self.get_user_by_email(email):
             raise ValueError(f"User with email '{email}' already exists.")
-        
-        user_id = str(uuid4())
-        now = datetime.now().isoformat()
-        
-        user = User(
-            id=user_id,
-            first_name=user_data.get('first_name'),
-            last_name=user_data.get('last_name'),
-            email=user_data.get('email'),
-            is_admin=user_data.get('is_admin', False),
-            created_at=now,
-            updated_at=now
-        )
-        
-        # Validation is handled within the User model's __init__ 
-        # (or should be called here if not in __init__)
-        # Note: The line 'user.validate' is likely intended to be 'user.validate()',
-        # but the BaseModel update handles this implicitly in the project's design.
+
+        user = User(**user_data)
+
+        # Validation is handled within the User model's __init__
         user.validate()
-        self.user_repo.add(user)
+        self.user_repository.add(user)
         return user
 
     def get_user(self, user_id: str) -> Optional[User]:
         """Retrieves a User by ID."""
-        return self.user_repo.get(user_id)
+        return self.user_repository.get(user_id)
 
     def get_all_users(self) -> list[User]:
         """Retrieves all Users."""
-        return self.user_repo.get_all()
+        return self.user_repository.get_all()
 
     def get_user_by_email(self, email: str) -> Optional[User]:
         """Retrieves a User by email attribute."""
         # Requires the InMemoryRepository to implement 'get_by_attribute'
-        return self.user_repo.get_by_attribute('email', email)
+        return self.user_repository.get_by_attribute('email', email)
 
-    def update_user(self, user_id: str, user_data: Dict) -> Optional[User]:
-        """Updates a User's attributes."""
-        user = self.user_repo.get(user_id)
-        if user:
-            # The model's update method handles attribute assignment, validation, and updated_at timestamp.
-            user.update(user_data)
+    def update_user(self, user_id: str, profile_data: Dict) -> Optional[User]:
+        user = self.user_repository.get(user_id)
+        if not user:
+            return None
+
+        allowed_fields = {'first_name', 'last_name'}
+
+        data_to_update = {
+            key: value for key, value in profile_data.items() if key in allowed_fields
+            }
+
+        if data_to_update:
+            user.update(data_to_update)
+
         return user
+
+
+
+    def update_user_by_admin(self, user_id: str, admin_data: Dict) -> Optional[User]:
+        """
+        Updates any user attribute as an administrator.
+        Includes critical fields like email, password, and is_admin status.
+        """
+        user = self.user_repository.get(user_id)
+        if not user:
+            return None
+        
+        #correctly handle email uniqueness
+        new_email = admin_data.get('email')
+        new_email = admin_data.get('email')
+        if new_email and new_email != user.email:
+            existing_user = self.get_user_by_email(new_email)
+            if existing_user and existing_user.id != user_id:
+                raise ValueError(f"User with email '{new_email}' already exists.") 
+
+            user.update(admin_data)
+        
+            return user
+    
+    def delete_user(self, user_id: str) -> bool:
+        """Deletes a User by ID."""
+        return self.user_repository.delete(user_id)
+
+
+    
 
     # ==================================
     # ===== AMENITY METHODS (CRUD) =====
@@ -84,20 +112,20 @@ class HBnBFacade:
         """Creates a new Amenity instance, validates it, and persists it."""
         amenity = Amenity(**amenity_data)
         amenity.validate()
-        self.amenity_repo.add(amenity)
+        self.amenity_repository.add(amenity)
         return amenity
 
     def get_amenity(self, amenity_id: str) -> Optional[Amenity]:
         """Retrieves an Amenity by ID."""
-        return self.amenity_repo.get(amenity_id)
+        return self.amenity_repository.get(amenity_id)
 
     def get_all_amenities(self) -> list[Amenity]:
         """Retrieves all Amenities."""
-        return self.amenity_repo.get_all()
+        return self.amenity_repository.get_all()
 
     def update_amenity(self, amenity_id: str, amenity_data: Dict) -> Optional[Amenity]:
         """Updates an Amenity's attributes."""
-        amenity = self.amenity_repo.get(amenity_id)
+        amenity = self.amenity_repository.get(amenity_id)
         if amenity:
             amenity.update(amenity_data)
         return amenity
@@ -119,23 +147,25 @@ class HBnBFacade:
         place_data['owner'] = owner
         place = Place(**place_data)
         place.validate()
-        self.place_repo.add(place)
-        return place
+        self.place_repository.add(place)
+        return place.to_dict()
 
     def get_place(self, place_id: str) -> Optional[Place]:
         """Retrieves a Place by ID."""
-        return self.place_repo.get(place_id)
+        place = self.place_repository.get(place_id)
+        return place.to_dict() if place else None
 
     def get_all_places(self) -> list[Place]:
         """Retrieves all Places."""
-        return self.place_repo.get_all()
+        places = self.place_repository.get_all()
+        return [place.to_dict() for place in places]
 
     def update_place(self, place_id: str, place_data: Dict) -> Optional[Place]:
         """Updates a Place's attributes."""
-        place = self.place_repo.get(place_id)
+        place = self.place_repository.get(place_id)
         if place:
             place.update(place_data)
-        return place
+        return place.to_dict() if place else None
 
     # ==================================
     # ===== REVIEW METHODS (CRUD+) =====
@@ -157,7 +187,7 @@ class HBnBFacade:
 
         review = Review(**review_data)
         review.validate()
-        self.review_repo.add(review)
+        self.review_repository.add(review)
 
         if not hasattr(place, 'reviews'):
             place.reviews = []
@@ -167,11 +197,11 @@ class HBnBFacade:
 
     def get_review(self, review_id: str) -> Optional[Review]:
         """Retrieves a Review by ID."""
-        return self.review_repo.get(review_id)
+        return self.review_repository.get(review_id)
 
     def get_all_reviews(self) -> list[Review]:
         """Retrieves all Reviews."""
-        return self.review_repo.get_all()
+        return self.review_repository.get_all()
 
     def get_reviews_by_place(self, place_id: str) -> list[Review]:
         """
@@ -183,11 +213,11 @@ class HBnBFacade:
             return []
 
         # Find reviews where the 'place' attribute is the Place object
-        return self.review_repo.get_by_attribute('place', place_obj)
+        return self.review_repository.get_by_attribute('place', place_obj)
 
     def update_review(self, review_id: str, review_data: Dict) -> Optional[Review]:
         """Updates a Review's attributes (PUT)."""
-        review = self.review_repo.get(review_id)
+        review = self.review_repository.get(review_id)
         if review:
             review.update(review_data)
         return review
@@ -197,4 +227,4 @@ class HBnBFacade:
         Deletes a Review (DELETE), and removes the reference from the parent Place,
         maintaining data consistency. (Required for Task 5).
         """
-        return self.review_repo.delete(review_id)
+        return self.review_repository.delete(review_id)

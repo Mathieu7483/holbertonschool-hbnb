@@ -1,0 +1,95 @@
+ USER ID : 
+ PLACE ID : 
+
+
+Methde POSTMAN USERS LAMBDA
+
+{
+    "first_name": "John",
+    "last_name": "Doe",
+    "email": "john.doe@example.com",
+    "is_admin": false,
+    "password" : "Password123"
+}
+id : 6be416ab-6d24-4e1c-8d62-741ff101b09a
+Token : eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc2MTgyODU4MCwianRpIjoiZWMyODhiMzktYTQ3My00N2ZiLWEzZDUtZDUwMDhiM2ExZDE1IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjZiZTQxNmFiLTZkMjQtNGUxYy04ZDYyLTc0MWZmMTAxYjA5YSIsIm5iZiI6MTc2MTgyODU4MCwiY3NyZiI6Ijc4ZTRlOTdkLTAxYWEtNDMzYi04YTY5LWE1YTM3MDI0MGM2ZiIsImV4cCI6MTc2MTgzOTM4MCwiaXNfYWRtaW4iOmZhbHNlfQ.4_Y8bXECt2deQGc1VElGIEU7WbZTyiA0XSrg9iShqn0
+
+
+Methde POSTMAN USERS ADMIN
+[
+  {
+    "id": "2ebe9e2b-583e-4c1f-996d-75f612b29b15",
+    "created_at": null,
+    "updated_at": null,
+    "first_name": "Mathieu",
+    "last_name": "GODALIER",
+    "email": "mathieu.admin@example.com",
+    "is_admin": true
+  },
+  {
+    "id": "a61d3a9e-ccd9-4102-a50a-01bd93a6b897",
+    "created_at": null,
+    "updated_at": null,
+    "first_name": "Florian",
+    "last_name": "Doe",
+    "email": "Florian.doe@example.com",
+    "is_admin": true
+  }
+]
+id : 2ebe9e2b-583e-4c1f-996d-75f612b29b15
+token : eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc2MTgxNDEyMSwianRpIjoiNTNkNTFiYTctNGU5Yi00OGQ5LTg5MGMtYjVhZWU0Mzg4NzJiIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjJlYmU5ZTJiLTU4M2UtNGMxZi05OTZkLTc1ZjYxMmIyOWIxNSIsIm5iZiI6MTc2MTgxNDEyMSwiY3NyZiI6ImVmNmZmNTUwLTllNDYtNDdlZC05MmI5LTI5MGIyMGEwMjAyYyIsImV4cCI6MTc2MTgyNDkyMSwiaXNfYWRtaW4iOnRydWV9.sWc_prr55vwBCti9Zsyw7h05zRP53YT0HSMyPiF4_Iw
+
+METHODE POSTMAN PLACE
+{
+    "title": "Chalet du Lac Léman",
+    "description": "Vue magnifique sur le lac, parfait pour le télétravail.",
+    "price": 180.50,
+    "latitude": 46.3948,
+    "longitude": 6.4023,
+    "owner_id": "VOTRE_ID_OWNER_ICI", 
+    "amenities": []
+}
+
+METHODE POSTMAN AMENITY
+{
+    "name": "Wifi haut débit"
+}
+
+
+
+METHODE POSTMAN REVIEW
+{
+    "text": "Excellent séjour, vue imprenable et hôte très accueillant.",
+    "rating": 5,
+    "place_id": "ID PLACE", 
+    "user_id": "ID USER"
+}
+
+
+
+
+
+UPDATE USER
+{
+    "first_name": "Mathieu_Update",
+    "last_name": "Nouveau_Nom",
+}
+
+UPDATE PLACE
+{
+    "title": "Chalet avec Piscine et Vue",
+    "description": "Nouvelle description après travaux.",
+    "price": 350
+    "amenities": []
+}
+
+UPDATE AMENITY
+{
+    "name": "Piscine Olympique"
+}
+
+UPDATE REVIEW
+{
+    "text": "L'endroit était fantastique, 5 étoiles amplement méritées !",
+    "rating": 5
+}

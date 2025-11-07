@@ -2,17 +2,17 @@ from app.models.basemodel import BaseModel
 # from typing import Optional # Omitted as requested
 
 class User(BaseModel):
-    def __init__(self, id=None, first_name=None, last_name=None, email=None, is_admin=False, created_at=None, updated_at=None):
-        
+    def __init__(self, first_name=None, last_name=None, email=None, is_admin=False, **kwargs):
+
         # Call the parent constructor to handle ID, created_at, and updated_at.
-        super().__init__(id=id, created_at=created_at, updated_at=updated_at)
-        
+        super().__init__(**kwargs)
+
         # Specific attributes for User
         self.first_name = first_name
         self.last_name = last_name
         self.email = email
         self.is_admin = is_admin
-        
+
         self.validate()
 
     # CRUCIAL: Add the overloaded update method for PUT operations.
@@ -20,8 +20,8 @@ class User(BaseModel):
         """
         Overloads BaseModel.update to apply data changes, then re-validate the object.
         """
-        super().update(data) 
-        self.validate()      
+        super().update(data)
+        self.validate()
 
     def validate(self):
         """Validate the attributes of the User instance."""
@@ -35,8 +35,8 @@ class User(BaseModel):
         """Return a dictionary representation of the User instance."""
         user_dict = super().to_dict()
         user_dict.update({
-            "first_name": self.first_name, 
-            "last_name": self.last_name, 
+            "first_name": self.first_name,
+            "last_name": self.last_name,
             "email": self.email,
             "is_admin": self.is_admin
         })

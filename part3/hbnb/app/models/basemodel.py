@@ -1,25 +1,27 @@
 import uuid
 from datetime import datetime
+from app.extensions import db
 
-class BaseModel:
+class BaseModel(db.Model):
     """
     Base class for all models, providing core attributes (id, created_at, updated_at)
     and methods (save, update, to_dict).
     """
+    __abstract__ = True  # This ensures SQLAlchemy does not create a table for BaseModel
+
+    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, nullable=False,default=datetime.utcnow, onupdate=datetime.utcnow)
 
     # Core attributes are set to None by default, allowing the Facade to pass existing values.
     def __init__(self, **kwargs):
-
-        now = datetime.now().isoformat()
-
-        # Attributes with default values if not provided
-        self.id = kwargs.get('id', str(uuid.uuid4()))
-        self.created_at = kwargs.get('created_at', now)
-        self.updated_at = kwargs.get('updated_at', now)
+        super().__init__(**kwargs)
 
     def save(self):
         """Update the updated_at timestamp whenever the object is modified."""
-        self.updated_at = datetime.now().isoformat()
+        self.updated_at = datetime.utcnow()
+        db.session.add(self)
+        db.session.commit()
 
     def update(self, data: dict):
         """
@@ -36,9 +38,13 @@ class BaseModel:
                 setattr(self, key, value)
 
         # Update the timestamp, proving the object has changed. Crucial for tests.
-        self.save()
+        self.updated_at = datetime.utcnow()
+        db.session.commit()
 
     def to_dict(self):
         """Return a dictionary representation of the object."""
-        result = self.__dict__.copy()
-        return result
+        return {
+            'id': self.id,
+            'created_at': self.created_at.isoformat() if self.created_at else None,
+            'updated_at': self.updated_at.isoformat() if self.updated_at else None
+        }
