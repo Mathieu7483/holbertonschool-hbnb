@@ -144,6 +144,8 @@ python3 run.py
 * Testing Tools: cURL, Postman
 * Design: Facade Pattern, Repository Pattern
 
+# Test and demonstration with POSTMAN
+[Link to video](https://youtu.be/s2dbj7_r9Y8)
 
 # ✍️ Authors
 
