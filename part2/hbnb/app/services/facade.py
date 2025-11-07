@@ -30,13 +30,24 @@ class HBnBFacade:
         email = user_data.get('email')
         if not email:
             raise ValueError("Email is required to create a User.")
-
+        
         if self.get_user_by_email(email):
             raise ValueError(f"User with email '{email}' already exists.")
-
-        user = User(**user_data)
-
-        # Validation is handled within the User model's __init__
+        
+        user_id = str(uuid4())
+        now = datetime.now().isoformat()
+        
+        user = User(
+            id=user_id,
+            first_name=user_data.get('first_name'),
+            last_name=user_data.get('last_name'),
+            email=user_data.get('email'),
+            is_admin=user_data.get('is_admin', False),
+            created_at=now,
+            updated_at=now
+        )
+        
+        # Validation is handled within the User model's __init__ 
         # (or should be called here if not in __init__)
         # Note: The line 'user.validate' is likely intended to be 'user.validate()',
         # but the BaseModel update handles this implicitly in the project's design.
