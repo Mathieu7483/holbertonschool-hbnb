@@ -11,50 +11,75 @@ Methde POSTMAN USERS LAMBDA
     "is_admin": false,
     "password" : "Password123"
 }
-id : 6be416ab-6d24-4e1c-8d62-741ff101b09a
-Token : eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc2MTgyODU4MCwianRpIjoiZWMyODhiMzktYTQ3My00N2ZiLWEzZDUtZDUwMDhiM2ExZDE1IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjZiZTQxNmFiLTZkMjQtNGUxYy04ZDYyLTc0MWZmMTAxYjA5YSIsIm5iZiI6MTc2MTgyODU4MCwiY3NyZiI6Ijc4ZTRlOTdkLTAxYWEtNDMzYi04YTY5LWE1YTM3MDI0MGM2ZiIsImV4cCI6MTc2MTgzOTM4MCwiaXNfYWRtaW4iOmZhbHNlfQ.4_Y8bXECt2deQGc1VElGIEU7WbZTyiA0XSrg9iShqn0
+id : 
+Token : 
+
+{
+    "first_name": "Alice",
+    "last_name": "Doe",
+    "email": "Alice.doe@example.com",
+    "is_admin": false,
+    "password" : "Password123"
+}
+id : 
+Token : 
+
 
 
 Methde POSTMAN USERS ADMIN
 [
   {
-    "id": "2ebe9e2b-583e-4c1f-996d-75f612b29b15",
-    "created_at": null,
-    "updated_at": null,
     "first_name": "Mathieu",
     "last_name": "GODALIER",
     "email": "mathieu.admin@example.com",
+    "password" : "Admin@1234",
     "is_admin": true
   },
+  id : 5aae6cd1-f712-43fc-9de2-3fa50e813c3b
+  Token : 
+
   {
-    "id": "a61d3a9e-ccd9-4102-a50a-01bd93a6b897",
-    "created_at": null,
-    "updated_at": null,
     "first_name": "Florian",
     "last_name": "Doe",
     "email": "Florian.doe@example.com",
+    "password" : "Admin@1234",
     "is_admin": true
   }
 ]
-id : 2ebe9e2b-583e-4c1f-996d-75f612b29b15
-token : eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc2MTgxNDEyMSwianRpIjoiNTNkNTFiYTctNGU5Yi00OGQ5LTg5MGMtYjVhZWU0Mzg4NzJiIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjJlYmU5ZTJiLTU4M2UtNGMxZi05OTZkLTc1ZjYxMmIyOWIxNSIsIm5iZiI6MTc2MTgxNDEyMSwiY3NyZiI6ImVmNmZmNTUwLTllNDYtNDdlZC05MmI5LTI5MGIyMGEwMjAyYyIsImV4cCI6MTc2MTgyNDkyMSwiaXNfYWRtaW4iOnRydWV9.sWc_prr55vwBCti9Zsyw7h05zRP53YT0HSMyPiF4_Iw
+id : 
+token : 
 
-METHODE POSTMAN PLACE
+METHODE POSTMAN PLACE by ADMIN
 {
     "title": "Chalet du Lac Léman",
     "description": "Vue magnifique sur le lac, parfait pour le télétravail.",
     "price": 180.50,
     "latitude": 46.3948,
     "longitude": 6.4023,
-    "owner_id": "VOTRE_ID_OWNER_ICI", 
+    "owner_id": "2ebe9e2b-583e-4c1f-996d-75f612b29b15", 
     "amenities": []
 }
+ID: e13deb8f-413e-4640-b5e8-1339c1e325e8
+
+METHODE POSTMAN PLACE by USER
+{
+    "title": "Chalet du Lac Léman",
+    "description": "Vue magnifique sur le lac, parfait pour le télétravail.",
+    "price": 180.50,
+    "latitude": 46.3948,
+    "longitude": 6.4023,
+    "owner_id": "USER ID", 
+    "amenities": []
+}
+ID: 
+
+
 
 METHODE POSTMAN AMENITY
 {
     "name": "Wifi haut débit"
 }
-
+ID:
 
 
 METHODE POSTMAN REVIEW
@@ -64,7 +89,7 @@ METHODE POSTMAN REVIEW
     "place_id": "ID PLACE", 
     "user_id": "ID USER"
 }
-
+ID: 
 
 
 
