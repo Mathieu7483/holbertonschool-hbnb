@@ -45,6 +45,31 @@ This project demonstrates proficiency in integrating **Python OOP** and **Flask*
   * Creating **Entity-Relationship (ER) Diagrams** using **Mermaid.js** to visually document the database structure.
 
 -----
+## ⚙️ Getting Started
+
+### 🔹 Install dependencies
+
+We recommend using a virtual environment:
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
+
+### 🔹 Run the application
+
+```bash
+python3 run.py
+```
+
+### 🔹 Run the swagger app in browser
+```bash
+http://localhost:5000/api/v2/docs
+```
+
+-----
+
 
 # 📁 **Core Tasks Breakdown**
 
