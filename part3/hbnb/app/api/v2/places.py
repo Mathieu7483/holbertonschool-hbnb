@@ -58,7 +58,6 @@ place_response_model = places_ns.model('PlaceResponse', {
     'longitude': fields.Float(description='Longitude'),
     'owner': fields.Nested(user_model, description='Owner details'),
     'amenities': fields.List(fields.String, description='Amenities IDs'),
-    'reviews_count': fields.Integer(description='Number of reviews'),
     'created_at': fields.String(description='Creation date'),
     'updated_at': fields.String(description='Last update date')
 })
