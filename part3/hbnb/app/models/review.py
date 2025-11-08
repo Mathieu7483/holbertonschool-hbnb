@@ -10,9 +10,13 @@ class Review(BaseModel):
     place_id = db.Column(db.String(36), db.ForeignKey('places.id'), nullable=False)
     user_id = db.Column(db.String(36), db.ForeignKey('users.id'), nullable=False)
 
+    # Add unique constraint
+    __table_args__ = (
+        db.UniqueConstraint('user_id', 'place_id', name='unique_user_place_review'),
+    )
 
     def to_dict(self):
-        """complete serialization of the review."""
+        """Complete serialization of the review"""
         data = super().to_dict()
         data.update({
             "text": self.text,
@@ -21,11 +25,14 @@ class Review(BaseModel):
             "user_id": self.user_id,
         })
 
+        # Use nested dict to avoid exposing sensitive user data
         if self.user:
-            # Assuming User model has a simple to_dict() or to_nested_dict() for the nested output
-            data['user'] = self.user.to_dict() 
+            data['user'] = self.user.to_nested_dict()
             
         if hasattr(self, 'place') and self.place: 
-            data['place'] = self.place.to_nested_dict() 
+            data['place'] = self.place.to_nested_dict()
             
         return data
+
+    def __repr__(self):
+        return f"<Review {self.id} - Rating: {self.rating}>"
