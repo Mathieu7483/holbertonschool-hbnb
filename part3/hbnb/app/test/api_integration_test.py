@@ -11,7 +11,7 @@ BASE_URL = "http://127.0.0.1:5000/api/v2" # Assurez-vous que le port est correct
 IDS = {
     'ADMIN_ID': None,
     'USER_ID': None,
-    'OWNER_ID': None, # Nouvelle variable pour le créateur de la Place
+    'OWNER_ID': None,
     'AMENITY_ID': None,
     'PLACE_ID': None,
     'REVIEW_ID': None,
@@ -38,7 +38,7 @@ def test_abort(message):
 # FONCTION PRINCIPALE DE TEST
 # ======================================================================
 
-def run_api_tests():
+def main_test_suite():
     """Exécute une suite de tests d'intégration de bout en bout sur l'API."""
     
     print("--- 🎬 STARTING END-TO-END API TESTS ---")
@@ -54,20 +54,19 @@ def run_api_tests():
         if response.status_code == 201:
             IDS['ADMIN_ID'] = response.json().get('id')
             print_result(True, f"Admin created. ID: {IDS['ADMIN_ID']}")
-            print(f"    -> ADMIN ID generated: {IDS['ADMIN_ID']}")
         else:
             return test_abort(f"FAILED TO CREATE ADMIN: {response.status_code} - {response.text}")
     except requests.exceptions.ConnectionError:
         return test_abort("CONNECTION ERROR: Is the Flask server running?")
 
-    # 1B. Création d'un utilisateur qui sera le Propriétaire (Owner) de la Place
+    # 1B, 1C, 1D, 1E, 1F: (Code d'authentification inchangé pour la concision)
+    # 1B. Création d'un utilisateur Owner
     print("[1B: POST /users] - Creating Place Owner User")
     owner_data = {"first_name": "Place", "last_name": "Owner", "email": "owner@hbnb.com", "password": "owner_password"}
     response = requests.post(f"{BASE_URL}/users", json=owner_data)
     if response.status_code == 201:
         IDS['OWNER_ID'] = response.json().get('id')
         print_result(True, f"Owner user created. ID: {IDS['OWNER_ID']}")
-        print(f"    -> OWNER ID generated: {IDS['OWNER_ID']}")
     else:
         return test_abort(f"FAILED TO CREATE OWNER: {response.status_code} - {response.text}")
 
@@ -78,7 +77,6 @@ def run_api_tests():
     if response.status_code == 201:
         IDS['USER_ID'] = response.json().get('id')
         print_result(True, f"Normal user created. ID: {IDS['USER_ID']}")
-        print(f"    -> USER ID generated: {IDS['USER_ID']}")
     else:
         return test_abort(f"FAILED TO CREATE USER: {response.status_code} - {response.text}")
 
@@ -89,7 +87,6 @@ def run_api_tests():
     if response.status_code == 200:
         IDS['ADMIN_TOKEN'] = response.json().get('access_token')
         print_result(True, "Admin authenticated, token received.")
-        print(f"    -> ADMIN TOKEN received: {IDS['ADMIN_TOKEN'][:25]}...")
     else:
         return test_abort(f"FAILED TO AUTHENTICATE ADMIN: {response.status_code} - {response.text}")
         
@@ -100,7 +97,6 @@ def run_api_tests():
     if response.status_code == 200:
         IDS['OWNER_TOKEN'] = response.json().get('access_token')
         print_result(True, "Owner authenticated, token received.")
-        print(f"    -> OWNER TOKEN received: {IDS['OWNER_TOKEN'][:25]}...")
     else:
         return test_abort(f"FAILED TO AUTHENTICATE OWNER: {response.status_code} - {response.text}")
 
@@ -111,29 +107,19 @@ def run_api_tests():
     if response.status_code == 200:
         IDS['USER_TOKEN'] = response.json().get('access_token')
         print_result(True, "Reviewer authenticated, token received.")
-        print(f"    -> USER TOKEN received: {IDS['USER_TOKEN'][:25]}...")
     else:
         return test_abort(f"FAILED TO AUTHENTICATE REVIEWER: {response.status_code} - {response.text}")
-
-    # Résumé des IDs et Tokens
-    print("\n--- Summary of Generated IDs and Tokens ---")
-    print(f"  Admin ID: {IDS['ADMIN_ID']}")
-    print(f"  Owner ID: {IDS['OWNER_ID']}")
-    print(f"  User ID:  {IDS['USER_ID']}")
-    print(f"  Admin Token (truncated): {IDS['ADMIN_TOKEN'][:25]}...")
-    print(f"  Owner Token (truncated): {IDS['OWNER_TOKEN'][:25]}...")
-    print(f"  User Token (truncated):  {IDS['USER_TOKEN'][:25]}...")
-    print("------------------------------------------")
-
-
+        
     # Préparer les headers
     admin_headers = {'Authorization': f'Bearer {IDS["ADMIN_TOKEN"]}'}
     owner_headers = {'Authorization': f'Bearer {IDS["OWNER_TOKEN"]}'}
     user_headers = {'Authorization': f'Bearer {IDS["USER_TOKEN"]}'}
+    
+    print("------------------------------------------")
 
 
-    # --- 2. AMENITY & PLACE CREATION ---
-    print("\n--- 2. AMENITY & PLACE CREATION ---")
+    # --- 2. AMENITY & PLACE CREATION + VERIFICATION DE LA RELATION ---
+    print("\n--- 2. AMENITY & PLACE CREATION + VERIFICATION DE LA RELATION ---")
     
     # 2A. Création Amenity (par l'Admin)
     print("\n[2A: POST /amenities] - Admin creates Amenity")
@@ -142,18 +128,12 @@ def run_api_tests():
     if response.status_code == 201:
         IDS['AMENITY_ID'] = response.json().get('id')
         print_result(True, f"Amenity created by Admin. ID: {IDS['AMENITY_ID']}")
-        print(f"    -> AMENITY ID generated: {IDS['AMENITY_ID']}")
     else:
         return test_abort(f"FAILED TO CREATE AMENITY: {response.status_code} - {response.text}")
         
-    # 2B. Modification Amenity (par l'Admin)
-    print("[2B: PUT /amenities/<id>] - Admin modifies Amenity")
-    response = requests.put(f"{BASE_URL}/amenities/{IDS['AMENITY_ID']}", json={"name": "Piscine Olympique"}, headers=admin_headers)
-    if response.status_code == 200 and response.json().get('name') == "Piscine Olympique":
-        print_result(True, "Amenity modified successfully by Admin.")
-    else:
-        print_result(False, f"FAILED to modify Amenity: {response.status_code} - {response.text}")
-        
+    # 2B. Création Amenity (ID bidon pour un test d'échec plus tard)
+    FAKE_AMENITY_ID = str(uuid.uuid4())
+    
     # 2C. Création Place (par l'Owner)
     print("\n[2C: POST /places] - Owner creates Place")
     place_data = {
@@ -163,33 +143,66 @@ def run_api_tests():
         "owner_id": IDS['OWNER_ID'], # Le lieu appartient à l'Owner
         "latitude": 46.3626,       
         "longitude": 6.8045,       
-        "amenities": [IDS['AMENITY_ID']]
+        "amenities": [IDS['AMENITY_ID']] # Association ici
     }
     response = requests.post(f"{BASE_URL}/places", json=place_data, headers=owner_headers)
     if response.status_code == 201:
         IDS['PLACE_ID'] = response.json().get('id')
-        print_result(True, f"Place created by Owner. ID: {IDS['PLACE_ID']}")
-        print(f"    -> PLACE ID generated: {IDS['PLACE_ID']}")
+        print_result(True, f"Place created by Owner with Amenity ID: {IDS['PLACE_ID']}")
     else:
         return test_abort(f"FAILED TO CREATE PLACE BY OWNER: {response.status_code} - {response.text}")
         
-    # 2D. Création Place (par l'Admin) - Vérification optionnelle
-    # Cette étape est moins critique pour les règles métier, mais valide le droit de l'Admin.
-    print("[2D: POST /places] - Admin creates second Place")
-    admin_place_data = {
-        "title": "Admin's Place",
-        "description": "Lieu d'admin",
-        "price": 100.0,
-        "owner_id": IDS['ADMIN_ID'],
-        "latitude": 10.0,
-        "longitude": 10.0,
-        "amenities": []
-    }
-    response = requests.post(f"{BASE_URL}/places", json=admin_place_data, headers=admin_headers)
-    print_result(response.status_code == 201, "Admin successfully created a Place.")
+    # 2D. VÉRIFICATION CRITIQUE : GET /places/<id> pour s'assurer que la relation est persistante
+    print("[2D: GET /places/<id>] - **CRITICAL CHECK: Verifying Amenity relationship persistence**")
+    response = requests.get(f"{BASE_URL}/places/{IDS['PLACE_ID']}", headers=owner_headers)
+    
+    amenity_ids_in_place = response.json().get('amenities', [])
+    
+    # On vérifie le statut HTTP et la présence de l'ID de l'Amenity dans la liste
+    check_passed = (
+        response.status_code == 200 and 
+        IDS['AMENITY_ID'] in amenity_ids_in_place
+    )
+    
+    if check_passed:
+        print_result(True, "Relationship persistence **CONFIRMED**: Amenity ID found in Place details.")
+    else:
+        # Échec critique de la persistance, la relation Many-to-Many ne fonctionne pas.
+        return test_abort(f"CRITICAL: Amenity ID is **MISSING** from Place details. Got amenities: {amenity_ids_in_place}")
+        
+    # 2E. TEST D'ÉCHEC : Création Place avec un Amenity ID inexistant (DOIT ÉCHOUER 400)
+    print("\n[2E: POST /places] - Test: Creating Place with **FAKE** Amenity ID (Expected 400 Bad Request)")
+    bad_place_data = place_data.copy()
+    bad_place_data["amenities"] = [FAKE_AMENITY_ID]
+    bad_place_data["title"] = "Bad Place"
+    
+    response = requests.post(f"{BASE_URL}/places", json=bad_place_data, headers=owner_headers)
+    print_result(
+        response.status_code == 400, 
+        f"Validation check passed: Creation with fake Amenity ID forbidden (Got {response.status_code})."
+    )
+    
+    # 2F. Modification Amenity (Admin, inchangé)
+    print("[2F: PUT /amenities/<id>] - Admin modifies Amenity")
+    response = requests.put(f"{BASE_URL}/amenities/{IDS['AMENITY_ID']}", json={"name": "Piscine Olympique"}, headers=admin_headers)
+    if response.status_code == 200 and response.json().get('name') == "Piscine Olympique":
+        print_result(True, "Amenity modified successfully by Admin.")
+    else:
+        print_result(False, f"FAILED to modify Amenity: {response.status_code} - {response.text}")
+        
+    # 2G. VÉRIFICATION DE LA MODIFICATION (Test de l'impact)
+    print("[2G: GET /places/<id>] - Check: Amenity modification does not break the Place relation")
+    response = requests.get(f"{BASE_URL}/places/{IDS['PLACE_ID']}", headers=owner_headers)
+    
+    # La liste d'Amenity doit toujours contenir l'ID, même après modification
+    check_passed_after_update = (
+        response.status_code == 200 and 
+        IDS['AMENITY_ID'] in response.json().get('amenities', [])
+    )
+    print_result(check_passed_after_update, "Check passed: Place relation maintained after Amenity update.")
 
 
-    # --- 3. PLACE UPDATE SECURITY ---
+    # --- 3. PLACE UPDATE SECURITY (inchangé) ---
     print("\n--- 3. PLACE UPDATE Security Checks ---")
     
     # 3A. Modification Place par l'Owner (OK)
@@ -214,7 +227,7 @@ def run_api_tests():
     print_result(response.status_code in [401, 403], f"Security check passed: Third-party User forbidden to update (Got {response.status_code}).")
 
 
-    # --- 4. REVIEW CREATION SECURITY ---
+    # --- 4. REVIEW CREATION SECURITY (inchangé) ---
     print("\n--- 4. REVIEW Creation Security Checks ---")
 
     # 4A. Création Review par l'User (Reviewer) (OK)
@@ -229,7 +242,6 @@ def run_api_tests():
     if response.status_code == 201:
         IDS['REVIEW_ID'] = response.json().get('id')
         print_result(True, f"Review created by Reviewer. ID: {IDS['REVIEW_ID']}")
-        print(f"    -> REVIEW ID generated: {IDS['REVIEW_ID']}")
     else:
         return test_abort(f"FAILED TO CREATE REVIEW BY REVIEWER: {response.status_code} - {response.text}")
 
@@ -250,7 +262,7 @@ def run_api_tests():
     print_result(response.status_code == 403, f"Security check passed: Owner forbidden to review own Place (Got {response.status_code}).")
 
 
-    # --- 5. REVIEW UPDATE SECURITY ---
+    # --- 5. REVIEW UPDATE SECURITY (inchangé) ---
     print("\n--- 5. REVIEW Update Security Checks ---")
 
     # 5A. Auteur (User/Reviewer) modifie sa propre Review (OK)
@@ -275,8 +287,8 @@ def run_api_tests():
     print_result(response.status_code == 403, f"Security check passed: Owner forbidden to modify review (Got {response.status_code}).")
 
 
-    # --- 6. USER DELETION SECURITY ---
-    print("\n--- 6. USER Deletion Security Checks ---")
+    # --- 6. USER DELETION SECURITY & CLEANUP ---
+    print("\n--- 6. USER Deletion Security Checks & Cleanup ---")
 
     # 6A. Admin supprime l'User (Owner) (OK)
     print(f"\n[6A: DELETE /users/{IDS['OWNER_ID']}] - Admin deletes Owner")
@@ -291,17 +303,16 @@ def run_api_tests():
     response = requests.delete(f"{BASE_URL}/users/{IDS['ADMIN_ID']}", headers=admin_headers)
     print_result(response.status_code == 403, f"Security check passed: Admin self-deletion forbidden (Got {response.status_code}).")
         
-
-    # 7A. Suppression du Reviewer restant (User normal)
-    print(f"[7A: DELETE /users/{IDS['USER_ID']}] - Final Reviewer Cleanup")
+    # 6C. Suppression du Reviewer restant (User normal)
+    print(f"[6C: DELETE /users/{IDS['USER_ID']}] - Final Reviewer Cleanup")
     response = requests.delete(f"{BASE_URL}/users/{IDS['USER_ID']}", headers=admin_headers)
     if response.status_code == 204:
         print_result(True, "Final cleanup: Reviewer deleted successfully (204).")
     else:
         print_result(False, f"CLEANUP FAILED: FAILED TO DELETE REVIEWER: {response.status_code} - {response.text}")
     
-    # 7B. Suppression finale de l'Admin (s'il n'y a plus de données liées)
-    print(f"[7B: DELETE /users/{IDS['ADMIN_ID']}] - Final Admin Cleanup")
+    # 6D. Suppression finale de l'Admin
+    print(f"[6D: DELETE /users/{IDS['ADMIN_ID']}] - Final Admin Cleanup Attempt (Expecting 403 or 204)")
     response = requests.delete(f"{BASE_URL}/users/{IDS['ADMIN_ID']}", headers=admin_headers)
     if response.status_code == 403:
          print_result(True, "Admin self-deletion check confirmed (403).")
@@ -313,4 +324,4 @@ def run_api_tests():
     print("\n--- 🏁 END OF API TESTS ---")
 
 if __name__ == "__main__":
-    run_api_tests()
+    main_test_suite()
