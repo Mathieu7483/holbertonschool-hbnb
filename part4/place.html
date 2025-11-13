@@ -7,57 +7,58 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <header>
+        <a href="index.html">
+            <img src="images/logo.png" alt="HBNB Logo" class="logo">
+        </a>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="login.html" class="login-button">Login</a>
+        </nav>
+    </header>
+
     <main>
-        <section id="place-details">
-            <!-- Place details will be populated dynamically -->
-             <ol>
-                <li>
-                    <h2>Name place</h2>
-                    <p>The host</p>
-                    <p>Price: {}/night</p>
-                    <p>description</p>
-                </li>
-                <li>
-                    <h3>Amenities</h3>
-                    <ul>
-                        <li>Amenity 1</li>
-                        <li>Amenity 2</li>
-                    </ul>
-                </li>   
-             </ol>
-        </section>
-        <section class="place_info">
-            <h2>Place Information</h2>
-            <p>Number of Bedrooms: </p>
-            <p>Number of Bathrooms: </p>
-            <p>Maximum Guests: </p>
-            <textarea readonly>Description of the place</textarea>
+        <section class="place-details">
+            <h2>Name place</h2>
+            <div class="place-info">
+                <p><strong>Host:</strong> The host name</p>
+                <p><strong>Price:</strong> $150/night</p>
+                <p><strong>Max Guests:</strong> 4</p>
+                <p><strong>Bedrooms:</strong> 2</p>
+                <p><strong>Bathrooms:</strong> 1</p>
+            </div>
+            
+            <p><strong>Description:</strong> Description détaillée du lieu, pour voir sa taille.</p>
+
+            <h3>Amenities</h3>
+            <ul>
+                <li>Amenity 1 (WiFi)</li>
+                <li>Amenity 2 (Pool)</li>
+                <li>Amenity 3 (Kitchen)</li>
+            </ul>
         </section>
 
-        <section class="review_card">
-            <h2>Reviews</h2>
-            <ul>
-                <li>
-                    <h3>Reviewer Name</h3>
-                    <p>Rating: </p>
-                    <p>Review text</p>
-                </li>
-            </ul>
-            <button href="add_review.html" class="add-review-button">Add Review</button>
-        </section>
         <section id="reviews">
-            <!-- Reviews will be populated dynamically -->
-        </section>
-        <section id="add-review">
-            <h2>Add a Review</h2>
-            <form id="review-form">
-                <label for="review-text">Review:</label>
-                <textarea id="review-text" name="review-text" required></textarea>
-                
-                <button type="submit">Submit</button>
-            </form>
+            <h3>Reviews</h3>
+            
+            <article class="review-card">
+                <h4>Reviewer Name</h4>
+                <p>Rating: 5/5</p>
+                <p>Excellent place, clean and well located!</p>
+            </article>
+            
+            <article class="review-card">
+                <h4>Another User</h4>
+                <p>Rating: 4/5</p>
+                <p>Good value for money, but the kitchen was a bit small.</p>
+            </article>
+
+            <a href="add_review.html" class="add-review-button">Add Review</a>
         </section>
     </main>
-    <script src="scripts.js"></script>
+    
+    <footer>
+        <p>&copy; All rights reserved 2024 Holberton School</p>
+    </footer>
 </body>
 </html>
