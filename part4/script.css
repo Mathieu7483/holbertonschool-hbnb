@@ -27,6 +27,25 @@ main {
     padding: 2rem;
 }
 
+footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 1rem;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+header {
+    background-color: beige;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+}
+
+
 
 .place-card, .review-card {
     /* Fixed Parameters: */
@@ -72,14 +91,8 @@ main {
 }
 
 
-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 2rem;
-}
-
-.logo {
+a.logo {
+    display: block;
     width: 150px; 
     height: auto;
 }
@@ -113,3 +126,4 @@ header {
 .place-info p {
     margin: 5px 0;
 }
+

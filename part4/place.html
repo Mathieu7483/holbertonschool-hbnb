@@ -8,14 +8,19 @@
 </head>
 <body>
     <header>
-        <a href="index.html">
-            <img src="images/logo.png" alt="HBNB Logo" class="logo">
-        </a>
-        <nav>
-            <a href="index.html">Home</a>
-            <a href="login.html" class="login-button">Login</a>
-        </nav>
-    </header>
+    <nav>
+        <div class="nav-left">
+            <a href="images/logo.png" id="logo-link">
+                <img src="images/logo.png" alt="HBnB logo" width="150" height="auto">
+            </a>
+            <a href="index.html" id="home-link">Home</a>
+        </div>
+        <div class="nav-right">
+            <a href="login.html" id="login-link">Login</a>
+            <button id="logout-button" style="display: none;">Logout</button>
+        </div>
+    </nav>
+</header>
 
     <main>
         <section class="place-details">
@@ -28,7 +33,7 @@
                 <p><strong>Bathrooms:</strong> 1</p>
             </div>
             
-            <p><strong>Description:</strong> Description détaillée du lieu, pour voir sa taille.</p>
+            <p><strong>Description:</strong>Description of the place to see how many character normally 155.</p>
 
             <h3>Amenities</h3>
             <ul>
