@@ -83,12 +83,7 @@ python3 -m http.server 8000
 
 # ✍️ Authors
 
-<div align="center">
-
-| Author | Role | GitHub | Email |
-|--------|------|--------|-------|
-| **Mathieu Godalier** | Front developper |[Mathieu7483](https://github.com/Mathieu7483) | 11436@holbertonstudents.com |
-</div>
+[Mathieu GODALIER](https://github.com/Mathieu7483) - Holberton school's student 
 
 # ⚖️ License
 This project is licensed under the MIT License. For more details, see the LICENSE file.
