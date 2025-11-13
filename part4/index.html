@@ -5,39 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>List of Places</title>
     <link rel="stylesheet" href="styles.css">
-</head>
+    </head>
 <body>
-    <header><a href="images/logo.png" class="logo"></a>
+    <header>
+        <a href="index.html">
+            <img src="images/logo.png" alt="HBNB Logo" class="logo">
+        </a>
         <nav>
-            <a href="index.html" class="home-link">Home</a>
-            <a href login.html class="signup-link">Sign Up</a>
-            <button class="login-button">Login</button>
+            <a href="index.html">Home</a>
+            <a href="login.html" class="login-button">Login</a>
         </nav>
     </header>
+
     <main>
         <section id="filter">
             <label for="price-filter">Max Price:</label>
             <select id="price-filter">
-                <!-- Options will be populated dynamically -->
-            </select>
+                </select>
         </section>
+
         <section id="places-list">
-            <!-- List of places will be populated dynamically -->
-        </section>
-        <section class="place-card">
-            <ol>
-                <li>
-                    <h2>Name place</h2>
-                    <p>Price: {}/night</p>
-                    <button class="details-button">View Details</button>
-                </li>
-            </ol>
-        </section>
+            <article class="place-card">
+                <h2>Name place</h2>
+                <div>Price: $100/night</div>
+                <a href="place.html" class="details-button">View Details</a>
+            </article>
+
+            </section>
     </main>
-    <script src="scripts.js"></script>
 
     <footer>
-        <p>&copy;All rights reserved 2024 Holberton School</p>
+        <p>&copy; All rights reserved 2024 Holberton School</p>
     </footer>
 </body>
 </html>
