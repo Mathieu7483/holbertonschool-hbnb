@@ -7,9 +7,11 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <header>
+    <header><a href="images/logo.png" class="logo"></a>
         <nav>
-            <a href="login.html" id="login-link">Login</a>
+            <a href="index.html" class="home-link">Home</a>
+            <a href login.html class="signup-link">Sign Up</a>
+            <button class="login-button">Login</button>
         </nav>
     </header>
     <main>
@@ -22,7 +24,20 @@
         <section id="places-list">
             <!-- List of places will be populated dynamically -->
         </section>
+        <section class="place-card">
+            <ol>
+                <li>
+                    <h2>Name place</h2>
+                    <p>Price: {}/night</p>
+                    <button class="details-button">View Details</button>
+                </li>
+            </ol>
+        </section>
     </main>
     <script src="scripts.js"></script>
+
+    <footer>
+        <p>&copy;All rights reserved 2024 Holberton School</p>
+    </footer>
 </body>
 </html>
