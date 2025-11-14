@@ -7,8 +7,9 @@
 }
 
 body {
-    background-color: #f4f4f4;
+    background-color: hsl(187, 68%, 73%);
     color: #333;
+    font-family: sans-serif;
 }
 
 header {
@@ -35,6 +36,8 @@ footer {
     position: fixed;
     bottom: 0;
     width: 100%;
+    margin: auto;
+    text-align: center;
 }
 
 header {
@@ -127,3 +130,13 @@ a.logo {
     margin: 5px 0;
 }
 
+.nav-right a {
+    margin-left: 20px;
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+}
+.nav-right a:hover {
+    text-decoration: underline;
+    color: #007bff;
+}
