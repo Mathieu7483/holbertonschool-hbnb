@@ -131,7 +131,7 @@ a.logo {
     height: auto;
 }
 
-#login-form, .add-review-button {
+#login-form {
     background-color: #ffffff;
     padding: 40px;
     border-radius: 10px;
