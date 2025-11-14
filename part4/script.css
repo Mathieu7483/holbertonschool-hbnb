@@ -104,7 +104,7 @@ main h2 {
 
 .details-button {
     display: inline-block;
-    background-color: #2ecc71;
+    background-color: #2e6bcc;
     color: white;
     text-decoration: none;
     padding: 8px 15px;
@@ -113,6 +113,10 @@ main h2 {
     transition: background-color 0.3s;
 }
 
+.details-button:hover {
+    background-color: #0056e0;
+    color: black
+}
 
 .place-details {
     padding: 20px;
@@ -152,7 +156,7 @@ main h2 {
 #reviews h3 {
     width: 100%;
     margin-bottom: 15px;
-    border-bottom: 2px solid #007bff;
+    border-bottom: 2px solid #0055ff;
     padding-bottom: 5px;
 }
 
@@ -170,7 +174,7 @@ main h2 {
 .add-review-button {
 
     display: inline-block;
-    background-color: #284ea7;
+    background-color: #2e6bcc;
     color: white;
     padding: 10px 20px;
     border-radius: 5px;
@@ -178,7 +182,10 @@ main h2 {
     font-weight: bold;
     margin-top: 20px;
 }
-
+.add-review-button:hover {
+    background-color: #0056e0;
+    color: black
+}
 
 #login-form, .form { 
     background-color: #ffffff;
@@ -217,7 +224,7 @@ main > * {
 }
 
 .form button[type="submit"] {
-    background-color: #007bff;
+    background-color: #2e6bcc;
     color: white;
     padding: 15px;
     border: none;
@@ -229,6 +236,10 @@ main > * {
     margin-top: 10px;
 }
 
+.form button[type="submit"]:hover {
+    background-color: #0056e0;
+    color: black
+}
 /* FOOTER */
 footer {
     margin-top: 40px;
