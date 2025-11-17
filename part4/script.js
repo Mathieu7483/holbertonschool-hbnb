@@ -1,6 +1,7 @@
 // API endpoint URLs
-const API_LOGIN_URL = 'https://part3/hbnb/app/api/v2/auth/login';
-const API_PLACES_URL = 'https://part3/hbnb/app/api/v2/places'; // Update with your actual API endpoint
+const API_BASE_URL = 'http://localhost:5000';
+const API_LOGIN_URL = `${API_BASE_URL}/api/v2/auth/login`;
+const API_PLACES_URL = `${API_BASE_URL}/api/v2/places`;
 
 // ==================== COOKIE HELPER FUNCTIONS ====================
 
@@ -148,17 +149,19 @@ function displayPlaces(places) {
 
 // Filter places by price
 function filterPlacesByPrice(maxPrice) {
-    const placeCards = document.querySelectorAll('.place-card');
+    let filteredPlaces;
 
-    placeCards.forEach(card => {
-        const placePrice = parseFloat(card.dataset.price);
+    if (maxPrice === 'all') {
+        filteredPlaces = allPlaces;
+    } else {
 
-        if (maxPrice === 'all' || placePrice <= maxPrice) {
-            card.style.display = 'block';
-        } else {
-            card.style.display = 'none';
-        }
-    });
+        filteredPlaces = allPlaces.filter(place => {
+            const price = parseFloat(place.price_per_night) || 0;
+            return price <= maxPrice;
+        });
+    }
+
+    displayPlaces(filteredPlaces); 
 }
 
 // ==================== DOM CONTENT LOADED ====================
@@ -233,7 +236,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const priceFilter = document.getElementById('price-filter');
     if (priceFilter) {
         priceFilter.addEventListener('change', (event) => {
-            const selectedValue = event.target.value;
+            filterPlacesByPrice(event.target.value);
+        });
             
             // Convert filter value to max price
             let maxPrice;
@@ -254,6 +258,5 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             
             filterPlacesByPrice(maxPrice);
-        });
-    }
+        }
 });
