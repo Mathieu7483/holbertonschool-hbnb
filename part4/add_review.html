@@ -27,13 +27,14 @@
         <div class="add-review">
             <form id="review-form" class="form"> 
                 <h2>Add a Review for [Place Name]</h2>
-                <input type="hidden" name="place_id" value="123">
+                <input type="hidden" name="place_id" value="">
 
                 <label for="review">Your Review:</label>
                 <textarea id="review" name="review" required></textarea>
                 
                 <label for="rating">Rating:</label>
                 <select id="rating" name="rating" required>
+                    <option value="">Select rating</option>
                     <option value="5">5 Stars</option>
                     <option value="4">4 Stars</option>
                     <option value="3">3 Stars</option>
