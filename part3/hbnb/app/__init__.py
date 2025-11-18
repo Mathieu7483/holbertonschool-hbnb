@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_restx import Api
 from app.extensions import bcrypt, jwt, db
+from flask_cors import CORS
 
 # Import models to ensure they are registered with SQLAlchemy
 import app.models
@@ -13,6 +14,7 @@ def create_app(config_class="config.DevelopmentConfig"):
     
     # 1. Initialize Flask application
     app = Flask(__name__)
+    CORS(app)
 
     # 2. Load configuration from the provided config class
     app.config.from_object(config_class)
