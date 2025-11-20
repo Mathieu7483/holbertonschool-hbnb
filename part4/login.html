@@ -26,13 +26,19 @@
     <main>
         <form id="login-form">
             <h2>Login</h2>
-            
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
-            
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
-            
+    
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+    
+                <label for="password">Password:</label>
+                <div class="password-field-container"> 
+                    <input type="password" id="password" name="password" required>
+        
+                    <span id="show" onclick="toggleFormPassword()">
+                        <i class="fa-solid fa-eye"></i> Show
+                    </span>
+                 </div>
+    
             <button type="submit">Login</button>
         </form>
     </main>
@@ -41,5 +47,22 @@
         <p>&copy; All rights reserved 2025 Holberton School</p>
     </footer>
     <script src="script.js"></script>
+    <script>
+    //function to toogle display on/off logout button
+    function toggleFormPassword(){
+        const PasswordInput = document.getElementById('password');
+        const toggleIconPassWord = document.getElementById('show');
+        
+        if(PasswordInput.type === 'password'){
+            PasswordInput.type = 'text';
+            toggleIconPassWord.classList.remove('fa-eye');
+            toggleIconPassWord.classList.add('fa-eye-slash');
+        } else {
+            PasswordInput.type = 'password';
+            toggleIconPassWord.classList.remove('fa-eye-slash');
+            toggleIconPassWord.classList.add('fa-eye');
+        }
+    };
+    </script>
 </body>
 </html>
