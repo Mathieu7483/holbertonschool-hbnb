@@ -6,17 +6,23 @@
 
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f9;
     color: #333;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    background-image: url('images/create-a-background-image-for-hbnb-apply.png');
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
+    background-color: black;
 }
 
 header {
     background-color: #ffffff;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     padding: 10px 0;
+    opacity: 0.75;
 }
 
 nav {
@@ -44,13 +50,14 @@ nav {
     color: #333;
     font-weight: 500;
     transition: color 0.3s;
-    font-size: 1.2rem;
+    font-size: 1.5rem;
 }
 
 .nav-right button {
     margin-left: 15px;
     padding: 8px 15px;
     font-weight: bold;
+    font-size: 1.5rem;
     cursor: pointer;
     border: none;
     background-color: #ff4757;
@@ -87,7 +94,7 @@ main h2 {
 
 
 .place-card {
-
+ 
     margin: 20px;
     padding: 10px;
     border: 1px solid #ddd; 
