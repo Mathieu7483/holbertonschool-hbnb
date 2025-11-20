@@ -63,11 +63,11 @@ ID: e13deb8f-413e-4640-b5e8-1339c1e325e8
 
 METHODE POSTMAN PLACE by USER
 {
-    "title": "Chalet du Lac Léman",
-    "description": "Vue magnifique sur le lac, parfait pour le télétravail.",
-    "price": 180.50,
-    "latitude": 46.3948,
-    "longitude": 6.4023,
+    "title": "Maison de campagne",
+    "description": "Calme, parfait pour les saisons automnale et printanière .",
+    "price": 80.50,
+    "latitude": 22.3948,
+    "longitude": 16.4023,
     "owner_id": "USER ID", 
     "amenities": []
 }
@@ -118,3 +118,37 @@ UPDATE REVIEW
     "text": "L'endroit était fantastique, 5 étoiles amplement méritées !",
     "rating": 5
 }
+
+
+
+
+
+[
+  {
+    "id": "c3a5deac-106e-4b54-9639-cd7efc144f9b",
+    "first_name": "John",
+    "last_name": "Doe",
+    "email": "john.doe@example.com",
+    "is_admin": false,
+    "created_at": "2025-11-10T14:29:22.029631",
+    "updated_at": "2025-11-10T14:29:22.029639"
+  },
+  {
+    "id": "aa235c9e-fc72-40c5-a4f0-65c77b375063",
+    "first_name": "Alice",
+    "last_name": "Doe",
+    "email": "Alice.doe@example.com",
+    "is_admin": false,
+    "created_at": "2025-11-10T14:36:40.223349",
+    "updated_at": "2025-11-10T14:36:40.223356"
+  },
+  {
+    "id": "86436687-e349-4dd0-b597-9c46f6519369",
+    "first_name": "Mathieu",
+    "last_name": "GODALIER",
+    "email": "mathieu.admin@example.com",
+    "is_admin": true,
+    "created_at": "2025-11-10T14:39:28.556138",
+    "updated_at": "2025-11-10T14:39:28.556143"
+  }
+]

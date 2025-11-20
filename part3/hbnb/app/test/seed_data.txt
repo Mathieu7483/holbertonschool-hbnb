@@ -1,0 +1,174 @@
+[
+  {
+    "first_name": "Mathieu",
+    "last_name": "GODALIER",
+    "email": "mathieu.admin@example.com",
+    "password": "Admin@1234",
+    "is_admin": true
+  },
+  {
+    "first_name": "Sophie",
+    "last_name": "LEROUX",
+    "email": "sophie.admin@example.com",
+    "password": "Admin@1234",
+    "is_admin": true
+  },
+  {
+    "first_name": "Antoine",
+    "last_name": "DUPONT",
+    "email": "antoine.dupont@example.com",
+    "password": "User@5678",
+    "is_admin": false
+  },
+  {
+    "first_name": "Camille",
+    "last_name": "PETIT",
+    "email": "camille.petit@example.com",
+    "password": "User@5678",
+    "is_admin": false
+  },
+  {
+    "first_name": "Thomas",
+    "last_name": "MARTIN",
+    "email": "thomas.martin@example.com",
+    "password": "User@5678",
+    "is_admin": false
+  },
+  {
+    "first_name": "Julie",
+    "last_name": "GARCIA",
+    "email": "julie.garcia@example.com",
+    "password": "User@5678",
+    "is_admin": false
+  },
+  {
+    "first_name": "Sébastien",
+    "last_name": "RIVET",
+    "email": "sebastien.rivet@example.com",
+    "password": "User@5678",
+    "is_admin": false
+  },
+  {
+    "first_name": "Laura",
+    "last_name": "SIMON",
+    "email": "laura.simon@example.com",
+    "password": "User@5678",
+    "is_admin": false
+  },
+  {
+    "first_name": "Vincent",
+    "last_name": "MOREAU",
+    "email": "vincent.moreau@example.com",
+    "password": "User@5678",
+    "is_admin": false
+  },
+  {
+    "first_name": "Manon",
+    "last_name": "LEFEVRE",
+    "email": "manon.lefevre@example.com",
+    "password": "User@5678",
+    "is_admin": false
+  },
+
+
+  
+  {
+    "title": "Chalet du Lac Léman",
+    "description": "Vue magnifique sur le lac, parfait pour le télétravail.",
+    "price": 180.50,
+    "latitude": 46.3948,
+    "longitude": 6.4023,
+    "owner_id": null,
+    "amenities": []
+  },
+  {
+    "title": "Appartement Design - Vieux Lyon",
+    "description": "Loft historique rénové avec cachet, idéal pour un séjour citadin.",
+    "price": 115.00,
+    "latitude": 45.7600,
+    "longitude": 4.8250,
+    "owner_id": null,
+    "amenities": []
+  },
+  {
+    "title": "Villa Provençale - Piscine et Calme",
+    "description": "Évasion garantie sous le soleil du sud, grand jardin et tranquillité.",
+    "price": 320.99,
+    "latitude": 43.5297,
+    "longitude": 5.4474,
+    "owner_id": null,
+    "amenities": []
+  },
+  {
+    "title": "Studio à la Montagne (Hiver/Été)",
+    "description": "Accès direct aux pistes de ski ou aux sentiers de randonnée.",
+    "price": 99.00,
+    "latitude": 45.0805,
+    "longitude": 6.3907,
+    "owner_id": null,
+    "amenities": []
+  },
+  {
+    "title": "Maison de Pêcheur en Bretagne",
+    "description": "Petite maison rustique face à l'océan, idéal pour déconnecter.",
+    "price": 145.00,
+    "latitude": 48.6500,
+    "longitude": -4.6000,
+    "owner_id": null,
+    "amenities": []
+  },
+  {
+    "title": "Appartement RDC - Proche Gare",
+    "description": "Pratique et central, parfait pour les professionnels en transit.",
+    "price": 75.50,
+    "latitude": 47.2184,
+    "longitude": -1.5536,
+    "owner_id": null,
+    "amenities": []
+  },
+  {
+    "title": "Demeure Historique avec Cour Intérieure",
+    "description": "Charme de l'ancien dans une ville médiévale du Sud-Ouest.",
+    "price": 220.00,
+    "latitude": 43.9427,
+    "longitude": 4.8055,
+    "owner_id": null,
+    "amenities": []
+  },
+  {
+    "title": "Tiny House Écologique",
+    "description": "Logement minimaliste et durable en pleine nature, expérience unique.",
+    "price": 65.00,
+    "latitude": 46.5133,
+    "longitude": 0.3621,
+    "owner_id": null,
+    "amenities": []
+  },
+  {
+    "title": "T2 en Front de Mer",
+    "description": "Balcon avec vue panoramique, réveillez-vous avec le bruit des vagues.",
+    "price": 190.50,
+    "latitude": 43.3000,
+    "longitude": 3.0000,
+    "owner_id": null,
+    "amenities": []
+  },
+ 
+
+
+  {
+    "name": "Wi-Fi Haut Débit"
+  },
+  {
+    "name": "Piscine Privée"
+  },
+  {
+    "name": "Parking Gratuit"
+  },
+  {
+    "name": "Cuisine Équipée"
+  },
+  {
+    "name": "Vue Mer"
+  }
+  ]
