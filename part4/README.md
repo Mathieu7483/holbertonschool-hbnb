@@ -57,7 +57,7 @@ Since this is a web client, no "compilation" is necessary. Execution is performe
 
       ```bash
       #example launch server
-      ~/Holberton/holbertonschool-hbnb/part4$ python3 run.py
+      ~/Holberton/holbertonschool-hbnb/part3/hbnb$ python3 run.py
       ```
 
 2.  **Launch the Web Client:**
