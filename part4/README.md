@@ -80,6 +80,11 @@ python3 -m http.server 8000
       * Verify the `token` cookie in the browser's developer tools.
 
 -----
+# Snippet video
+
+[Here the video link](https://youtu.be/hjov5nvEGNo)
+
+-----
 
 # ✍️ Authors
 
