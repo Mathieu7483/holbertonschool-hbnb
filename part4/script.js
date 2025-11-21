@@ -402,7 +402,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             
             const reviewText = document.getElementById('review').value.trim();
-            const rating = document.getElementById('rating').value;
+
+            const selectedRatingElement = reviewForm.querySelector('input[name="rating"]:checked');
+            const rating = selectedRatingElement ? selectedRatingElement.value : null;
             
             if (!reviewText || !rating) {
                 alert('Please fill in all fields.');
