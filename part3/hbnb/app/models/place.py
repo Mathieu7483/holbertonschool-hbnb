@@ -40,8 +40,9 @@ class Place(BaseModel):
         if hasattr(self, 'owner') and self.owner: 
             data["owner"] = self.owner.to_nested_dict()
         
-        if self.amenities:
-            data["amenities"] = [a.id for a in self.amenities]
+        # CORRECTION : Sérialisation complète de la relation Many-to-Many
+        if hasattr(self, 'amenities') and self.amenities:
+            data["amenities"] = [a.to_dict() for a in self.amenities]
         else:
             data["amenities"] = []
         
