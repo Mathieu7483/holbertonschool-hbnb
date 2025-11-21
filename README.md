@@ -147,11 +147,11 @@ After completing all tasks, the HBnB backend becomes a **secure, scalable, and p
 - 🧠 Clear database documentation with SQL scripts and ER diagrams
 
 # 📝 Description Part 4
-# 🌐 HBnB - Simple Web Client (Part 4: Front-end)
+## 🌐 HBnB - Simple Web Client (Part 4: Front-end)
 
 -----
 
-## 📝 Project Description
+### 📝 Project Description
 
 This project constitutes Phase 4 of the **HBnB** application development, focusing on the creation of a **Simple Web Client (Front-end)**. It implements an interactive user interface using **HTML5, CSS3, and JavaScript ES6** to communicate with the previously developed back-end API.
 
@@ -159,7 +159,7 @@ The technical objective is to build a **dynamic and responsive** web application
 
 -----
 
-## 💻 Exercise Content
+### 💻 Exercise Content
 
 This repository contains the foundational HTML and CSS files, along with the JavaScript scripts implementing the client-side behavior for the HBnB application.
 
@@ -174,11 +174,11 @@ This repository contains the foundational HTML and CSS files, along with the Jav
 
 -----
 
-## ⚙️ Prerequisites
+### ⚙️ Prerequisites
 
 To run and test this web client, the following dependencies are required:
 
-### 🛠️ Dependencies
+#### 🛠️ Dependencies
 
 1.  **Functional HBnB API:** The back-end developed in previous parts of the project must be running and accessible.
 2.  **CORS Configuration:** The Flask API must be configured to allow **Cross-Origin Resource Sharing (CORS)** requests originating from the web client's host (e.g., `http://127.0.0.1:8000`).
@@ -190,7 +190,7 @@ If you encounter `Cross-Origin` security errors, you must modify your Flask API 
 
 -----
 
-## 🚀 Usage and Execution
+#### 🚀 Usage and Execution
 
 Since this is a web client, no "compilation" is necessary. Execution is performed directly in the browser.
 
@@ -223,7 +223,7 @@ python3 -m http.server 8000
       * Verify the `token` cookie in the browser's developer tools.
 
 -----
-# Snippet video
+## Snippet video
 
 [Here the video link](https://youtu.be/hjov5nvEGNo)
 
