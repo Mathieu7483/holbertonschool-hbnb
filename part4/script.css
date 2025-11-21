@@ -74,7 +74,6 @@ nav {
 
 main {
     flex-grow: 1;
-    width: 90%;
     max-width: 1200px;
     margin: 20px auto;
     padding: 20px 0;
@@ -88,8 +87,9 @@ main h2 {
 #places-list {
     display: flex;
     flex-wrap: wrap;
-    gap: 20px;
     justify-content: flex-start;
+    width: 100%;
+    padding: 0 10px;
 }
 
 
@@ -301,4 +301,47 @@ footer {
     box-sizing: border-box;
     height: 25px;
     font-size: 1.1em;
+}
+
+
+#star-rating-area {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end; 
+    width: fit-content;
+}
+
+#star-rating-area input[type="radio"] {
+    display: none;
+}
+
+
+.star-label {
+    cursor: pointer;
+    
+
+    background-image: url('images/star.png'); 
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    
+
+    width: 30px; 
+    height: 30px;
+    margin-left: 5px;
+    
+    opacity: 0.3; 
+    
+    transition: opacity 0.2s, transform 0.2s;
+}
+
+#star-rating-area .star-label:hover,
+#star-rating-area .star-label:hover ~ .star-label {
+    opacity: 1; 
+    transform: scale(1.1);
+}
+
+#star-rating-area input[type="radio"]:checked ~ .star-label {
+    opacity: 1; 
+    transform: scale(1);
 }
