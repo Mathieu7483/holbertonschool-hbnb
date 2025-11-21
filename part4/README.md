@@ -69,7 +69,7 @@ Since this is a web client, no "compilation" is necessary. Execution is performe
 
 ```bash
 # Example launch using Python's http.server module
-cd path/to/part4
+cd ~/Holberton/holbertonschool-hbnb/part4
 python3 -m http.server 8000
 # The web client is accessible via: http://localhost:8000/index.html
 ```
@@ -78,6 +78,11 @@ python3 -m http.server 8000
       * Navigate to `login.html`.
       * Log in with valid credentials to obtain the JWT stored in the cookies.
       * Verify the `token` cookie in the browser's developer tools.
+
+-----
+# Snippet video
+
+[Here the video link](https://youtu.be/hjov5nvEGNo)
 
 -----
 
