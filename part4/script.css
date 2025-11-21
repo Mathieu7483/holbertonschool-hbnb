@@ -315,23 +315,16 @@ footer {
     display: none;
 }
 
-
 .star-label {
     cursor: pointer;
-    
-
     background-image: url('images/star.png'); 
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
-    
-
     width: 30px; 
     height: 30px;
     margin-left: 5px;
-    
     opacity: 0.3; 
-    
     transition: opacity 0.2s, transform 0.2s;
 }
 
