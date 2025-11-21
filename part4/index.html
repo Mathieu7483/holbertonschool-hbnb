@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>List of Places</title>
+    <link rel="stylesheet" href="script.css">
+    <link rel="icon" href="images/logo.png">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="nav-left">
+                <a href="index.html" id="logo-link">
+                    <img src="images/logo.png" alt="HBnB logo" width="150" height="auto">
+                </a>
+            </div>
+            <div class="nav-right">
+                <a href="index.html" id="home-link">Home</a>
+                <a href="login.html" id="login-link">Login</a>
+                <button id="logout-button" style="display: none;">Logout</button>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section id="filter">
+            <label for="price-filter">Max Price:</label>
+            <select id="price-filter">
+                <option value="all">All Prices</option>
+                <option value="10">Max $10</option>
+                <option value="50">Max $50</option>
+                <option value="100">Max $100</option>
+            </select>
+        </section>
+
+        <section id="places-list">
+            <p>Loading places...</p>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; All rights reserved 2025 Holberton School</p>
+    </footer>
+    <script src="script.js"></script>
+</body>
+</html>

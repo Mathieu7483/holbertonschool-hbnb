@@ -1,0 +1,340 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    color: #333;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-image: url('images/create-a-background-image-for-hbnb-apply.png');
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
+    background-color: black;
+}
+
+header {
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 10px 0;
+    opacity: 0.75;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.logo img {
+    display: block;
+}
+
+.nav-right {
+    display: flex;
+    align-items: center;
+}
+
+.nav-right a {
+    margin-left: 15px;
+    padding: 8px 12px;
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    transition: color 0.3s;
+    font-size: 1.5rem;
+}
+
+.nav-right button {
+    margin-left: 15px;
+    padding: 8px 15px;
+    font-weight: bold;
+    font-size: 1.5rem;
+    cursor: pointer;
+    border: none;
+    background-color: #ff4757;
+    color: white;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+
+.nav-right a:hover {
+    color: #007bff;
+}
+
+
+main {
+    flex-grow: 1;
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px 0;
+}
+
+main h2 {
+    color: #007bff;
+    margin-bottom: 20px;
+}
+
+#places-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    width: 100%;
+    padding: 0 10px;
+}
+
+
+.place-card {
+ 
+    margin: 20px;
+    padding: 10px;
+    border: 1px solid #ddd; 
+    border-radius: 10px; 
+    width: calc(33.333% - 40px);
+    min-width: 280px;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s;
+}
+
+.place-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.details-button {
+    display: inline-block;
+    background-color: #2e6bcc;
+    color: white;
+    text-decoration: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    margin-top: 10px;
+    transition: background-color 0.3s;
+}
+
+.details-button:hover {
+    background-color: #0056e0;
+    color: black
+}
+
+.place-details {
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.place-info p {
+    margin: 5px 0;
+}
+
+.place-details h3 {
+    margin-top: 20px;
+    margin-bottom: 10px;
+    color: #007bff;
+}
+
+.place-details ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+#reviews {
+    margin-top: 40px; 
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: #fcfcfc;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-wrap: wrap; 
+    gap: 20px;
+}
+
+#reviews h3 {
+    color : #007bff;
+    width: 100%;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #0055ff;
+    padding-bottom: 5px;
+}
+
+
+.review-card {
+    margin: 0;
+    padding: 10px; 
+    border: 1px solid #ddd;
+    border-radius: 10px; 
+    width: calc(50% - 10px);
+    background-color: #ffffff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.add-review-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;    
+    background-color: #2e6bcc;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: bold;
+    margin-top: 20px;
+}
+.add-review-button:hover {
+    background-color: #0056e0;
+    color: black
+}
+
+#login-form { 
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    width: 100%;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+}
+
+main > * {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.form h2 {
+    text-align: center;
+    color: #007bff;
+    margin-bottom: 30px;
+}
+
+.form label {
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #555;
+}
+
+.form input, .form textarea {
+    width: calc(100% - 12px);
+    padding: 5px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    height: 300px;
+    resize: none;
+}
+form input[type="password"] {
+    height: 25px;
+    font-size: 1.1em;
+}
+
+
+form input[type="email"] {
+    height: 25px;
+    font-size: 1.1em;
+}
+
+form button {
+    background-color: #2e6bcc;
+    color: white;
+    padding: 15px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 1.1em;
+    font-weight: bold;
+    transition: background-color 0.3s;
+    margin-top: 10px;
+}
+
+form button:hover {
+    background-color: #0056e0;
+    color: black
+}
+
+footer {
+    margin-top: 40px;
+    padding: 15px;
+    background-color: #333;
+    color: white;
+    text-align: center;
+    width: 100%;
+}
+
+.password-field-container {
+    position: relative; 
+    display: block;
+    height: 25px;
+    font-size: 1.1em;
+     
+}
+
+
+#show {
+    position: absolute;
+    top: 50%;
+    right: 10px; 
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #007bff;
+    font-size: 1.1em;
+    user-select: none;
+    height: 25px;
+}
+
+#password {
+    padding-right: 60px;
+    width: 100%;
+    box-sizing: border-box;
+    height: 25px;
+    font-size: 1.1em;
+}
+
+
+#star-rating-area {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end; 
+    width: fit-content;
+}
+
+#star-rating-area input[type="radio"] {
+    display: none;
+}
+
+.star-label {
+    cursor: pointer;
+    background-image: url('images/star.png'); 
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 30px; 
+    height: 30px;
+    margin-left: 5px;
+    opacity: 0.3; 
+    transition: opacity 0.2s, transform 0.2s;
+}
+
+#star-rating-area .star-label:hover,
+#star-rating-area .star-label:hover ~ .star-label {
+    opacity: 1; 
+    transform: scale(1.1);
+}
+
+#star-rating-area input[type="radio"]:checked ~ .star-label {
+    opacity: 1; 
+    transform: scale(1);
+}
