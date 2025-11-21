@@ -69,7 +69,7 @@ Since this is a web client, no "compilation" is necessary. Execution is performe
 
 ```bash
 # Example launch using Python's http.server module
-cd path/to/part4
+cd ~/Holberton/holbertonschool-hbnb/part4
 python3 -m http.server 8000
 # The web client is accessible via: http://localhost:8000/index.html
 ```
