@@ -15,10 +15,6 @@ class HBnBFacade:
         self.review_repository = ReviewRepository()
         self.amenity_repository = AmenityRepository()
 
-    # ==================================
-    # ===== USER METHODS (CRUD) ========
-    # ==================================
-
     def create_user(self, user_data: Dict) -> User:
         email = user_data.get('email')
         if not email:
@@ -76,10 +72,6 @@ class HBnBFacade:
         self.user_repository.delete(user_to_delete)
         return True
 
-    # ==================================
-    # ===== AMENITY METHODS (CRUD) =====
-    # ==================================
-
     def create_amenity(self, amenity_data: Dict) -> Amenity:
         name = amenity_data.get('name')
         if not name:
@@ -118,10 +110,6 @@ class HBnBFacade:
         self.amenity_repository.delete(amenity)
         return True
 
-    # ==================================
-    # ===== PLACE METHODS (CRUD) =======
-    # ==================================
-
     def create_place(self, place_data: Dict) -> Place:
         owner_id = place_data.get('owner_id')
         if not owner_id:
@@ -130,18 +118,19 @@ class HBnBFacade:
         if not self.get_user(owner_id):
             raise ValueError(f"Owner with ID '{owner_id}' not found.")
 
-        amenity_ids = place_data.get('amenities', [])
-        place_data_copy = {k: v for k, v in place_data.items() if k != 'amenities'}
+        amenities_names = place_data.pop('amenities', [])
         
-        new_place = Place(**place_data_copy)
+        new_place = Place(**place_data) 
         
-        if amenity_ids:
+        if amenities_names:
             amenity_objects = db.session.scalars(
-                db.select(Amenity).filter(Amenity.id.in_(amenity_ids))
+                db.select(Amenity).filter(Amenity.name.in_(amenities_names))
             ).all()
             
-            if len(amenity_objects) != len(amenity_ids):
-                raise ValueError("One or more amenities not found.")
+            if len(amenity_objects) != len(amenities_names):
+                found_names = {a.name for a in amenity_objects}
+                missing = set(amenities_names) - found_names
+                raise ValueError(f"Amenities not found: {missing}")
             
             new_place.amenities.extend(amenity_objects)
 
@@ -169,13 +158,17 @@ class HBnBFacade:
         if not place:
             return None
 
-        amenity_ids = place_data.pop('amenities', None)
-        if amenity_ids is not None:
+        amenities_list = place_data.pop('amenities', None)
+        if amenities_list is not None:
             amenity_objects = db.session.scalars(
-                db.select(Amenity).filter(Amenity.id.in_(amenity_ids))
+                db.select(Amenity).filter(Amenity.name.in_(amenities_list))
             ).all()
-            if len(amenity_objects) != len(amenity_ids):
-                raise ValueError("One or more amenities not found.")
+            
+            if len(amenity_objects) != len(amenities_list):
+                found_names = {a.name for a in amenity_objects}
+                missing = set(amenities_list) - found_names
+                raise ValueError(f"Amenities not found: {missing}")
+            
             place.amenities = amenity_objects
 
         place_data.pop('owner_id', None)
@@ -189,10 +182,6 @@ class HBnBFacade:
             return False
         self.place_repository.delete(place)
         return True
-
-    # ==================================
-    # ===== REVIEW METHODS (CRUD) ======
-    # ==================================
 
     def user_has_reviewed_place(self, user_id: str, place_id: str) -> bool:
         existing_review = self.review_repository.get_by_attributes(
