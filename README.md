@@ -225,7 +225,7 @@ python3 -m http.server 8000
 -----
 ## Snippet video
 
-[Here the video link](https://youtu.be/hjov5nvEGNo)
+[Here the video link](https://youtu.be/zxRX9r8he8g)
 
 -----
 # ✍️ Authors
